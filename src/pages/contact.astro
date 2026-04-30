@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ContactForm from "../components/contact/ContactForm";
+import ContactInfo from "../components/contact/ContactInfo";
+import ContactMap from "../components/contact/ContactMap";
+---
+
+<Layout
+  title="Contacto | Hard-Ware – Soluciones Tecnológicas en Monterrey"
+  description="Contáctanos para solicitar una cotización, reportar una falla o conocer más sobre nuestros servicios de mantenimiento y reparación de equipos industriales."
+>
+  <!-- Page hero bar -->
+  <div
+    class="w-full py-16 md:py-24 text-white"
+    style="background: linear-gradient(135deg, #013383 0%, #233060 100%);"
+  >
+    <div class="container-lg text-center">
+      <p class="text-xs font-semibold uppercase tracking-widest mb-3 opacity-60">Estamos aquí</p>
+      <h1
+        class="text-4xl md:text-5xl font-extrabold mb-4"
+        style="font-family: 'Syne', sans-serif;"
+      >
+        Ponte en Contacto
+      </h1>
+      <p class="text-white/70 max-w-xl mx-auto text-base leading-relaxed">
+        Ten el primer contacto con nuestro personal altamente capacitado. Respondemos en menos de 24 horas hábiles.
+      </p>
+    </div>
+  </div>
+
+  <!-- Contact layout -->
+  <section class="section-padding bg-canvas">
+    <div class="container-lg">
+      <!-- Map full width -->
+      <div class="mb-10">
+        <ContactMap client:visible />
+      </div>
+
+      <!-- 3-column grid: info | form -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <!-- Info + Socials -->
+        <div class="lg:col-span-2">
+          <ContactInfo client:visible />
+        </div>
+
+        <!-- Form -->
+        <div class="lg:col-span-3">
+          <ContactForm client:visible />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

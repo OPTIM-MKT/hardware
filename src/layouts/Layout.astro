@@ -2,29 +2,100 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import { SEO } from "astro-seo";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import ScrollTop from "../components/shared/ScrollTop.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Hard-Ware | Reparación y Mantenimiento Industrial",
+  description = "Expertos en reparación de equipos industriales de control, mantenimiento de dispositivos móviles y gestión de garantías en Monterrey, N.L.",
+  image = "/og-image.jpg",
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <ClientRouter />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+
+    <SEO
+      title={title}
+      description={description}
+      openGraph={{
+        basic: {
+          title,
+          type: "website",
+          image,
+        },
+        optional: {
+          description,
+          siteName: "Hard-Ware",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title,
+        description,
+        image,
+      }}
+    />
+
+    <!-- Dark mode init: runs before paint to avoid flash -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (stored === "dark" || (!stored && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
-  <body>
-    <slot />
+
+  <body class="bg-canvas text-ink antialiased">
+    <Navbar />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+    <ScrollTop />
+
+    <!-- Theme toggle logic -->
+    <script>
+      function initThemeToggle() {
+        const btn = document.querySelector("[data-theme-toggle]");
+        const label = document.querySelector("[data-theme-label]");
+        if (!btn) return;
+
+        function updateLabel() {
+          const isDark = document.documentElement.classList.contains("dark");
+          if (label) label.textContent = isDark ? "Light" : "Dark";
+        }
+
+        btn.addEventListener("click", () => {
+          document.documentElement.classList.toggle("dark");
+          const isDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          updateLabel();
+        });
+
+        updateLabel();
+      }
+
+      document.addEventListener("astro:page-load", initThemeToggle);
+    </script>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>

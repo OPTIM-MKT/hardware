@@ -1,11 +1,24 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import HeroCarousel from "../components/home/HeroCarousel";
+import ServicesSection from "../components/home/ServicesSection";
+import PartnersSection from "../components/home/PartnersSection";
+import HomeContactTeaser from "../components/home/HomeContactTeaser";
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Hard-Ware | Reparación y Mantenimiento Industrial"
+  description="Expertos en reparación de equipos industriales de control, mantenimiento de dispositivos móviles y gestión de garantías en Monterrey, N.L."
+>
+  <!-- Hero Swiper full-screen -->
+  <HeroCarousel client:load />
+
+  <!-- Partners / Alianzas -->
+  <PartnersSection client:visible />
+
+  <!-- Services bento grid -->
+  <ServicesSection client:visible />
+
+  <!-- Contact teaser -->
+  <HomeContactTeaser client:visible />
 </Layout>

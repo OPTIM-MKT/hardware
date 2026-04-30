@@ -1,0 +1,52 @@
+{
+  "seo": {
+    "home_title": "Hard-Ware | Reparación y Mantenimiento Industrial",
+    "home_description": "Expertos en reparación de equipos industriales de control, mantenimiento de dispositivos móviles y gestión de garantías.",
+    "about_title": "Sobre Nosotros | Alianzas y Capacitación",
+    "contact_title": "Contacto | Soluciones Tecnológicas en Monterrey"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Nosotros",
+    "services": "Servicios",
+    "contact": "Contacto"
+  },
+  "home": {
+    "hero_title": "Si lo puedes imaginar, lo podemos desarrollar",
+    "hero_subtitle": "Cuidamos tu operación",
+    "hero_description": "En el momento menos oportuno, su equipo presenta una falla y no cuenta con póliza de servicios que lo ampare. Permítanos presentarnos de la mejor forma posible, poniendo a su servicio nuestra experiencia en reparación de equipos industriales de control.",
+    "hero_cta": "Contáctanos",
+    "partners_title": "Nuestros Socios Tecnológicos",
+    "partners_subtitle": "Contamos con alianzas con las marcas punteras en tecnología",
+    "partners_description": "Nos dimos a la tarea de mantener relaciones cercanas con las marcas líderes que resuelven los problemas de nuestros clientes. Creemos en la colaboración para el desarrollo de proyectos tecnológicos."
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "offering_title": "Ofrecemos",
+    "list": {
+      "maintenance": "Programas de mantenimiento a sus equipos.",
+      "repair": "Reparación, mantenimiento y backup de dispositivos móviles (terminales portátiles, impresoras móviles y laptops de uso rudo).",
+      "monitoring": "Gestión y monitoreo de sus dispositivos.",
+      "warranty": "Administración de las garantías de sus equipos, entre otros servicios administrados."
+    },
+    "training_title": "Capacitación",
+    "training_description": "Contamos con personal calificado para ofrecer cursos de capacitación (Impresoras, Terminales y Software).",
+    "installation_title": "Instalación",
+    "installation_description": "Ofrecemos el servicio de instalación de su equipo, ya sea impresora para credenciales, para etiquetas, lectores, terminales o aplicación. En equipos nuevos comprados con nosotros dentro de la Zona Metropolitana, la instalación corre por nuestra cuenta."
+  },
+  "contact": {
+    "title": "Ponte en contacto",
+    "subtitle": "Ten el primer contacto con nuestro personal altamente capacitado",
+    "form_name": "Nombre",
+    "form_phone": "Teléfono",
+    "form_email": "Correo electrónico",
+    "form_message": "Mensaje",
+    "form_submit": "Enviar Mensaje",
+    "address_title": "Dirección",
+    "address_value": "Rio Papaloapan #308, Col. Mexico, Monterrey, N.L CP64710",
+    "email_value": "ventas.online@hard-ware.com.mx",
+    "phone_value": "818 3652 769",
+    "hours_title": "Horario de atención",
+    "hours_value": "Lunes - Viernes: 8:00 am - 6:00 pm"
+  }
+}

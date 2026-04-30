@@ -1,0 +1,52 @@
+{
+  "seo": {
+    "home_title": "Hard-Ware | Industrial Repair & Maintenance",
+    "home_description": "Experts in industrial control equipment repair, mobile device maintenance, and warranty management.",
+    "about_title": "About Us | Alliances & Training",
+    "contact_title": "Contact | Tech Solutions in Monterrey"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero_title": "If you can imagine it, we can develop it",
+    "hero_subtitle": "We take care of your operation",
+    "hero_description": "When you least expect it, your equipment fails and you don't have a service policy to cover it. Let us introduce ourselves by putting our experience in industrial control equipment repair at your service.",
+    "hero_cta": "Contact Us",
+    "partners_title": "Our Technology Partners",
+    "partners_subtitle": "We have alliances with leading technology brands",
+    "partners_description": "We have dedicated ourselves to maintaining close relationships with the leading brands that solve our customers' problems. We believe in collaboration for the development of technological projects."
+  },
+  "services": {
+    "title": "Our Services",
+    "offering_title": "What We Offer",
+    "list": {
+      "maintenance": "Maintenance programs for your equipment.",
+      "repair": "Repair, maintenance, and backup of mobile devices (handheld terminals, mobile printers, and rugged laptops).",
+      "monitoring": "Management and monitoring of your devices.",
+      "warranty": "Warranty administration for your equipment, among other managed services."
+    },
+    "training_title": "Training",
+    "training_description": "We have qualified personnel to offer training courses (Printers, Terminals, and Software).",
+    "installation_title": "Installation",
+    "installation_description": "We offer installation services for your equipment, whether it's ID card printers, label printers, readers, terminals, or applications. For new equipment purchased from us within the Metropolitan Area, installation is on us."
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Have the first contact with our highly trained staff",
+    "form_name": "Name",
+    "form_phone": "Phone",
+    "form_email": "Email",
+    "form_message": "Message",
+    "form_submit": "Send Message",
+    "address_title": "Address",
+    "address_value": "Rio Papaloapan #308, Col. Mexico, Monterrey, N.L CP64710",
+    "email_value": "ventas.online@hard-ware.com.mx",
+    "phone_value": "818 3652 769",
+    "hours_title": "Business Hours",
+    "hours_value": "Monday - Friday: 8:00 am - 6:00 pm"
+  }
+}

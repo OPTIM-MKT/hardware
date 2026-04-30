@@ -3,10 +3,10 @@
 import ThemeToggle from "./shared/ThemeToggle.astro";
 
 const navLinks = [
-  { label: "Inicio",    href: "/" },
-  { label: "Nosotros",  href: "/about" },
-  { label: "Servicios", href: "/#services" },
-  { label: "Contacto",  href: "/contact" },
+  { label: "Inicio", href: "/" },
+  { label: "Nosotros", href: "/about" },
+  // { label: "Servicios", href: "/#services" },
+  { label: "Contacto", href: "/contact" },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -18,34 +18,40 @@ const currentPath = Astro.url.pathname;
 >
   <div class="container-lg">
     <nav class="flex items-center justify-between h-18 md:h-20">
-
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 group" aria-label="Hard-Ware Home">
-        <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary font-bold text-lg leading-none select-none">
+      <a
+        href="/"
+        class="flex items-center gap-2 group"
+        aria-label="Hard-Ware Home"
+      >
+        <span
+          class="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary font-bold text-lg leading-none select-none"
+        >
           H·W
         </span>
-        <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-accent transition-colors duration-300"
-          style="font-family: 'Syne', sans-serif;">
+        <span
+          id="nav-logo-text"
+          class="nav-link text-xl font-extrabold tracking-tight transition-colors duration-300"
+        >
           Hard<span class="text-accent">-</span>Ware
         </span>
       </a>
 
       <!-- Desktop links -->
       <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
-        {navLinks.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              class:list={[
-                "text-sm font-medium tracking-wide transition-colors duration-200 relative group",
-                "text-white/80 hover:text-white",
-              ]}
-            >
-              {link.label}
-              <span class="absolute -bottom-0.5 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
-            </a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="nav-link text-sm font-medium tracking-wide transition-colors duration-200 relative group"
+              >
+                {link.label}
+                <span class="absolute -bottom-0.5 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
+              </a>
+            </li>
+          ))
+        }
       </ul>
 
       <!-- Right actions -->
@@ -64,11 +70,17 @@ const currentPath = Astro.url.pathname;
         id="mobile-menu-btn"
         aria-label="Abrir menú"
         aria-expanded="false"
-        class="md:hidden flex flex-col gap-1.5 p-2 rounded-md text-white"
+        class="md:hidden flex flex-col gap-1.5 p-2 rounded-md"
       >
-        <span class="hamburger-bar block h-0.5 w-6 bg-white rounded transition-all duration-300"></span>
-        <span class="hamburger-bar block h-0.5 w-6 bg-white rounded transition-all duration-300"></span>
-        <span class="hamburger-bar block h-0.5 w-4 bg-white rounded transition-all duration-300"></span>
+        <span
+          class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
+          style="background: currentColor"></span>
+        <span
+          class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
+          style="background: currentColor"></span>
+        <span
+          class="hamburger-bar block h-0.5 w-4 rounded transition-all duration-300"
+          style="background: currentColor"></span>
       </button>
     </nav>
   </div>
@@ -79,14 +91,16 @@ const currentPath = Astro.url.pathname;
     class="md:hidden max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-primary/95 backdrop-blur-md border-t border-white/10"
   >
     <div class="container-lg py-6 flex flex-col gap-4">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class="text-white/80 hover:text-white text-base font-medium transition-colors py-1 border-b border-white/10 last:border-0"
-        >
-          {link.label}
-        </a>
-      ))}
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-white/80 hover:text-white text-base font-medium transition-colors py-1 border-b border-white/10 last:border-0"
+          >
+            {link.label}
+          </a>
+        ))
+      }
       <div class="flex items-center gap-3 pt-2">
         <ThemeToggle />
         <a
@@ -104,12 +118,47 @@ const currentPath = Astro.url.pathname;
 <div class="h-18 md:h-20 pointer-events-none" aria-hidden="true"></div>
 
 <style>
-  /* Initial state: transparent */
   #navbar {
     background: transparent;
   }
 
-  /* Scrolled state applied via JS */
+  /* Nav link color – default (light mode, transparent) */
+  #navbar .nav-link {
+    color: var(--color-ink);
+  }
+  #navbar .nav-link:hover {
+    color: var(--color-primary);
+  }
+
+  /* When solid (scrolled or not-home): always white text */
+  #navbar.scrolled .nav-link,
+  #navbar.always-solid .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  #navbar.scrolled .nav-link:hover,
+  #navbar.always-solid .nav-link:hover {
+    color: #ffffff;
+  }
+
+  /* Dark mode transparent: also use white text */
+  .dark #navbar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .dark #navbar .nav-link:hover {
+    color: #ffffff;
+  }
+
+  /* Hamburger color */
+  #navbar #mobile-menu-btn {
+    color: var(--color-ink);
+  }
+  #navbar.scrolled #mobile-menu-btn,
+  #navbar.always-solid #mobile-menu-btn,
+  .dark #navbar #mobile-menu-btn {
+    color: #ffffff;
+  }
+
+  /* Scrolled state */
   #navbar.scrolled {
     background: rgba(1, 51, 131, 0.95);
     backdrop-filter: blur(16px);
@@ -117,7 +166,7 @@ const currentPath = Astro.url.pathname;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   }
 
-  /* On pages that aren't home, always show bg */
+  /* Always solid (non-home pages) */
   #navbar.always-solid {
     background: rgba(1, 51, 131, 0.98);
     backdrop-filter: blur(16px);
@@ -133,7 +182,8 @@ const currentPath = Astro.url.pathname;
     if (!navbar) return;
 
     // Detect if we're on the home page
-    const isHome = window.location.pathname === "/" || window.location.pathname === "";
+    const isHome =
+      window.location.pathname === "/" || window.location.pathname === "";
     if (!isHome) {
       navbar.classList.add("always-solid");
     }

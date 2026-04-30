@@ -5,14 +5,19 @@ import ScrollReveal from "../shared/ScrollReveal";
 export default function ContactMap() {
   return (
     <ScrollReveal direction="up" delay={0.15}>
-      <div className="bento-card overflow-hidden !p-0">
+      <div className="bento-card overflow-hidden p-0">
         <div className="p-5 border-b border-line">
-          <h3 className="text-base font-bold text-ink" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <h3 className="text-base font-bold text-black dark:text-white">
             Encuéntranos
           </h3>
-          <p className="text-xs text-muted mt-0.5">Rio Papaloapan #308, Col. Mexico, Monterrey, N.L.</p>
+          <p className="text-xs text-muted mt-0.5">
+            Rio Papaloapan #308, Col. Mexico, Monterrey, N.L.
+          </p>
         </div>
-        <div className="relative w-full" style={{ paddingBottom: "60%", minHeight: "280px" }}>
+        <div
+          className="relative w-full"
+          style={{ paddingBottom: "60%", minHeight: "280px" }}
+        >
           <iframe
             title="Hard-Ware ubicación"
             className="absolute inset-0 w-full h-full border-0"
@@ -23,7 +28,9 @@ export default function ContactMap() {
           />
         </div>
         <div className="p-4 bg-primary/5 dark:bg-panel flex items-center justify-between">
-          <p className="text-xs text-muted">Lunes – Viernes: 8:00 am – 6:00 pm</p>
+          <p className="text-xs text-muted">
+            Lunes – Viernes: 8:00 am – 6:00 pm
+          </p>
           <a
             href="https://goo.gl/maps/monterrey"
             target="_blank"
@@ -31,8 +38,18 @@ export default function ContactMap() {
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary dark:text-accent hover:underline"
           >
             Ver en Google Maps
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+              />
             </svg>
           </a>
         </div>

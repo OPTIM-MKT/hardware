@@ -116,15 +116,31 @@ body {
   background-color: var(--color-panel);
   border: 1px solid var(--color-line);
   padding: 2rem;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition: box-shadow 0.3s, transform 0.3s, background-color 0.3s, border-color 0.3s;
 }
 .bento-card:hover {
   box-shadow: 0 8px 40px rgba(1, 51, 131, 0.12);
   transform: translateY(-3px);
 }
+/* Explicit dark overrides so no Tailwind utility can override the token */
 .dark .bento-card {
+  background-color: #0f1d38;
+  border-color: #1e2d4d;
   box-shadow: none;
 }
 .dark .bento-card:hover {
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Form inputs dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #0f1d38;
+  color: #e8edf8;
+  border-color: #1e2d4d;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #7a8caf;
 }

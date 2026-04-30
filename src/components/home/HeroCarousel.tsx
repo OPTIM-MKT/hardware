@@ -3,7 +3,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import type { SwiperClass } from "swiper/react";
 
 const slides = [
   {
@@ -46,24 +47,29 @@ const slides = [
 
 const stats = [
   { value: "+500", label: "Equipos Reparados" },
-  { value: "+15",  label: "Años de Experiencia" },
+  { value: "+15", label: "Años de Experiencia" },
   { value: "+120", label: "Clientes Activos" },
   { value: "100%", label: "Cobertura ZMM" },
 ];
 
 export default function HeroCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<SwiperClass | null>(null);
 
   return (
-    <section className="relative w-full" style={{ height: "100svh", minHeight: "600px" }}>
+    <section
+      className="relative w-full"
+      style={{ height: "100svh", minHeight: "600px" }}
+    >
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         effect="fade"
         autoplay={{ delay: 6000, disableOnInteraction: false }}
-        pagination={{ clickable: true, el: ".hero-pagination" }}
+        pagination={{ clickable: true }}
         loop
+        onSwiper={(s) => (swiperRef.current = s)}
         onSlideChange={(s) => setActiveIndex(s.realIndex)}
-        className="w-full h-full"
+        className="w-full h-full hero-swiper"
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={slide.id}>
@@ -120,11 +126,8 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="text-white font-extrabold leading-[1.05] mb-4 whitespace-pre-line"
-                      style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: "clamp(2.5rem, 6vw, 5rem)",
-                      }}
+                      className="text-white font-extrabold leading-[1.1] mb-4 whitespace-pre-line"
+                      style={{ fontSize: "clamp(1.8rem, 4vw, 3.5rem)" }}
                     >
                       {slide.title}
                     </motion.h1>
@@ -184,8 +187,18 @@ export default function HeroCarousel() {
                         }}
                       >
                         {slide.cta}
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2.5}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                          />
                         </svg>
                       </a>
                       <a
@@ -203,13 +216,31 @@ export default function HeroCarousel() {
         ))}
       </Swiper>
 
-      {/* Custom pagination dots */}
-      <div className="hero-pagination absolute bottom-32 left-0 right-0 flex justify-center gap-2 z-20" />
+      {/* Manual slide indicators */}
+      <div className="absolute bottom-[88px] left-0 right-0 flex justify-center gap-2 z-20 pb-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => swiperRef.current?.slideToLoop(i)}
+            aria-label={`Slide ${i + 1}`}
+            className="transition-all duration-300 rounded-full focus:outline-none"
+            style={{
+              width: activeIndex === i ? "28px" : "8px",
+              height: "8px",
+              background:
+                activeIndex === i ? "#fab702" : "rgba(255,255,255,0.45)",
+            }}
+          />
+        ))}
+      </div>
 
       {/* Stats bar */}
       <div
         className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10"
-        style={{ background: "rgba(1,51,131,0.85)", backdropFilter: "blur(12px)" }}
+        style={{
+          background: "rgba(1,51,131,0.85)",
+          backdropFilter: "blur(12px)",
+        }}
       >
         <div className="container-lg">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
@@ -223,7 +254,7 @@ export default function HeroCarousel() {
               >
                 <span
                   className="text-2xl md:text-3xl font-extrabold"
-                  style={{ color: "#fab702", fontFamily: "'Syne', sans-serif" }}
+                  style={{ color: "#fab702" }}
                 >
                   {stat.value}
                 </span>

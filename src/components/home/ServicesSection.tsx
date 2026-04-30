@@ -174,7 +174,7 @@ export default function ServicesSection() {
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
                   {svc.icon}
                 </div>
-                <h3 className="text-lg font-bold text-black dark:text-slate-400 group-hover:text-white transition-colors">
+                <h3 className="text-lg font-bold text-black dark:text-slate-400 group-hover:text-accent transition-colors">
                   {svc.title}
                 </h3>
                 <p className="text-muted text-sm leading-relaxed flex-1">

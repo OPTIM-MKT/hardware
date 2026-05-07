@@ -1,9 +1,13 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-// ────────────────────────────────────────────────
-// Marcas
-// ────────────────────────────────────────────────
+const productoEnMarca = z.object({
+  nombre: z.string(),
+  imagen: z.string(),
+  slug: z.string().optional(),
+  descripcion: z.string().optional(),
+});
+
 const marcas = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/marcas" }),
   schema: z.object({
@@ -13,33 +17,32 @@ const marcas = defineCollection({
     distribuidorAutorizadoMX: z.boolean().default(false),
     sitioWeb: z.string().url().optional(),
     categorias: z.array(z.string()).default([]),
+    productos: z.array(productoEnMarca).default([]),
   }),
 });
 
-// ────────────────────────────────────────────────
-// Industrias
-// ────────────────────────────────────────────────
+const taxonomia = z.object({
+  nombre: z.string(),
+  titulo: z.string().optional(),
+  descripcion: z.string(),
+  imagen: z.string().optional(),
+  icono: z.string().optional(),
+  retosComunes: z.array(z.string()).default([]),
+  solucionesRecomendadas: z.array(z.string()).default([]),
+  productosRelevantes: z.array(z.string()).default([]),
+  marcasRelacionadas: z.array(z.string()).default([]),
+});
+
 const industrias = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/industrias" }),
-  schema: z.object({
-    nombre: z.string(),
-    descripcion: z.string().optional(),
-    icono: z.string().optional(),
-  }),
+  schema: taxonomia,
 });
 
-// ────────────────────────────────────────────────
-// Soluciones
-// ────────────────────────────────────────────────
 const soluciones = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/soluciones" }),
-  schema: z.object({
-    nombre: z.string(),
-    tagline: z.string(),
-    descripcion: z.string(),
-    imagen: z.string().optional(),
-    // ids de industrias como strings (se resuelven manualmente en las páginas)
-    industrias: z.array(z.string()).optional(),
+  schema: taxonomia.extend({
+    tagline: z.string().optional(),
+    industrias: z.array(z.string()).default([]),
     beneficios: z.array(z.string()).default([]),
     ctaLabel: z.string().default("Cotizar Solución"),
     ctaHref: z.string().default("/contact"),
@@ -47,14 +50,10 @@ const soluciones = defineCollection({
   }),
 });
 
-// ────────────────────────────────────────────────
-// Productos
-// ────────────────────────────────────────────────
 const productos = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/productos" }),
   schema: z.object({
     nombre: z.string(),
-    // id de marca como string (se resuelve manualmente en las páginas)
     marca: z.string(),
     descripcion: z.string(),
     descripcionLarga: z.string().optional(),

@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AboutBento from "../components/about/AboutBento";
+import ValueProposition from "../components/about/ValueProposition";
 ---
 
 <Layout
@@ -26,6 +27,8 @@ import AboutBento from "../components/about/AboutBento";
     </div>
   </div>
 
+  <!-- Propuesta de valor: HardWare ofrece soluciones integrales -->
+  <ValueProposition client:visible />
   <!-- Bento content -->
   <AboutBento client:visible />
 </Layout>

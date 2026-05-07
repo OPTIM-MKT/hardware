@@ -2,23 +2,47 @@
 import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/home/HeroCarousel";
 import ServicesSection from "../components/home/ServicesSection";
-import BrandsGrid from "../components/home/BrandsGrid";
+import BrandsPreview from "../components/home/BrandsPreview.astro";
+import IndustriesPreview from "../components/home/IndustriesPreview.astro";
+import SolutionsPreview from "../components/home/SolutionsPreview.astro";
 import HomeContactTeaser from "../components/home/HomeContactTeaser";
+
+const FEATURED_BRANDS = [
+  "zebra",
+  "panasonic",
+  "key",
+  "inkanto",
+  "3dconnexion",
+  "omron",
+  "poly",
+  "sew-eurodrive",
+];
+
+const FEATURED_INDUSTRIES = [
+  "manufactura",
+  "logistica",
+  "almacenes",
+  "retail",
+  "salud",
+  "ingenieria-cad",
+  "gobierno",
+  "operaciones-exteriores",
+];
 ---
 
 <Layout
-  title="Hard-Ware | Soluciones Industriales en Tecnología, Impresión e Identificación para Empresas en México"
-  description="Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell, SATO y más."
+  title="Hard-Ware | Distribuidor autorizado en México · Tecnología, impresión, identificación y automatización"
+  description="HardWare es distribuidor autorizado en México de Zebra, Panasonic Rugged, Key, Inkanto, 3DConnexion, Omron, Poly y SEW Eurodrive (vía MG Industrial Imports). Soluciones industriales integrales."
 >
-  <!-- Hero B2B -->
   <HeroCarousel client:load />
 
-  <!-- Brands / Distribuidores Autorizados -->
-  <BrandsGrid client:visible />
+  <BrandsPreview featuredSlugs={FEATURED_BRANDS} limit={8} />
 
-  <!-- Services bento grid -->
+  <IndustriesPreview featuredSlugs={FEATURED_INDUSTRIES} limit={8} />
+
+  <SolutionsPreview limit={6} />
+
   <ServicesSection client:visible />
 
-  <!-- Contact teaser -->
   <HomeContactTeaser client:visible />
 </Layout>

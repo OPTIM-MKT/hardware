@@ -116,6 +116,15 @@ const productOptions = productos.map((p) => ({
   </div>
 </section>
 
+<!-- Contenido Markdown -->
+<section class="section-padding pb-0">
+  <div class="container-lg">
+    <article class="prose dark:prose-invert prose-lg max-w-4xl prose-headings:font-extrabold prose-a:text-primary dark:prose-a:text-accent prose-img:rounded-2xl prose-headings:text-ink">
+      <slot />
+    </article>
+  </div>
+</section>
+
 <!-- Retos comunes -->
 {
   data.retosComunes.length > 0 && (
@@ -213,9 +222,9 @@ const productOptions = productos.map((p) => ({
               }
               titulo={p.data.nombre}
               descripcion={p.data.descripcion}
-              href={`/productos/${p.id}`}
+              href={`#cotizar`}
               eyebrow={p.data.categoria ?? "Producto"}
-              ctaLabel="Ver producto"
+              ctaLabel="Cotizar producto"
             />
           ))}
         </div>

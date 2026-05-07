@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import TaxonomyDetail from "../../components/shared/TaxonomyDetail.astro";
 
@@ -7,17 +7,21 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const industrias = await getCollection("industrias");
-  return industrias.map((i) => ({ params: { slug: i.id } }));
+  return industrias.map((i) => ({ params: { id: i.id } }));
 }
 
-const { slug } = Astro.params;
-const industria = await getEntry("industrias", slug!);
+const { id } = Astro.params;
+const industria = await getEntry("industrias", id!);
 if (!industria) return Astro.redirect("/404");
+
+const { Content } = await render(industria);
 ---
 
 <Layout
   title={`${industria.data.nombre} | Soluciones para tu industria | Hard-Ware`}
   description={industria.data.descripcion}
 >
-  <TaxonomyDetail kind="industria" data={industria.data} slug={industria.id} />
+  <TaxonomyDetail kind="industria" data={industria.data} slug={industria.id}>
+    <Content />
+  </TaxonomyDetail>
 </Layout>

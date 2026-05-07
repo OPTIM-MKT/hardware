@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import TaxonomyDetail from "../../components/shared/TaxonomyDetail.astro";
 
@@ -7,17 +7,21 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const soluciones = await getCollection("soluciones");
-  return soluciones.map((s) => ({ params: { slug: s.id } }));
+  return soluciones.map((s) => ({ params: { id: s.id } }));
 }
 
-const { slug } = Astro.params;
-const solucion = await getEntry("soluciones", slug!);
+const { id } = Astro.params;
+const solucion = await getEntry("soluciones", id!);
 if (!solucion) return Astro.redirect("/404");
+
+const { Content } = await render(solucion);
 ---
 
 <Layout
   title={`${solucion.data.nombre} | Solución HardWare | Distribuidor autorizado en México`}
   description={solucion.data.descripcion}
 >
-  <TaxonomyDetail kind="solucion" data={solucion.data} slug={solucion.id} />
+  <TaxonomyDetail kind="solucion" data={solucion.data} slug={solucion.id}>
+    <Content />
+  </TaxonomyDetail>
 </Layout>

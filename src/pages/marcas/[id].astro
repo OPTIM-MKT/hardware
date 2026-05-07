@@ -7,11 +7,11 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const marcas = await getCollection("marcas");
-  return marcas.map((m) => ({ params: { slug: m.id } }));
+  return marcas.map((m) => ({ params: { id: m.id } }));
 }
 
-const { slug } = Astro.params;
-const marca = await getEntry("marcas", slug!);
+const { id } = Astro.params;
+const marca = await getEntry("marcas", id!);
 if (!marca) return Astro.redirect("/404");
 
 interface ProductoCard {
@@ -23,7 +23,7 @@ interface ProductoCard {
 
 const productosCollection = await getCollection("productos");
 const productosFromCollection: ProductoCard[] = productosCollection
-  .filter((p) => p.data.marca === slug)
+  .filter((p) => p.data.marca === id)
   .map((p) => ({
     nombre: p.data.nombre,
     imagen: p.data.imagen ?? "",
@@ -211,7 +211,7 @@ const defaultProduct = productOptions[0]?.value ?? "";
         productos.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {productos.map((p) => {
-              const href = p.slug ? `/productos/${p.slug}` : "#cotizar";
+              const href = `#cotizar`;
               return (
                 <a
                   href={href}
@@ -235,8 +235,8 @@ const defaultProduct = productOptions[0]?.value ?? "";
                         {p.descripcion}
                       </p>
                     )}
-                    <span class="mt-auto inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary dark:text-accent group-hover:gap-3 transition-all">
-                      Ver producto
+                      <span class="mt-auto inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary dark:text-accent group-hover:gap-3 transition-all">
+                        Cotizar producto
                       <svg
                         class="w-3 h-3"
                         fill="none"

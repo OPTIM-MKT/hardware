@@ -2,19 +2,19 @@
 import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/home/HeroCarousel";
 import ServicesSection from "../components/home/ServicesSection";
-import PartnersSection from "../components/home/PartnersSection";
+import BrandsGrid from "../components/home/BrandsGrid";
 import HomeContactTeaser from "../components/home/HomeContactTeaser";
 ---
 
 <Layout
-  title="Hard-Ware | Reparación y Mantenimiento Industrial"
-  description="Expertos en reparación de equipos industriales de control, mantenimiento de dispositivos móviles y gestión de garantías en Monterrey, N.L."
+  title="Hard-Ware | Soluciones Industriales en Tecnología, Impresión e Identificación para Empresas en México"
+  description="Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell, SATO y más."
 >
-  <!-- Hero Swiper full-screen -->
+  <!-- Hero B2B -->
   <HeroCarousel client:load />
 
-  <!-- Partners / Alianzas -->
-  <PartnersSection client:visible />
+  <!-- Brands / Distribuidores Autorizados -->
+  <BrandsGrid client:visible />
 
   <!-- Services bento grid -->
   <ServicesSection client:visible />

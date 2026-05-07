@@ -9,44 +9,49 @@ import type { SwiperClass } from "swiper/react";
 const slides = [
   {
     id: 1,
-    tag: "Soluciones Industriales",
-    title: "Si lo puedes\nimaginar, lo\npodemos resolver.",
+    tag: "Soluciones Industriales B2B",
+    title: "Tecnología,\nimpresión e\nidentificación",
     image:
       "https://images.unsplash.com/photo-1561158250-01426799e9e0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    subtitle: "Reparación & Mantenimiento",
+    subtitle: "Soluciones industriales para empresas en México",
     description:
-      "En el momento menos oportuno, su equipo presenta una falla. Permítanos poner a su servicio nuestra experiencia en reparación de equipos industriales de control.",
-    cta: "Contáctanos",
-    ctaHref: "/contact",
+      "Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell y más.",
+    cta: "Ver Soluciones",
+    ctaHref: "/#services",
+    cta2: "Cotizar",
+    cta2Href: "/contact",
     bg: "from-primary via-secondary to-[#0a1a40]",
     accent: "#fab702",
   },
   {
     id: 2,
-    tag: "Dispositivos Móviles",
-    title: "Backup,\nReparación &\nMantenimiento.",
+    tag: "Identificación & Automatización",
+    title: "Trazabilidad\ntotal para tu\noperación.",
     image:
-      "https://images.unsplash.com/photo-1644115019513-8ff6d81c29ea?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-
-    subtitle: "Terminales · Impresoras · Laptops",
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    subtitle: "Terminales · Impresoras · Escáneres · RFID",
     description:
-      "Servicio integral para terminales portátiles, impresoras móviles y laptops de uso rudo. Mantenemos tu operación activa sin interrupciones.",
-    cta: "Ver Servicios",
-    ctaHref: "/#services",
+      "Implementamos sistemas de identificación automática y trazabilidad end-to-end que reducen errores y aumentan la eficiencia de tu cadena de suministro.",
+    cta: "Ver Productos",
+    ctaHref: "/productos",
+    cta2: "Hablar con un experto",
+    cta2Href: "/contact",
     bg: "from-[#0a1a40] via-primary to-secondary",
     accent: "#fab702",
   },
   {
     id: 3,
-    tag: "Alianzas Tecnológicas",
-    title: "Socios de\nlas marcas\nlíderes.",
+    tag: "Distribuidores Autorizados",
+    title: "Socios de las\nmarcas líderes\nen México.",
     image:
       "https://images.unsplash.com/photo-1618950399704-86fb060cd003?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    subtitle: "Zebra · Honeywell · Datalogic",
+    subtitle: "Zebra · Honeywell · SATO · Datalogic",
     description:
-      "Contamos con relaciones cercanas con las marcas punteras que resuelven los problemas de nuestros clientes. Colaboración para el desarrollo de proyectos tecnológicos.",
-    cta: "Conoce más",
-    ctaHref: "/about",
+      "Distribuidor autorizado oficial en México. Garantía de fábrica, soporte técnico especializado y acceso a programas de servicio directo del fabricante.",
+    cta: "Ver Marcas",
+    ctaHref: "/#marcas",
+    cta2: "Conocer más",
+    cta2Href: "/about",
     bg: "from-secondary via-[#0d1f4a] to-primary",
     accent: "#fab702",
   },
@@ -213,10 +218,10 @@ export default function HeroCarousel() {
                         </svg>
                       </a>
                       <a
-                        href="/#services"
+                        href={slide.cta2Href}
                         className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
                       >
-                        Servicios
+                        {slide.cta2}
                       </a>
                     </motion.div>
                   )}

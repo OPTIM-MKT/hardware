@@ -1,0 +1,138 @@
+---
+// SolutionCard.astro — Enterprise-style card for Soluciones section + Home
+interface Props {
+  nombre: string;
+  tagline: string;
+  descripcion: string;
+  imagen?: string;
+  beneficios?: string[];
+  ctaLabel?: string;
+  ctaHref?: string;
+  slug: string;
+  variant?: "compact" | "full"; // compact for home grid, full for soluciones page
+}
+
+const {
+  nombre,
+  tagline,
+  descripcion,
+  imagen,
+  beneficios = [],
+  ctaLabel = "Cotizar Solución",
+  ctaHref = "/contact",
+  slug,
+  variant = "full",
+} = Astro.props;
+---
+
+<article
+  class={`solution-card group relative overflow-hidden rounded-3xl border border-line bg-panel transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl ${variant === "compact" ? "flex flex-col" : "flex flex-col md:flex-row"}`}
+  data-solution={slug}
+>
+  {/* Image panel */}
+  {
+    imagen && (
+      <div
+        class={`relative overflow-hidden shrink-0 ${variant === "compact" ? "h-44 w-full rounded-t-3xl" : "h-64 md:h-auto md:w-80 rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none"}`}
+      >
+        <img
+          src={imagen}
+          alt={nombre}
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+        {/* Gradient overlay */}
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
+        {/* Category badge over image */}
+        <div class="absolute bottom-4 left-4">
+          <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-primary bg-accent">
+            Solución Enterprise
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  {/* Content panel */}
+  <div class="flex flex-col justify-between p-7 md:p-10 flex-1 gap-6">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+        {tagline}
+      </p>
+      <h3 class="text-xl md:text-2xl font-extrabold text-ink mb-3 leading-tight">
+        {nombre}
+      </h3>
+      <p class="text-muted text-sm leading-relaxed">
+        {descripcion}
+      </p>
+
+      {/* Benefits list */}
+      {
+        beneficios.length > 0 && (
+          <ul class="mt-5 space-y-2">
+            {beneficios.slice(0, variant === "compact" ? 2 : 4).map((b) => (
+              <li class="flex items-start gap-2 text-sm text-ink">
+                <svg
+                  class="w-4 h-4 mt-0.5 shrink-0 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                  />
+                </svg>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    {/* CTAs */}
+    <div class="flex flex-wrap items-center gap-3">
+      <a
+        href={ctaHref}
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-xs uppercase tracking-widest text-primary hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
+        style="background: #fab702;"
+      >
+        {ctaLabel}
+        <svg
+          class="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+          />
+        </svg>
+      </a>
+      {
+        variant === "full" && (
+          <a
+            href={`/soluciones/${slug}`}
+            class="text-xs font-semibold text-muted hover:text-primary dark:hover:text-accent uppercase tracking-widest underline-offset-4 hover:underline transition-colors"
+          >
+            Ver detalles
+          </a>
+        )
+      }
+    </div>
+  </div>
+
+  {/* Decorative corner accent */}
+  <div
+    class="absolute top-0 right-0 w-24 h-24 rounded-bl-[4rem] opacity-5 pointer-events-none"
+    style="background: var(--color-accent);"
+  >
+  </div>
+</article>

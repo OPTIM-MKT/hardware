@@ -7,6 +7,7 @@ import Footer from "../components/Footer.astro";
 import ScrollTop from "../components/shared/ScrollTop.astro";
 import CartPanel from "../components/cart/CartPanel";
 import AppToaster from "../components/shared/AppToaster";
+import Contact from "@/pages/contact.astro";
 
 interface Props {
   title?: string;
@@ -58,7 +59,9 @@ const {
       (function () {
         function applyTheme() {
           const stored = localStorage.getItem("theme");
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
           const isDark = stored === "dark" || (!stored && prefersDark);
           document.documentElement.classList.toggle("dark", isDark);
         }
@@ -67,7 +70,9 @@ const {
         // Reapply *before* paint of the new page so there's no flash.
         document.addEventListener("astro:before-swap", (e) => {
           const stored = localStorage.getItem("theme");
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
           const isDark = stored === "dark" || (!stored && prefersDark);
           /** @type {Document} */
           const newDoc = e.newDocument;

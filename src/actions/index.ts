@@ -10,18 +10,20 @@ import { EmailTemplate } from "@/components/contact/email-template";
 import { renderToString } from "react-dom/server";
 import React from "react";
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
-const FROM_ADDRESS =
-  import.meta.env.RESEND_FROM ?? "Homii Privacidad <onboarding@resend.dev>";
-const TO_ADDRESS =
-  import.meta.env.RESEND_TO ?? "socialmedia@optimmkt.com";
 
 export const server = {
   send: defineAction({
     accept: "json",
     input: contactSchema,
     handler: async (data) => {
+      const resend = new Resend(import.meta.env.RESEND_API_KEY);
+      
+      const FROM_ADDRESS =
+        import.meta.env.RESEND_FROM ?? "Homii Privacidad <onboarding@resend.dev>";
+      const TO_ADDRESS =
+        import.meta.env.RESEND_TO ?? "socialmedia@optimmkt.com";
+
       const presupuestoLabel =
         data.modo === "proyecto"
           ? getLabelByValue(PRESUPUESTO_OPTIONS, data.presupuesto)

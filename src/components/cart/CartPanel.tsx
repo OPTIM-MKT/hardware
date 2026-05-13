@@ -50,7 +50,7 @@ export default function CartPanel() {
           >
             <header className="flex items-center justify-between px-6 py-5 border-b border-line">
               <div>
-                <h2 className="text-lg font-bold text-ink">Tu carrito</h2>
+                <h2 className="text-lg font-bold text-ink dark:text-white">Tu carrito</h2>
                 <p className="text-xs text-muted">
                   {items.length} producto{items.length === 1 ? "" : "s"} para cotizar
                 </p>
@@ -102,7 +102,7 @@ export default function CartPanel() {
                         <a
                           href={`/productos/${item.slug}`}
                           onClick={() => cartStore.closePanel()}
-                          className="text-sm font-semibold text-ink hover:text-primary line-clamp-2"
+                          className="text-sm font-semibold text-ink dark:text-accent hover:text-primary dark:hover:text-accent/80 line-clamp-2"
                         >
                           {item.nombre}
                         </a>
@@ -184,7 +184,7 @@ function EmptyState() {
           />
         </svg>
       </div>
-      <p className="text-sm font-semibold text-ink">Tu carrito está vacío</p>
+      <p className="text-sm font-semibold text-ink dark:text-white">Tu carrito está vacío</p>
       <p className="text-xs text-muted max-w-[220px] leading-relaxed">
         Agrega productos desde el catálogo para solicitar tu cotización personalizada.
       </p>
@@ -216,7 +216,7 @@ function QuantityStepper({
       >
         −
       </button>
-      <span className="text-xs font-semibold text-ink min-w-6 text-center tabular-nums">
+      <span className="text-xs font-semibold text-ink dark:text-accent min-w-6 text-center tabular-nums">
         {value}
       </span>
       <button

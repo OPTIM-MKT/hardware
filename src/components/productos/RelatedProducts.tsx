@@ -30,7 +30,7 @@ export default function RelatedProducts({
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
               También te puede interesar
             </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-ink">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-ink dark:text-white">{title}</h2>
           </div>
           <a
             href="/productos"
@@ -92,7 +92,7 @@ function RelatedCard({ product }: { product: RelatedProduct }) {
         <p className="text-[10px] font-semibold uppercase tracking-widest text-muted">
           {product.marca}
         </p>
-        <h3 className="text-sm font-bold text-ink line-clamp-2 group-hover:text-primary transition-colors">
+        <h3 className="text-sm font-bold text-ink dark:text-white line-clamp-2 group-hover:text-primary transition-colors">
           {product.nombre}
         </h3>
       </div>

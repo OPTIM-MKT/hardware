@@ -40,11 +40,12 @@ export default function ContactForm({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      modo: "proyecto",
+      modo: initialMode,
       nombre: "",
       empresa: "",
       email: "",
@@ -56,26 +57,69 @@ export default function ContactForm({
     } as unknown as ContactFormData,
   });
 
+  // Keep RHF state in sync with the mode toggle. A hidden input bound to
+  // `register("modo")` doesn't fire onChange when its `value` prop mutates,
+  // so RHF would keep the default and the discriminated-union validation
+  // would silently fail.
+  useEffect(() => {
+    setValue("modo", mode as ContactFormData["modo"], {
+      shouldValidate: false,
+      shouldDirty: false,
+    });
+  }, [mode, setValue]);
+
+  // Mirror the cart into form state so zod's `items.min(1)` validation passes
+  // (and so we always submit the latest cart, not a stale closure).
+  useEffect(() => {
+    if (mode === "productos") {
+      setValue("items" as any, cartItems as any, {
+        shouldValidate: false,
+        shouldDirty: false,
+      });
+    }
+  }, [mode, cartItems, setValue]);
+
   const onSubmit: SubmitHandler<ContactFormData> = async (data) => {
     const payload: ContactFormData =
       data.modo === "productos"
         ? { ...data, items: cartItems }
         : data;
 
-    const { error } = await actions.send(payload);
+    try {
+      const { error } = await actions.send(payload);
 
-    if (error) {
-      toast.error("No pudimos enviar tu solicitud", {
-        description: error.message ?? "Inténtalo de nuevo en unos minutos.",
+      if (error) {
+        console.error("[ContactForm] action returned error:", error);
+        toast.error("No pudimos enviar tu solicitud", {
+          description: error.message ?? "Inténtalo de nuevo en unos minutos.",
+        });
+        return;
+      }
+
+      toast.success("Solicitud enviada", {
+        description: "Te contactaremos en menos de 24 h hábiles.",
       });
-      return;
+      if (payload.modo === "productos") cartStore.clear();
+      setSubmitted(true);
+    } catch (err) {
+      console.error("[ContactForm] submit threw:", err);
+      toast.error("Error inesperado", {
+        description:
+          err instanceof Error
+            ? err.message
+            : "Revisa tu conexión e inténtalo otra vez.",
+      });
     }
+  };
 
-    toast.success("Solicitud enviada", {
-      description: "Te contactaremos en menos de 24 h hábiles.",
+  const onInvalid = (formErrors: typeof errors) => {
+    console.warn("[ContactForm] validation errors:", formErrors);
+    const firstMsg =
+      Object.values(formErrors)[0]?.message ??
+      "Revisa los campos marcados en rojo.";
+    toast.error("Faltan campos por completar", {
+      description: String(firstMsg),
     });
-    if (payload.modo === "productos") cartStore.clear();
-    setSubmitted(true);
   };
 
   if (submitted) {
@@ -92,7 +136,7 @@ export default function ContactForm({
           >
             ✓
           </div>
-          <h3 className="text-2xl font-bold text-ink">¡Mensaje enviado!</h3>
+          <h3 className="text-2xl font-bold text-black dark:text-white">¡Mensaje enviado!</h3>
           <p className="text-muted text-sm max-w-xs leading-relaxed">
             Nuestro equipo te contactará en menos de{" "}
             <strong>24 horas hábiles</strong>.
@@ -121,17 +165,16 @@ export default function ContactForm({
         >
           Hard-Ware · Distribuidor autorizado en México
         </span>
-        <h2 className="text-2xl font-bold text-ink mb-1">Solicita tu cotización</h2>
+        <h2 className="text-2xl font-bold text-black dark:text-white mb-1">Solicita tu cotización</h2>
         <p className="text-muted text-sm">
           Te respondemos en menos de 24 h hábiles.
         </p>
       </header>
 
       <ModeSwitch mode={mode} onChange={setMode} />
-      <input type="hidden" {...register("modo")} value={mode} />
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, onInvalid)}
         noValidate
         className="space-y-5 mt-8"
       >

@@ -53,14 +53,27 @@ const {
       }}
     />
 
-    <!-- Dark mode init: runs before paint to avoid flash -->
+    <!-- Dark mode init: runs before paint to avoid flash + persists across View Transitions -->
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (stored === "dark" || (!stored && prefersDark)) {
-          document.documentElement.classList.add("dark");
+        function applyTheme() {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const isDark = stored === "dark" || (!stored && prefersDark);
+          document.documentElement.classList.toggle("dark", isDark);
         }
+        applyTheme();
+        // ClientRouter swaps <head>/<body>; the html.dark class can be lost.
+        // Reapply *before* paint of the new page so there's no flash.
+        document.addEventListener("astro:before-swap", (e) => {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const isDark = stored === "dark" || (!stored && prefersDark);
+          /** @type {Document} */
+          const newDoc = e.newDocument;
+          newDoc.documentElement.classList.toggle("dark", isDark);
+        });
+        document.addEventListener("astro:after-swap", applyTheme);
       })();
     </script>
   </head>

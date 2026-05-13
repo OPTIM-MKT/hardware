@@ -13,9 +13,9 @@ import React from "react";
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 const FROM_ADDRESS =
-  import.meta.env.RESEND_FROM ?? "Hard-Ware <contacto@send.hard-ware.com.mx>";
+  import.meta.env.RESEND_FROM ?? "Homii Privacidad <onboarding@resend.dev>";
 const TO_ADDRESS =
-  import.meta.env.RESEND_TO ?? "ventas.online@hard-ware.com.mx";
+  import.meta.env.RESEND_TO ?? "socialmedia@optimmkt.com";
 
 export const server = {
   send: defineAction({

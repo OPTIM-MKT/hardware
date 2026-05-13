@@ -153,7 +153,7 @@ export default function ProductCatalog({ products }: Props) {
               className="fixed top-0 left-0 bottom-0 z-50 w-[85%] max-w-sm p-6 overflow-y-auto md:hidden"
             >
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold text-ink">Filtros</h3>
+                <h3 className="text-lg font-bold text-ink dark:text-white">Filtros</h3>
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(false)}
@@ -194,7 +194,7 @@ export default function ProductCatalog({ products }: Props) {
 
         {filtered.length === 0 ? (
           <div className="bento-card flex flex-col items-center text-center py-16 gap-3">
-            <p className="text-base font-semibold text-ink">Sin resultados</p>
+            <p className="text-base font-semibold text-ink dark:text-white">Sin resultados</p>
             <p className="text-sm text-muted max-w-sm">
               No encontramos productos con esos criterios. Ajusta los filtros o busca otra palabra.
             </p>
@@ -289,9 +289,9 @@ function FiltersPanel({
           type="checkbox"
           checked={soloDisponibles}
           onChange={(e) => onSoloDisponibles(e.target.checked)}
-          className="w-4 h-4 rounded border-line accent-primary"
+          className="w-4 h-4 rounded border-line accent-primary dark:accent-[#fab702]"
         />
-        <span className="text-sm text-ink">Solo disponibles</span>
+        <span className="text-sm text-ink dark:text-white">Solo disponibles</span>
       </label>
 
       {hasFilters && (
@@ -329,9 +329,9 @@ function FilterGroup({
             type="radio"
             checked={value === "all"}
             onChange={() => onChange("all")}
-            className="w-4 h-4 accent-primary"
+            className="w-4 h-4 accent-primary dark:accent-[#fab702]"
           />
-          <span className="text-sm text-ink">Todas</span>
+          <span className="text-sm text-ink dark:text-white">Todas</span>
         </label>
         {options.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">
@@ -339,9 +339,9 @@ function FilterGroup({
               type="radio"
               checked={value === opt}
               onChange={() => onChange(opt)}
-              className="w-4 h-4 accent-primary"
+              className="w-4 h-4 accent-primary dark:accent-[#fab702]"
             />
-            <span className="text-sm text-ink">{opt}</span>
+            <span className="text-sm text-ink dark:text-white">{opt}</span>
           </label>
         ))}
       </div>
@@ -437,7 +437,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         <p className="text-[10px] font-semibold uppercase tracking-widest text-muted">
           {product.marca} · {product.categoria}
         </p>
-        <h3 className="text-base font-bold text-ink line-clamp-2 group-hover:text-primary transition-colors">
+        <h3 className="text-base font-bold text-ink dark:text-white line-clamp-2 group-hover:text-primary transition-colors">
           {product.nombre}
         </h3>
         <p className="text-sm text-muted line-clamp-2">{product.descripcion}</p>

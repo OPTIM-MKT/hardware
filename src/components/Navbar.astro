@@ -4,6 +4,7 @@ import ThemeToggle from "./shared/ThemeToggle.astro";
 import CartButton from "./cart/CartButton";
 
 const navLinks = [
+  // { label: "Inicio", href: "/" },
   { label: "Productos", href: "/productos" },
   { label: "Blogs", href: "/blogs" },
   { label: "Nosotros", href: "/about" },
@@ -79,22 +80,22 @@ const isActive = (href: string) => {
       <!-- Mobile actions: cart + hamburger -->
       <div class="flex md:hidden items-center gap-1">
         <CartButton client:load />
-      <button
-        id="mobile-menu-btn"
-        aria-label="Abrir menú"
-        aria-expanded="false"
-        class="flex flex-col gap-1.5 p-2 rounded-md"
-      >
-        <span
-          class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
-          style="background: currentColor"></span>
-        <span
-          class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
-          style="background: currentColor"></span>
-        <span
-          class="hamburger-bar block h-0.5 w-4 rounded transition-all duration-300"
-          style="background: currentColor"></span>
-      </button>
+        <button
+          id="mobile-menu-btn"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          class="flex flex-col gap-1.5 p-2 rounded-md"
+        >
+          <span
+            class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
+            style="background: currentColor"></span>
+          <span
+            class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
+            style="background: currentColor"></span>
+          <span
+            class="hamburger-bar block h-0.5 w-4 rounded transition-all duration-300"
+            style="background: currentColor"></span>
+        </button>
       </div>
     </nav>
   </div>

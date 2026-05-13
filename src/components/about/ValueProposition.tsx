@@ -128,8 +128,7 @@ export default function ValueProposition({
               </p>
               <a
                 href="/productos"
-                className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-widest text-primary hover:-translate-y-0.5 transition-all duration-300"
-                style={{ background: "#fab702" }}
+                className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-widest bg-accent text-primary hover:-translate-y-0.5 transition-all duration-300"
               >
                 Ver catálogo
                 <svg

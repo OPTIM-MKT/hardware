@@ -33,7 +33,7 @@ export default function AddToCartButton({
 
   const styles =
     variant === "primary"
-      ? "bg-accent text-primary hover:-translate-y-0.5 hover:shadow-lg"
+      ? "bg-accent text-primary dark:text-accent hover:-translate-y-0.5 hover:shadow-lg"
       : "border border-line text-ink hover:border-primary hover:text-primary";
 
   return (
@@ -48,7 +48,7 @@ export default function AddToCartButton({
           >
             −
           </button>
-          <span className="text-sm font-semibold text-ink min-w-8 text-center tabular-nums">
+          <span className="text-sm font-semibold text-primary dark:text-accent min-w-8 text-center tabular-nums">
             {cantidad}
           </span>
           <button
@@ -67,7 +67,13 @@ export default function AddToCartButton({
         onClick={handleAdd}
         className={`inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${styles}`}
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

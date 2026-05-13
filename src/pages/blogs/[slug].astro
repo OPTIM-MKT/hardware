@@ -34,7 +34,7 @@ const related = all
         <span>/</span>
         <a href="/blogs" class="hover:text-primary transition-colors">Blog</a>
         <span>/</span>
-        <span class="text-ink line-clamp-1">{data.titulo}</span>
+        <span class="text-ink dark:text-white line-clamp-1">{data.titulo}</span>
       </nav>
 
       <header class="mb-10">
@@ -42,7 +42,7 @@ const related = all
           {data.categoria ?? "Artículo"} · {dateFormatter.format(data.fecha)}
           {data.tiempoLectura && <span> · {data.tiempoLectura} min lectura</span>}
         </p>
-        <h1 class="text-3xl md:text-5xl font-extrabold text-ink leading-tight mb-4">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-ink dark:text-white leading-tight mb-4">
           {data.titulo}
         </h1>
         <p class="text-lg text-muted leading-relaxed">{data.descripcion}</p>
@@ -67,7 +67,7 @@ const related = all
     related.length > 0 && (
       <section class="section-padding bg-slate-50 dark:bg-slate-950">
         <div class="container-lg">
-          <h2 class="text-2xl md:text-3xl font-bold text-ink mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-ink dark:text-white mb-8">
             Más artículos
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -89,7 +89,7 @@ const related = all
                 <p class="text-[10px] font-semibold uppercase tracking-widest text-muted">
                   {dateFormatter.format(p.data.fecha)}
                 </p>
-                <h3 class="text-sm font-bold text-ink line-clamp-2 group-hover:text-primary transition-colors">
+                <h3 class="text-sm font-bold text-ink dark:text-white line-clamp-2 group-hover:text-primary transition-colors">
                   {p.data.titulo}
                 </h3>
               </a>

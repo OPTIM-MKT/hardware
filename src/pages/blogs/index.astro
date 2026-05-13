@@ -36,7 +36,7 @@ const dateFormatter = new Intl.DateTimeFormat("es-MX", {
       {
         posts.length === 0 ? (
           <div class="bento-card text-center py-16">
-            <p class="text-base font-semibold text-ink">Pronto tendremos contenido</p>
+            <p class="text-base font-semibold text-ink dark:text-white">Pronto tendremos contenido</p>
             <p class="text-sm text-muted mt-2">
               Estamos preparando guías y artículos para ayudarte a sacar más provecho de tu operación.
             </p>
@@ -63,7 +63,7 @@ const dateFormatter = new Intl.DateTimeFormat("es-MX", {
                     {post.data.categoria ?? "Artículo"} ·{" "}
                     {dateFormatter.format(post.data.fecha)}
                   </p>
-                  <h2 class="text-lg font-bold text-ink line-clamp-2 group-hover:text-primary transition-colors">
+                  <h2 class="text-lg font-bold text-ink dark:text-white line-clamp-2 group-hover:text-primary transition-colors">
                     {post.data.titulo}
                   </h2>
                   <p class="text-sm text-muted line-clamp-3">

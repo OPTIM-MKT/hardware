@@ -61,7 +61,7 @@ const cartProduct = {
         <span>/</span>
         <a href="/productos" class="hover:text-primary transition-colors">Productos</a>
         <span>/</span>
-        <span class="text-ink line-clamp-1">{data.nombre}</span>
+        <span class="text-ink dark:text-white line-clamp-1">{data.nombre}</span>
       </nav>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-start">
@@ -100,7 +100,7 @@ const cartProduct = {
             <p class="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
               {data.marca} · {data.categoria}
             </p>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-ink mb-3 leading-tight">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-ink dark:text-white mb-3 leading-tight">
               {data.nombre}
             </h1>
             <p class="text-base text-muted leading-relaxed">{data.descripcion}</p>
@@ -116,7 +116,7 @@ const cartProduct = {
             data.caracteristicas.length > 0 && (
               <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 list-none p-0 m-0">
                 {data.caracteristicas.map((c) => (
-                  <li class="flex items-start gap-2 text-sm text-ink">
+                  <li class="flex items-start gap-2 text-sm text-ink dark:text-white">
                     <svg
                       class="w-4 h-4 mt-0.5 text-accent shrink-0"
                       fill="none"
@@ -174,7 +174,7 @@ const cartProduct = {
     data.especificaciones.length > 0 && (
       <section class="section-padding bg-slate-50 dark:bg-slate-950">
         <div class="container-lg">
-          <h2 class="text-2xl md:text-3xl font-bold text-ink mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-ink dark:text-white mb-8">
             Especificaciones técnicas
           </h2>
           <div class="bento-card p-0 overflow-hidden">
@@ -184,7 +184,7 @@ const cartProduct = {
                   <dt class="text-xs font-semibold uppercase tracking-widest text-muted">
                     {spec.label}
                   </dt>
-                  <dd class="text-sm text-ink m-0">{spec.value}</dd>
+                  <dd class="text-sm text-ink dark:text-white m-0">{spec.value}</dd>
                 </div>
               ))}
             </dl>
@@ -207,7 +207,7 @@ const cartProduct = {
           <p class="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
             Cotiza este producto
           </p>
-          <h2 class="text-2xl md:text-3xl font-bold text-ink mb-4 leading-tight">
+          <h2 class="text-2xl md:text-3xl font-bold text-black dark:text-white mb-4 leading-tight">
             ¿Listo para integrar <span class="text-primary dark:text-accent">{data.nombre}</span> en tu operación?
           </h2>
           <p class="text-sm text-muted leading-relaxed mb-4">
@@ -222,7 +222,7 @@ const cartProduct = {
               "Propuesta económica + técnica",
               "Asesoría sobre integración y volumen",
             ].map((bullet) => (
-              <li class="flex items-start gap-2 text-sm text-ink">
+              <li class="flex items-start gap-2 text-sm text-ink dark:text-white">
                 <svg
                   class="w-4 h-4 mt-0.5 text-accent shrink-0"
                   fill="none"

@@ -9,7 +9,7 @@ export default function CartButton() {
       type="button"
       onClick={() => cartStore.openPanel()}
       aria-label={`Abrir carrito${count ? ` (${count} artículos)` : ""}`}
-      className="relative inline-flex items-center justify-center w-10 h-10 rounded-full text-accent dark:text-white hover:bg-white/10 transition-colors cursor-pointer"
+      className="cart-btn relative inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors cursor-pointer"
     >
       <svg
         className="w-5 h-5"

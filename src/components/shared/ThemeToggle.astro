@@ -40,24 +40,24 @@
     transparent navbar on home is also against a colored hero).
   */
   .theme-toggle-btn {
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.35);
+    color: var(--nav-theme-color, #ffffff);
+    border-color: var(--nav-theme-border, rgba(255, 255, 255, 0.35));
     background: transparent;
   }
   .theme-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: var(--nav-theme-hover-bg, rgba(255, 255, 255, 0.12));
+    border-color: var(--nav-theme-hover-border, rgba(255, 255, 255, 0.6));
   }
 
   /*
     Dark mode → accent color (yellow), accent border
   */
   .dark .theme-toggle-btn {
-    color: var(--color-accent);
-    border-color: rgba(250, 183, 2, 0.45);
+    color: var(--nav-theme-color, var(--color-accent));
+    border-color: var(--nav-theme-border, rgba(250, 183, 2, 0.45));
   }
   .dark .theme-toggle-btn:hover {
-    background: rgba(250, 183, 2, 0.1);
-    border-color: var(--color-accent);
+    background: var(--nav-theme-hover-bg, rgba(250, 183, 2, 0.1));
+    border-color: var(--nav-theme-hover-border, var(--color-accent));
   }
 </style>

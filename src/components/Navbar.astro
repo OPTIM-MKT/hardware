@@ -143,6 +143,27 @@ const isActive = (href: string) => {
 <style>
   #navbar {
     background: transparent;
+    --nav-theme-color: var(--color-primary);
+    --nav-theme-border: rgba(1, 51, 131, 0.35);
+    --nav-theme-hover-bg: rgba(1, 51, 131, 0.08);
+    --nav-theme-hover-border: var(--color-primary);
+    --nav-cart-color: var(--color-primary);
+    --nav-cart-hover-bg: rgba(1, 51, 131, 0.08);
+  }
+
+  #navbar :global(.cart-btn) {
+    color: var(--nav-cart-color);
+  }
+  #navbar :global(.cart-btn:hover) {
+    background-color: var(--nav-cart-hover-bg);
+  }
+
+  /* Ensure the theme toggle inside the blue mobile menu panel is always white in light mode */
+  #mobile-menu {
+    --nav-theme-color: #ffffff;
+    --nav-theme-border: rgba(255, 255, 255, 0.35);
+    --nav-theme-hover-bg: rgba(255, 255, 255, 0.12);
+    --nav-theme-hover-border: rgba(255, 255, 255, 0.6);
   }
 
   /* Nav link color – default (light mode, transparent) */
@@ -204,6 +225,12 @@ const isActive = (href: string) => {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+    --nav-theme-color: #ffffff;
+    --nav-theme-border: rgba(255, 255, 255, 0.35);
+    --nav-theme-hover-bg: rgba(255, 255, 255, 0.12);
+    --nav-theme-hover-border: rgba(255, 255, 255, 0.6);
+    --nav-cart-color: var(--color-accent);
+    --nav-cart-hover-bg: rgba(255, 255, 255, 0.1);
   }
 
   /* Always solid (non-home pages) */
@@ -211,6 +238,24 @@ const isActive = (href: string) => {
     background: rgba(1, 51, 131, 0.98);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    --nav-theme-color: #ffffff;
+    --nav-theme-border: rgba(255, 255, 255, 0.35);
+    --nav-theme-hover-bg: rgba(255, 255, 255, 0.12);
+    --nav-theme-hover-border: rgba(255, 255, 255, 0.6);
+    --nav-cart-color: var(--color-accent);
+    --nav-cart-hover-bg: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Dark mode overrides for navbar variables */
+  .dark #navbar,
+  .dark #navbar.scrolled,
+  .dark #navbar.always-solid {
+    --nav-theme-color: var(--color-accent);
+    --nav-theme-border: rgba(250, 183, 2, 0.45);
+    --nav-theme-hover-bg: rgba(250, 183, 2, 0.1);
+    --nav-theme-hover-border: var(--color-accent);
+    --nav-cart-color: #ffffff;
+    --nav-cart-hover-bg: rgba(255, 255, 255, 0.1);
   }
 </style>
 

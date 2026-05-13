@@ -1,73 +1,40 @@
-"use client";
-
-import { useState, type ReactNode } from "react";
-import { useForm, type SubmitHandler, type Resolver } from "react-hook-form";
+import { useEffect, useState, type ReactNode } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "sonner";
+import { actions } from "astro:actions";
+import {
+  contactSchema,
+  PRESUPUESTO_OPTIONS,
+  TIMELINE_OPTIONS,
+  type ContactFormData,
+} from "./contact.schema";
+import { cartStore } from "../cart/cart-store";
+import { useCartItems } from "../cart/use-cart";
 
-export const contactFormSchema = z.object({
-  nombre: z.string().min(2, "Indica tu nombre"),
-  empresa: z.string(),
-  email: z.email("Correo inválido"),
-  telefono: z.string(),
-  producto: z.string().min(1, "Selecciona un producto"),
-  tamanoPedido: z.string(),
-  fechaEstimada: z.string(),
-  comentarios: z.string(),
-});
-
-export type ContactFormData = z.infer<typeof contactFormSchema>;
-
-export interface ProductOption {
-  value: string;
-  label: string;
+interface ContactFormProps {
+  initialMode?: "productos" | "proyecto";
 }
-
-export interface ContactFormProps {
-  productOptions?: ProductOption[];
-  defaultProduct?: string;
-  onSubmit?: (data: ContactFormData) => void | Promise<void>;
-  resolver?: Resolver<ContactFormData>;
-  title?: string;
-  subtitle?: string;
-  submitLabel?: string;
-  bare?: boolean;
-  className?: string;
-  header?: ReactNode;
-  footer?: ReactNode;
-}
-
-const SIZE_OPTIONS = ["10", "20", "50", "100+"] as const;
-
-const DEFAULT_PRODUCTS: ProductOption[] = [
-  { value: "terminales-moviles", label: "Terminales Móviles" },
-  { value: "impresoras-etiquetas", label: "Impresoras de Etiquetas" },
-  { value: "escaneres", label: "Escáneres / Lectores" },
-  { value: "rfid", label: "RFID" },
-  { value: "credencializacion", label: "Credencialización" },
-  { value: "ribbons", label: "Ribbons / Consumibles" },
-  { value: "rugged", label: "Equipos Rugged / Toughbook" },
-  { value: "automatizacion", label: "Automatización Industrial" },
-  { value: "cad", label: "Periféricos CAD / 3D" },
-  { value: "audio", label: "Audio Profesional" },
-  { value: "otro", label: "Otro" },
-];
 
 export default function ContactForm({
-  productOptions = DEFAULT_PRODUCTS,
-  defaultProduct = "",
-  onSubmit,
-  resolver,
-  title = "Solicitar contacto",
-  subtitle = "Cuéntanos qué necesitas. Te respondemos en menos de 24 h hábiles.",
-  submitLabel = "Enviar solicitud",
-  bare = false,
-  className = "",
-  header,
-  footer,
+  initialMode = "proyecto",
 }: ContactFormProps) {
+  const cartItems = useCartItems();
+  const [mode, setMode] = useState<"productos" | "proyecto">(initialMode);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const queryMode = params.get("mode");
+    if (queryMode === "productos" || queryMode === "proyecto") {
+      setMode(queryMode);
+    } else if (cartItems.length > 0) {
+      setMode("productos");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     register,
@@ -75,35 +42,45 @@ export default function ContactForm({
     reset,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
-    resolver: resolver ?? zodResolver(contactFormSchema),
+    resolver: zodResolver(contactSchema),
     defaultValues: {
+      modo: "proyecto",
       nombre: "",
       empresa: "",
       email: "",
       telefono: "",
-      producto: defaultProduct,
-      tamanoPedido: "",
-      fechaEstimada: "",
-      comentarios: "",
-    },
+      mensaje: "",
+      descripcionProyecto: "",
+      presupuesto: "",
+      timeline: "",
+    } as unknown as ContactFormData,
   });
 
-  const submitHandler: SubmitHandler<ContactFormData> = async (data) => {
-    if (onSubmit) {
-      await onSubmit(data);
-    } else {
-      await new Promise((r) => setTimeout(r, 800));
+  const onSubmit: SubmitHandler<ContactFormData> = async (data) => {
+    const payload: ContactFormData =
+      data.modo === "productos"
+        ? { ...data, items: cartItems }
+        : data;
+
+    const { error } = await actions.send(payload);
+
+    if (error) {
+      toast.error("No pudimos enviar tu solicitud", {
+        description: error.message ?? "Inténtalo de nuevo en unos minutos.",
+      });
+      return;
     }
+
+    toast.success("Solicitud enviada", {
+      description: "Te contactaremos en menos de 24 h hábiles.",
+    });
+    if (payload.modo === "productos") cartStore.clear();
     setSubmitted(true);
   };
 
-  const wrapperClass = bare
-    ? `flex flex-col gap-6 ${className}`
-    : `bento-card ${className}`;
-
   if (submitted) {
     return (
-      <div className={wrapperClass}>
+      <div className="bento-card">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -126,7 +103,7 @@ export default function ContactForm({
               reset();
               setSubmitted(false);
             }}
-            className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline hover:opacity-70 transition-opacity"
+            className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline hover:opacity-70 transition-opacity cursor-pointer"
           >
             Enviar otra solicitud
           </button>
@@ -136,24 +113,27 @@ export default function ContactForm({
   }
 
   return (
-    <div className={wrapperClass}>
-      {header ?? (
-        <div className="mb-8">
-          <span
-            className="inline-block px-3 py-1 text-[10px] font-semibold uppercase tracking-widest rounded-full mb-3"
-            style={{ background: "rgba(250,183,2,0.12)", color: "#fab702" }}
-          >
-            HardWare · Distribuidor autorizado en México
-          </span>
-          <h2 className="text-2xl font-bold text-ink mb-1">{title}</h2>
-          <p className="text-muted text-sm">{subtitle}</p>
-        </div>
-      )}
+    <div className="bento-card">
+      <header className="mb-8">
+        <span
+          className="inline-block px-3 py-1 text-[10px] font-semibold uppercase tracking-widest rounded-full mb-3"
+          style={{ background: "rgba(250,183,2,0.12)", color: "#fab702" }}
+        >
+          Hard-Ware · Distribuidor autorizado en México
+        </span>
+        <h2 className="text-2xl font-bold text-ink mb-1">Solicita tu cotización</h2>
+        <p className="text-muted text-sm">
+          Te respondemos en menos de 24 h hábiles.
+        </p>
+      </header>
+
+      <ModeSwitch mode={mode} onChange={setMode} />
+      <input type="hidden" {...register("modo")} value={mode} />
 
       <form
-        onSubmit={handleSubmit(submitHandler)}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="space-y-5"
+        className="space-y-5 mt-8"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field id="cf-nombre" label="Nombre *" error={errors.nombre?.message}>
@@ -165,11 +145,7 @@ export default function ContactForm({
               {...register("nombre")}
             />
           </Field>
-          <Field
-            id="cf-empresa"
-            label="Empresa"
-            error={errors.empresa?.message}
-          >
+          <Field id="cf-empresa" label="Empresa" error={errors.empresa?.message}>
             <input
               id="cf-empresa"
               type="text"
@@ -190,11 +166,7 @@ export default function ContactForm({
               {...register("email")}
             />
           </Field>
-          <Field
-            id="cf-telefono"
-            label="Teléfono"
-            error={errors.telefono?.message}
-          >
+          <Field id="cf-telefono" label="Teléfono *" error={errors.telefono?.message}>
             <input
               id="cf-telefono"
               type="tel"
@@ -205,94 +177,239 @@ export default function ContactForm({
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field
-            id="cf-producto"
-            label="Producto de interés *"
-            error={errors.producto?.message}
-          >
-            <select
-              id="cf-producto"
-              className={inputClass(!!errors.producto)}
-              {...register("producto")}
-            >
-              <option value="">Seleccionar producto...</option>
-              {productOptions.map((p) => (
-                <option key={p.value} value={p.value}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field
-            id="cf-tamano"
-            label="Tamaño de pedido"
-            error={errors.tamanoPedido?.message}
-          >
-            <select
-              id="cf-tamano"
-              className={inputClass(!!errors.tamanoPedido)}
-              {...register("tamanoPedido")}
-            >
-              <option value="">Seleccionar volumen...</option>
-              {SIZE_OPTIONS.map((s) => (
-                <option key={s} value={s}>
-                  {s} unidades
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
+        {mode === "productos" ? (
+          <ProductsSection items={cartItems} />
+        ) : (
+          <ProyectoSection register={register} errors={errors} />
+        )}
 
         <Field
-          id="cf-fecha"
-          label="Fecha estimada de compra"
-          error={errors.fechaEstimada?.message}
-        >
-          <input
-            id="cf-fecha"
-            type="date"
-            className={inputClass(!!errors.fechaEstimada)}
-            {...register("fechaEstimada")}
-          />
-        </Field>
-
-        <Field
-          id="cf-comentarios"
-          label="Comentarios adicionales"
-          error={errors.comentarios?.message}
+          id="cf-mensaje"
+          label={mode === "productos" ? "Comentarios adicionales" : "Detalles adicionales"}
+          error={errors.mensaje?.message}
         >
           <textarea
-            id="cf-comentarios"
+            id="cf-mensaje"
             rows={4}
-            placeholder="Describe tu proyecto, integración requerida, plazos u otros detalles relevantes..."
+            placeholder={
+              mode === "productos"
+                ? "Volumen estimado, requisitos de integración, plazos..."
+                : "Cualquier detalle adicional relevante para tu proyecto..."
+            }
             className={`${inputClass(false)} resize-none`}
-            {...register("comentarios")}
+            {...register("mensaje")}
           />
         </Field>
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full flex items-center cursor-pointer justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm uppercase tracking-widest text-primary hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-          style={{ background: "#fab702" }}
+          disabled={isSubmitting || (mode === "productos" && cartItems.length === 0)}
+          className="w-full flex items-center cursor-pointer justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm uppercase tracking-widest bg-accent text-primary hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
         >
-          {isSubmitting ? "Enviando…" : submitLabel}
+          {isSubmitting
+            ? "Enviando…"
+            : mode === "productos"
+            ? "Solicitar cotización"
+            : "Enviar solicitud"}
         </button>
 
-        {footer ?? (
-          <p className="text-center text-[11px] text-muted">
-            HardWare es distribuidor autorizado en México. Al enviar aceptas la{" "}
-            <a
-              href="/privacidad"
-              className="underline hover:text-primary dark:hover:text-accent"
-            >
-              política de privacidad
-            </a>
-            .
-          </p>
-        )}
+        <p className="text-center text-[11px] text-muted">
+          Hard-Ware es distribuidor autorizado en México. Al enviar aceptas la{" "}
+          <a
+            href="/privacidad"
+            className="underline hover:text-primary dark:hover:text-accent"
+          >
+            política de privacidad
+          </a>
+          .
+        </p>
       </form>
+    </div>
+  );
+}
+
+function ModeSwitch({
+  mode,
+  onChange,
+}: {
+  mode: "productos" | "proyecto";
+  onChange: (m: "productos" | "proyecto") => void;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Tipo de cotización"
+      className="grid grid-cols-2 gap-2 p-1 rounded-full border border-line bg-canvas"
+    >
+      <ModeOption
+        active={mode === "productos"}
+        onClick={() => onChange("productos")}
+        label="Por productos"
+      />
+      <ModeOption
+        active={mode === "proyecto"}
+        onClick={() => onChange("proyecto")}
+        label="Por proyecto"
+      />
+    </div>
+  );
+}
+
+function ModeOption({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={active}
+      onClick={onClick}
+      className={`px-4 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all cursor-pointer ${
+        active
+          ? "bg-primary text-white shadow"
+          : "text-muted hover:text-ink"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function ProductsSection({
+  items,
+}: {
+  items: ReturnType<typeof useCartItems>;
+}) {
+  if (items.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-line p-6 text-center bg-canvas">
+        <p className="text-sm font-semibold text-ink mb-1">
+          Aún no tienes productos en tu carrito
+        </p>
+        <p className="text-xs text-muted mb-3">
+          Agrégalos desde el catálogo para cotizarlos juntos.
+        </p>
+        <a
+          href="/productos"
+          className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline cursor-pointer"
+        >
+          Ver productos
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-line bg-canvas">
+      <div className="px-4 py-3 border-b border-line flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+          Productos en tu cotización ({items.length})
+        </p>
+        <button
+          type="button"
+          onClick={() => cartStore.openPanel()}
+          className="text-xs font-semibold text-primary dark:text-accent hover:underline cursor-pointer"
+        >
+          Editar
+        </button>
+      </div>
+      <ul className="divide-y divide-line">
+        {items.map((it) => (
+          <li key={it.slug} className="flex items-center gap-3 px-4 py-3">
+            {it.imagen ? (
+              <img
+                src={it.imagen}
+                alt={it.nombre}
+                className="w-12 h-12 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-lg bg-line" />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] uppercase tracking-widest text-muted font-semibold">
+                {it.marca}
+              </p>
+              <p className="text-sm font-semibold text-ink line-clamp-1">
+                {it.nombre}
+              </p>
+            </div>
+            <span className="text-xs font-bold text-ink tabular-nums">
+              ×{it.cantidad}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ProyectoSection({
+  register,
+  errors,
+}: {
+  register: ReturnType<typeof useForm<ContactFormData>>["register"];
+  errors: ReturnType<typeof useForm<ContactFormData>>["formState"]["errors"];
+}) {
+  return (
+    <div className="space-y-5">
+      <Field
+        id="cf-desc"
+        label="Descripción del proyecto *"
+        error={(errors as any).descripcionProyecto?.message}
+      >
+        <textarea
+          id="cf-desc"
+          rows={4}
+          placeholder="Cuéntanos qué quieres lograr: industria, alcance, integraciones, equipos involucrados…"
+          className={`${inputClass(!!(errors as any).descripcionProyecto)} resize-none`}
+          {...register("descripcionProyecto" as any)}
+        />
+      </Field>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Field
+          id="cf-presupuesto"
+          label="Presupuesto estimado *"
+          error={(errors as any).presupuesto?.message}
+        >
+          <select
+            id="cf-presupuesto"
+            className={inputClass(!!(errors as any).presupuesto)}
+            {...register("presupuesto" as any)}
+          >
+            <option value="">Selecciona un rango…</option>
+            {PRESUPUESTO_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field
+          id="cf-timeline"
+          label="Horizonte de tiempo *"
+          error={(errors as any).timeline?.message}
+        >
+          <select
+            id="cf-timeline"
+            className={inputClass(!!(errors as any).timeline)}
+            {...register("timeline" as any)}
+          >
+            <option value="">Selecciona…</option>
+            {TIMELINE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
     </div>
   );
 }
@@ -304,14 +421,17 @@ const inputClass = (hasError: boolean) =>
       : "border-line focus:border-primary dark:focus:border-accent"
   }`;
 
-interface FieldProps {
+function Field({
+  id,
+  label,
+  error,
+  children,
+}: {
   id: string;
   label: string;
   error?: string;
   children: ReactNode;
-}
-
-function Field({ id, label, error, children }: FieldProps) {
+}) {
   return (
     <div className="flex flex-col gap-1.5">
       <label

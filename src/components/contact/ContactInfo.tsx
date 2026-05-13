@@ -25,7 +25,7 @@ const socials = [
   },
   {
     name: "WhatsApp",
-    handle: "818 3652 769",
+    handle: "Escribir por WhatsApp",
     href: "https://wa.me/528183652769",
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@ const info = [
       </svg>
     ),
     label: "Teléfono",
-    value: "818 3652 769",
+    value: "Llamar ahora",
     href: "tel:+528183652769",
   },
   {

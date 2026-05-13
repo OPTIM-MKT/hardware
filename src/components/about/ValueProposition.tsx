@@ -127,11 +127,11 @@ export default function ValueProposition({
                 {highlightBody}
               </p>
               <a
-                href="/marcas/sew-eurodrive"
+                href="/productos"
                 className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-xs uppercase tracking-widest text-primary hover:-translate-y-0.5 transition-all duration-300"
                 style={{ background: "#fab702" }}
               >
-                Ver soluciones SEW Eurodrive
+                Ver catálogo
                 <svg
                   className="w-3.5 h-3.5"
                   fill="none"

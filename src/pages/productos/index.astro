@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import ProductCatalog, {
+  type CatalogProduct,
+} from "../../components/productos/ProductCatalog";
+import ContactForm from "../../components/contact/ContactForm";
+
+const productos = await getCollection("productos");
+
+const items: CatalogProduct[] = productos.map(({ id, data }) => ({
+  slug: id,
+  nombre: data.nombre,
+  marca: data.marca,
+  categoria: data.categoria,
+  descripcion: data.descripcion,
+  imagen: data.imagen,
+  disponible: data.disponible,
+  destacado: data.destacado,
+  nuevo: data.nuevo,
+  sku: data.sku,
+  tags: data.tags,
+}));
+---
+
+<Layout
+  title="Productos | Hard-Ware – Catálogo de tecnología industrial"
+  description="Explora el catálogo completo de productos Hard-Ware: impresoras, terminales, escáneres, equipos rugged, audio profesional y consumibles."
+>
+  <section
+    class="w-full py-16 md:py-24 text-white"
+    style="background: linear-gradient(135deg, #013383 0%, #233060 100%);"
+  >
+    <div class="container-lg text-center">
+      <p
+        class="text-xs font-semibold uppercase tracking-widest mb-3 opacity-60"
+      >
+        Catálogo
+      </p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Productos</h1>
+      <p class="text-white/70 max-w-xl mx-auto text-base leading-relaxed">
+        Tecnología industrial de marcas líderes. Filtra por categoría o marca,
+        agrega al carrito y solicita tu cotización personalizada.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-lg">
+      <ProductCatalog products={items} client:load />
+    </div>
+  </section>
+
+  <section class="section-padding bg-slate-50 dark:bg-slate-950">
+    <div class="container-lg">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div class="lg:col-span-2">
+          <p class="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
+            Solicita tu cotización
+          </p>
+          <h2 class="text-2xl md:text-3xl font-bold text-ink mb-4 leading-tight">
+            Agrega productos al carrito y <span class="text-primary dark:text-accent">cotízalos juntos</span>
+          </h2>
+          <p class="text-sm text-muted leading-relaxed mb-4">
+            Construye tu lista desde el catálogo arriba, completa el
+            formulario y recibe una propuesta consolidada en menos de 24 h
+            hábiles. ¿Necesitas asesoría antes de elegir? Cambia a modo
+            «Por proyecto» y cuéntanos qué quieres lograr.
+          </p>
+          <ul class="space-y-2 list-none p-0 m-0">
+            {[
+              "Precio por volumen y bundles",
+              "Compatibilidad e integración garantizadas",
+              "Acompañamiento postventa",
+            ].map((bullet) => (
+              <li class="flex items-start gap-2 text-sm text-ink">
+                <svg
+                  class="w-4 h-4 mt-0.5 text-accent shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width={2.5}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                  />
+                </svg>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="lg:col-span-3">
+          <ContactForm initialMode="productos" client:visible />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,79 +1,48 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-const productoEnMarca = z.object({
-  nombre: z.string(),
-  imagen: z.string(),
-  slug: z.string().optional(),
-  descripcion: z.string().optional(),
-});
-
-const marcas = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/marcas" }),
-  schema: z.object({
-    nombre: z.string(),
-    descripcion: z.string(),
-    logo: z.string().optional(),
-    distribuidorAutorizadoMX: z.boolean().default(false),
-    sitioWeb: z.string().url().optional(),
-    categorias: z.array(z.string()).default([]),
-    productos: z.array(productoEnMarca).default([]),
-  }),
-});
-
-const taxonomia = z.object({
-  nombre: z.string(),
-  titulo: z.string().optional(),
-  descripcion: z.string(),
-  imagen: z.string().optional(),
-  icono: z.string().optional(),
-  retosComunes: z.array(z.string()).default([]),
-  solucionesRecomendadas: z.array(z.string()).default([]),
-  productosRelevantes: z.array(z.string()).default([]),
-  marcasRelacionadas: z.array(z.string()).default([]),
-});
-
-const industrias = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/industrias" }),
-  schema: taxonomia,
-});
-
-const soluciones = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/soluciones" }),
-  schema: taxonomia.extend({
-    tagline: z.string().optional(),
-    industrias: z.array(z.string()).default([]),
-    beneficios: z.array(z.string()).default([]),
-    ctaLabel: z.string().default("Cotizar Solución"),
-    ctaHref: z.string().default("/contact"),
-    destacada: z.boolean().default(false),
-  }),
-});
-
 const productos = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/productos" }),
   schema: z.object({
     nombre: z.string(),
     marca: z.string(),
+    marcaLogo: z.string().optional(),
     descripcion: z.string(),
     descripcionLarga: z.string().optional(),
     imagen: z.string().optional(),
-    industrias: z.array(z.string()).default([]),
-    solucionRelacionada: z.string().optional(),
-    complementos: z.array(z.string()).default([]),
+    galeria: z.array(z.string()).default([]),
+    categoria: z.string(),
+    subcategoria: z.string().optional(),
+    tags: z.array(z.string()).default([]),
     caracteristicas: z.array(z.string()).default([]),
-    precio: z
-      .object({
-        desde: z.number().optional(),
-        moneda: z.string().default("MXN"),
-        cotizar: z.boolean().default(true),
-      })
-      .optional(),
+    especificaciones: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        })
+      )
+      .default([]),
     sku: z.string().optional(),
     disponible: z.boolean().default(true),
     destacado: z.boolean().default(false),
-    categoria: z.string().optional(),
+    nuevo: z.boolean().default(false),
   }),
 });
 
-export const collections = { marcas, industrias, soluciones, productos };
+const blogs = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blogs" }),
+  schema: z.object({
+    titulo: z.string(),
+    descripcion: z.string(),
+    fecha: z.coerce.date(),
+    autor: z.string().default("Hard-Ware"),
+    portada: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    categoria: z.string().optional(),
+    destacado: z.boolean().default(false),
+    tiempoLectura: z.number().optional(),
+  }),
+});
+
+export const collections = { productos, blogs };

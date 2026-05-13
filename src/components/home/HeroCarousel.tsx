@@ -16,8 +16,8 @@ const slides = [
     subtitle: "Soluciones industriales para empresas en México",
     description:
       "Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell y más.",
-    cta: "Ver Soluciones",
-    ctaHref: "/#services",
+    cta: "Ver productos",
+    ctaHref: "/productos",
     cta2: "Cotizar",
     cta2Href: "/contact",
     bg: "from-primary via-secondary to-[#0a1a40]",
@@ -48,8 +48,8 @@ const slides = [
     subtitle: "Zebra · Honeywell · SATO · Datalogic",
     description:
       "Distribuidor autorizado oficial en México. Garantía de fábrica, soporte técnico especializado y acceso a programas de servicio directo del fabricante.",
-    cta: "Ver Marcas",
-    ctaHref: "/#marcas",
+    cta: "Ver productos",
+    ctaHref: "/productos",
     cta2: "Conocer más",
     cta2Href: "/about",
     bg: "from-secondary via-[#0d1f4a] to-primary",

@@ -1,17 +1,20 @@
 ---
 // Navbar.astro — sticky, transparent → solid on scroll, with mobile hamburger
 import ThemeToggle from "./shared/ThemeToggle.astro";
+import CartButton from "./cart/CartButton";
 
 const navLinks = [
-  // { label: "Inicio", href: "/" },
-  { label: "Soluciones", href: "/soluciones" },
-  { label: "Industrias", href: "/industrias" },
-  { label: "Marcas", href: "/marcas" },
+  { label: "Productos", href: "/productos" },
+  { label: "Blogs", href: "/blogs" },
   { label: "Nosotros", href: "/about" },
   { label: "Contacto", href: "/contact" },
 ];
 
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => {
+  if (href === "/") return currentPath === "/";
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+};
 ---
 
 <header
@@ -42,23 +45,29 @@ const currentPath = Astro.url.pathname;
       <!-- Desktop links -->
       <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
         {
-          navLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="nav-link text-sm font-medium tracking-wide transition-colors duration-200 relative group"
-              >
-                {link.label}
-                <span class="absolute -bottom-0.5 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-          ))
+          navLinks.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  data-active={active ? "true" : "false"}
+                  aria-current={active ? "page" : undefined}
+                  class="nav-link text-sm font-medium tracking-wide transition-colors duration-200 relative group"
+                >
+                  {link.label}
+                  <span class="nav-underline absolute -bottom-0.5 left-0 h-px bg-accent transition-all duration-300" />
+                </a>
+              </li>
+            );
+          })
         }
       </ul>
 
       <!-- Right actions -->
       <div class="hidden md:flex items-center gap-3">
         <ThemeToggle />
+        <CartButton client:load />
         <a
           href="/contact"
           class="inline-flex items-center gap-2 px-5 py-2 text-xs font-semibold uppercase tracking-widest rounded-full bg-accent text-primary hover:bg-amber-400 transition-colors duration-300"
@@ -67,12 +76,14 @@ const currentPath = Astro.url.pathname;
         </a>
       </div>
 
-      <!-- Mobile hamburger -->
+      <!-- Mobile actions: cart + hamburger -->
+      <div class="flex md:hidden items-center gap-1">
+        <CartButton client:load />
       <button
         id="mobile-menu-btn"
         aria-label="Abrir menú"
         aria-expanded="false"
-        class="md:hidden flex flex-col gap-1.5 p-2 rounded-md"
+        class="flex flex-col gap-1.5 p-2 rounded-md"
       >
         <span
           class="hamburger-bar block h-0.5 w-6 rounded transition-all duration-300"
@@ -84,6 +95,7 @@ const currentPath = Astro.url.pathname;
           class="hamburger-bar block h-0.5 w-4 rounded transition-all duration-300"
           style="background: currentColor"></span>
       </button>
+      </div>
     </nav>
   </div>
 
@@ -94,14 +106,22 @@ const currentPath = Astro.url.pathname;
   >
     <div class="container-lg py-6 flex flex-col gap-4">
       {
-        navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-white/80 hover:text-white text-base font-medium transition-colors py-1 border-b border-white/10 last:border-0"
-          >
-            {link.label}
-          </a>
-        ))
+        navLinks.map((link) => {
+          const active = isActive(link.href);
+          return (
+            <a
+              href={link.href}
+              data-active={active ? "true" : "false"}
+              aria-current={active ? "page" : undefined}
+              class:list={[
+                "mobile-link text-base font-medium transition-colors py-1 border-b border-white/10 last:border-0",
+                active ? "text-accent" : "text-white/80 hover:text-white",
+              ]}
+            >
+              {link.label}
+            </a>
+          );
+        })
       }
       <div class="flex items-center gap-3 pt-2">
         <ThemeToggle />
@@ -150,6 +170,23 @@ const currentPath = Astro.url.pathname;
     color: #ffffff;
   }
 
+  /* Active link — accent color + full underline, in every navbar state */
+  #navbar .nav-link[data-active="true"],
+  #navbar.scrolled .nav-link[data-active="true"],
+  #navbar.always-solid .nav-link[data-active="true"],
+  .dark #navbar .nav-link[data-active="true"] {
+    color: var(--color-accent);
+  }
+
+  /* Underline: hidden by default, full-width on hover OR when active */
+  #navbar .nav-underline {
+    width: 0;
+  }
+  #navbar .nav-link:hover .nav-underline,
+  #navbar .nav-link[data-active="true"] .nav-underline {
+    width: 100%;
+  }
+
   /* Hamburger color */
   #navbar #mobile-menu-btn {
     color: var(--color-ink);
@@ -188,6 +225,8 @@ const currentPath = Astro.url.pathname;
       window.location.pathname === "/" || window.location.pathname === "";
     if (!isHome) {
       navbar.classList.add("always-solid");
+    } else {
+      navbar.classList.remove("always-solid");
     }
 
     // Scroll handler

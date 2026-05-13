@@ -50,6 +50,7 @@ export default function HomeContactTeaser() {
               </a>
               <a
                 href="tel:+528183652769"
+                aria-label="Llamar a Hard-Ware"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide border border-line text-black dark:text-white hover:border-primary hover:text-primary transition-all duration-300"
               >
                 <svg
@@ -65,7 +66,7 @@ export default function HomeContactTeaser() {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                818 3652 769
+                Llamar
               </a>
             </div>
           </ScrollReveal>
@@ -81,21 +82,35 @@ export default function HomeContactTeaser() {
                   title: "Email",
                   value: "ventas.online@\nhard-ware.com.mx",
                 },
-                { icon: "📞", title: "Teléfono", value: "818 3652 769" },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="bento-card flex flex-col gap-2"
-                >
-                  <span className="text-2xl">{item.icon}</span>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-200">
-                    {item.title}
-                  </p>
-                  <p className="text-sm font-medium text-black dark:text-slate-300 whitespace-pre-line">
-                    {item.value}
-                  </p>
-                </div>
-              ))}
+                {
+                  icon: "📞",
+                  title: "Teléfono",
+                  value: "Llamar ahora",
+                  href: "tel:+528183652769",
+                },
+              ].map((item) => {
+                const content = (
+                  <>
+                    <span className="text-2xl">{item.icon}</span>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-200">
+                      {item.title}
+                    </p>
+                    <p className="text-sm font-medium text-black dark:text-slate-300 whitespace-pre-line">
+                      {item.value}
+                    </p>
+                  </>
+                );
+                const className = "bento-card flex flex-col gap-2";
+                return "href" in item && item.href ? (
+                  <a key={item.title} href={item.href} className={className}>
+                    {content}
+                  </a>
+                ) : (
+                  <div key={item.title} className={className}>
+                    {content}
+                  </div>
+                );
+              })}
             </div>
           </ScrollReveal>
         </div>

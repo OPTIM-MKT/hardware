@@ -5,6 +5,8 @@ import { SEO } from "astro-seo";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import ScrollTop from "../components/shared/ScrollTop.astro";
+import CartPanel from "../components/cart/CartPanel";
+import AppToaster from "../components/shared/AppToaster";
 
 interface Props {
   title?: string;
@@ -72,6 +74,8 @@ const {
 
     <Footer />
     <ScrollTop />
+    <CartPanel client:load />
+    <AppToaster client:load />
 
     <!-- Theme toggle logic -->
     <script>

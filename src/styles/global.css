@@ -144,3 +144,32 @@ body {
 .dark textarea::placeholder {
   color: #7a8caf;
 }
+
+/* ──────────────────────────────────────────────
+   Dark-mode color promotion
+   Primary (#013383) is unreadable on the dark canvas (#080f1e).
+   Promote every "text-primary" / "hover:text-primary" / "group-hover:text-primary"
+   utility to accent in dark mode — UNLESS the element also has bg-accent
+   (yellow button with primary text) or opts out via data-keep-primary.
+────────────────────────────────────────────── */
+.dark .text-primary:not(.bg-accent):not([data-keep-primary]) {
+  color: var(--color-accent);
+}
+.dark .hover\:text-primary:not(.bg-accent):not([data-keep-primary]):hover {
+  color: var(--color-accent);
+}
+.dark .group:hover .group-hover\:text-primary:not(.bg-accent):not([data-keep-primary]) {
+  color: var(--color-accent);
+}
+.dark .focus\:text-primary:not(.bg-accent):not([data-keep-primary]):focus {
+  color: var(--color-accent);
+}
+
+/* Cart side panel + mobile filters drawer: explicit panel surface for dark mode.
+   bg-canvas inlines the light value at build time, so we need an explicit override. */
+[data-surface="panel"] {
+  background-color: var(--color-panel);
+}
+.dark [data-surface="panel"] {
+  background-color: #0f1d38;
+}

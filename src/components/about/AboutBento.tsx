@@ -198,7 +198,7 @@ export default function AboutBento() {
         </ScrollReveal> */}
 
         {/* Team */}
-        <ScrollReveal direction="up" delay={0.1}>
+        {/* <ScrollReveal direction="up" delay={0.1}>
           <div className="mb-8">
             <h3 className="text-2xl font-extrabold text-black dark:text-white mb-6 text-center">
               Nuestro Equipo
@@ -228,7 +228,7 @@ export default function AboutBento() {
               ))}
             </div>
           </div>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         {/* CTA */}
         <ScrollReveal direction="up" delay={0.2}>

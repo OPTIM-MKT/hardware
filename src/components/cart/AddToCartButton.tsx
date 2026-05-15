@@ -33,8 +33,8 @@ export default function AddToCartButton({
 
   const styles =
     variant === "primary"
-      ? "bg-accent text-primary dark:text-accent hover:-translate-y-0.5 hover:shadow-lg"
-      : "border border-line text-ink hover:border-primary hover:text-primary";
+      ? "bg-accent text-primary dark:text-secondary hover:-translate-y-0.5 hover:shadow-lg"
+      : "border border-line text-primary hover:border-primary hover:text-primary";
 
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
@@ -65,7 +65,7 @@ export default function AddToCartButton({
       <button
         type="button"
         onClick={handleAdd}
-        className={`inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${styles}`}
+        className={`inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-secondary text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${styles}`}
       >
         <svg
           className="w-4 h-4"

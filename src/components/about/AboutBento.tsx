@@ -139,7 +139,7 @@ export default function AboutBento() {
               <span className="text-xs font-semibold uppercase tracking-widest text-muted mb-2">
                 Visión
               </span>
-              <h3 className="text-xl font-bold text-ink mb-3">
+              <h3 className="text-xl font-bold text-primary dark:text-white mb-3">
                 Líderes en soporte técnico industrial
               </h3>
               <p className="text-muted text-sm leading-relaxed">
@@ -158,7 +158,9 @@ export default function AboutBento() {
             <ScrollReveal key={v.title} delay={i * 0.08} direction="up">
               <div className="bento-card flex flex-col gap-3 text-center items-center">
                 <span className="text-4xl">{v.icon}</span>
-                <h4 className="font-bold text-ink text-sm">{v.title}</h4>
+                <h4 className="font-bold text-primary dark:text-white text-sm">
+                  {v.title}
+                </h4>
                 <p className="text-muted text-xs leading-relaxed">{v.desc}</p>
               </div>
             </ScrollReveal>

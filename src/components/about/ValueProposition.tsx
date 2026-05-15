@@ -85,7 +85,7 @@ export default function ValueProposition({
             <ScrollReveal key={pillar.title} direction="up" delay={i * 0.06}>
               <article className="bento-card flex flex-col gap-3 h-full">
                 <span className="text-3xl">{pillar.icon}</span>
-                <h3 className="text-lg font-bold text-ink leading-snug">
+                <h3 className="text-lg font-bold text-primary dark:text-white leading-snug">
                   {pillar.title}
                 </h3>
                 <p className="text-muted text-sm leading-relaxed">

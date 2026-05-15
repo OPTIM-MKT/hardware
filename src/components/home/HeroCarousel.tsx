@@ -5,14 +5,16 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef } from "react";
 import type { SwiperClass } from "swiper/react";
+import one from "@/assets/one.webp";
+import two from "@/assets/two.jpg";
+import tres from "@/assets/tres.webp";
 
 const slides = [
   {
     id: 1,
     tag: "Soluciones Industriales B2B",
     title: "Tecnología,\nimpresión e\nidentificación",
-    image:
-      "https://images.unsplash.com/photo-1561158250-01426799e9e0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: one,
     subtitle: "Soluciones industriales para empresas en México",
     description:
       "Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell y más.",
@@ -27,8 +29,7 @@ const slides = [
     id: 2,
     tag: "Identificación & Automatización",
     title: "Trazabilidad\ntotal para tu\noperación.",
-    image:
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: two,
     subtitle: "Terminales · Impresoras · Escáneres · RFID",
     description:
       "Implementamos sistemas de identificación automática y trazabilidad end-to-end que reducen errores y aumentan la eficiencia de tu cadena de suministro.",
@@ -43,8 +44,7 @@ const slides = [
     id: 3,
     tag: "Distribuidores Autorizados",
     title: "Socios de las\nmarcas líderes\nen México.",
-    image:
-      "https://images.unsplash.com/photo-1618950399704-86fb060cd003?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: tres,
     subtitle: "Zebra · Honeywell · SATO · Datalogic",
     description:
       "Distribuidor autorizado oficial en México. Garantía de fábrica, soporte técnico especializado y acceso a programas de servicio directo del fabricante.",
@@ -86,7 +86,7 @@ export default function HeroCarousel() {
           <SwiperSlide key={slide.id}>
             {/* Full-bleed photo background */}
             <img
-              src={slide.image}
+              src={slide.image.src}
               alt={slide.tag}
               className="absolute inset-0 w-full h-full object-cover"
               loading={i === 0 ? "eager" : "lazy"}

@@ -109,7 +109,7 @@ export default function HeroCarousel() {
             />
 
             {/* Content */}
-            <div className="relative z-10 container-lg h-full flex items-center">
+            <div className="relative z-10 container-lg h-full flex items-end pb-36 md:items-center md:pb-0">
               <div className="max-w-2xl">
                 {/* Tag */}
                 <AnimatePresence mode="wait">
@@ -120,13 +120,13 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.5, delay: 0.1 }}
-                      className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm"
+                      className="inline-flex items-center gap-2 mb-3 md:mb-6 px-3 md:px-4 py-1 md:py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm"
                     >
                       <span
                         className="w-1.5 h-1.5 rounded-full animate-pulse"
                         style={{ background: slide.accent }}
                       />
-                      <span className="text-xs font-semibold tracking-widest uppercase text-white/80">
+                      <span className="text-[10px] md:text-xs font-semibold tracking-widest uppercase text-white/80">
                         {slide.tag}
                       </span>
                     </motion.div>
@@ -142,8 +142,8 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
-                      className="text-white font-extrabold leading-[1.1] mb-4 whitespace-pre-line"
-                      style={{ fontSize: "clamp(1.8rem, 4vw, 3.5rem)" }}
+                      className="text-white font-extrabold leading-[1.08] mb-2 md:mb-4 whitespace-pre-line"
+                      style={{ fontSize: "clamp(1.35rem, 4vw, 3.5rem)" }}
                     >
                       {slide.title}
                     </motion.h1>
@@ -159,7 +159,7 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.5, delay: 0.35 }}
-                      className="text-sm font-semibold uppercase tracking-widest mb-4"
+                      className="text-[11px] md:text-sm font-semibold uppercase tracking-widest mb-2 md:mb-4"
                       style={{ color: slide.accent }}
                     >
                       {slide.subtitle}
@@ -176,7 +176,7 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.5, delay: 0.45 }}
-                      className="text-white/70 text-base leading-relaxed mb-8 max-w-lg"
+                      className="text-white/70 text-sm md:text-base leading-relaxed mb-4 md:mb-8 max-w-lg hidden md:block"
                     >
                       {slide.description}
                     </motion.p>
@@ -192,11 +192,11 @@ export default function HeroCarousel() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.5, delay: 0.55 }}
-                      className="flex flex-wrap gap-4"
+                      className="flex flex-wrap gap-2 md:gap-4"
                     >
                       <a
                         href={slide.ctaHref}
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
                         style={{
                           background: slide.accent,
                           color: "#013383",
@@ -219,7 +219,7 @@ export default function HeroCarousel() {
                       </a>
                       <a
                         href={slide.cta2Href}
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
                       >
                         {slide.cta2}
                       </a>
@@ -235,7 +235,7 @@ export default function HeroCarousel() {
       {/* ─── Vertical side navigator (right edge, centered) ─── */}
       <nav
         aria-label="Slides"
-        className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-5"
+        className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col gap-5"
       >
         {slides.map((slide, i) => {
           const isActive = activeIndex === i;
@@ -314,22 +314,22 @@ export default function HeroCarousel() {
         }}
       >
         <div className="container-lg">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+          <div className="grid grid-cols-4 divide-x divide-white/10">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.1, duration: 0.5 }}
-                className="flex flex-col items-center py-5 px-4"
+                className="flex flex-col items-center py-2.5 px-2 md:py-5 md:px-4"
               >
                 <span
-                  className="text-2xl md:text-3xl font-extrabold"
+                  className="text-base md:text-3xl font-extrabold"
                   style={{ color: "#fab702" }}
                 >
                   {stat.value}
                 </span>
-                <span className="text-xs text-white/50 mt-1 text-center tracking-wide">
+                <span className="text-[9px] md:text-xs text-white/50 mt-0.5 md:mt-1 text-center tracking-wide">
                   {stat.label}
                 </span>
               </motion.div>

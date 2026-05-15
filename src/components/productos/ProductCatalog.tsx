@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { cartStore } from "../cart/cart-store";
@@ -31,6 +31,12 @@ export default function ProductCatalog({ products, children }: Props) {
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [sort, setSort] = useState<SortKey>("relevancia");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, categoria, marca, soloDisponibles, sort]);
 
   const categorias = useMemo(
     () => Array.from(new Set(products.map((p) => p.categoria))).sort(),
@@ -83,6 +89,12 @@ export default function ProductCatalog({ products, children }: Props) {
     return list;
   }, [products, query, categoria, marca, soloDisponibles, sort]);
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   const hasFilters =
     query !== "" || categoria !== "all" || marca !== "all" || soloDisponibles;
 
@@ -92,10 +104,11 @@ export default function ProductCatalog({ products, children }: Props) {
     setMarca("all");
     setSoloDisponibles(false);
     setSort("relevancia");
+    setCurrentPage(1);
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 items-start">
       {/* Mobile filters trigger */}
       <div className="md:hidden flex items-center justify-between gap-3">
         <button
@@ -115,7 +128,7 @@ export default function ProductCatalog({ products, children }: Props) {
       </div>
 
       {/* Desktop filters */}
-      <aside className="hidden md:block">
+      <aside className="hidden md:block sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
         <FiltersPanel
           query={query}
           onQuery={setQuery}
@@ -212,11 +225,51 @@ export default function ProductCatalog({ products, children }: Props) {
             </div>
           )
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((product) => (
-              <ProductCard key={product.slug} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {paginatedProducts.map((product) => (
+                <ProductCard key={product.slug} product={product} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => {
+                    setCurrentPage((p) => Math.max(1, p - 1));
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
+                  aria-label="Página anterior"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                  </svg>
+                </button>
+
+                <span className="text-sm font-semibold text-ink dark:text-white px-4">
+                  Página {currentPage} de {totalPages}
+                </span>
+
+                <button
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() => {
+                    setCurrentPage((p) => Math.min(totalPages, p + 1));
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
+                  aria-label="Página siguiente"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>
@@ -277,16 +330,16 @@ function FiltersPanel({
       </div>
 
       <FilterGroup
-        label="Categoría"
-        value={categoria}
-        onChange={onCategoria}
-        options={categorias}
-      />
-      <FilterGroup
         label="Marca"
         value={marca}
         onChange={onMarca}
         options={marcas}
+      />
+      <FilterGroup
+        label="Categoría"
+        value={categoria}
+        onChange={onCategoria}
+        options={categorias}
       />
 
       <label className="flex items-center gap-3 cursor-pointer">

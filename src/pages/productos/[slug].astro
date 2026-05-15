@@ -6,6 +6,7 @@ import RelatedProducts, {
   type RelatedProduct,
 } from "../../components/productos/RelatedProducts";
 import ContactForm from "../../components/contact/ContactForm";
+import ProductsDisclaimer from "../../components/productos/ProductsDisclaimer.astro";
 
 export const prerender = true;
 
@@ -199,6 +200,10 @@ const cartProduct = {
   </article>
 
   <RelatedProducts products={recommended} client:visible />
+
+  <section class="container-lg pt-12">
+    <ProductsDisclaimer />
+  </section>
 
   <section class="section-padding">
     <div class="container-lg">

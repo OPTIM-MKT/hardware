@@ -30,15 +30,27 @@ export default function RelatedProducts({
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
               También te puede interesar
             </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-ink dark:text-white">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-ink dark:text-white">
+              {title}
+            </h2>
           </div>
           <a
             href="/productos"
             className="hidden md:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent hover:gap-2 transition-all"
           >
             Ver todos
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
             </svg>
           </a>
         </div>
@@ -66,7 +78,7 @@ function RelatedCard({ product }: { product: RelatedProduct }) {
         categoria: product.categoria,
         sku: product.sku,
       },
-      1
+      1,
     );
     toast.success(`Agregado: ${product.nombre}`, {
       action: { label: "Ver carrito", onClick: () => cartStore.openPanel() },
@@ -99,11 +111,21 @@ function RelatedCard({ product }: { product: RelatedProduct }) {
       <button
         type="button"
         onClick={handleAdd}
-        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-widest border border-line text-ink hover:border-primary hover:text-primary transition-colors cursor-pointer"
+        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-widest border border-line text-ink dark:text-white hover:border-primary hover:text-primary transition-colors cursor-pointer"
       >
         Agregar
-        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        <svg
+          className="w-3 h-3"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
         </svg>
       </button>
     </a>

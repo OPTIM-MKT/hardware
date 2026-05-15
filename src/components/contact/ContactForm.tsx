@@ -157,7 +157,7 @@ export default function ContactForm({
   }
 
   return (
-    <div className="bento-card">
+    <div id="contact-form" className="bento-card scroll-mt-32">
       <header className="mb-8">
         <span
           className="inline-block px-3 py-1 text-[10px] font-semibold uppercase tracking-widest rounded-full mb-3"

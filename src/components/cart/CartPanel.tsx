@@ -128,7 +128,7 @@ export default function CartPanel() {
 
             <footer className="border-t border-line p-5 flex flex-col gap-3">
               <a
-                href="/contact?mode=productos"
+                href="/contact?mode=productos#contact-form"
                 onClick={() => cartStore.closePanel()}
                 aria-disabled={empty}
                 className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm uppercase tracking-widest transition-all duration-300 ${

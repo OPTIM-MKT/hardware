@@ -4,6 +4,7 @@ import HeroCarousel from "../components/home/HeroCarousel";
 import ServicesSection from "../components/home/ServicesSection";
 import HomeContactTeaser from "../components/home/HomeContactTeaser";
 import FeaturedProducts from "../components/home/FeaturedProducts.astro";
+import Brands from "@/components/home/Brands.astro";
 ---
 
 <Layout
@@ -13,6 +14,8 @@ import FeaturedProducts from "../components/home/FeaturedProducts.astro";
   <HeroCarousel client:load />
 
   <FeaturedProducts />
+
+  <Brands />
 
   <ServicesSection client:visible />
 

@@ -1,0 +1,94 @@
+---
+import { Image } from "astro:assets";
+
+import zebra from "@/assets/images/brands/zebra.webp";
+import honeywell from "@/assets/images/brands/honeywell.webp";
+import Connexion from "@/assets/images/brands/3dConnexion.webp";
+import citizen from "@/assets/images/brands/citizen.webp";
+import iKey from "@/assets/images/brands/iKey.webp";
+import inkanton from "@/assets/images/brands/inkanto.webp";
+import omron from "@/assets/images/brands/omron.webp";
+import panasonic from "@/assets/images/brands/panasonic.webp";
+import polycom from "@/assets/images/brands/poly.webp";
+import proFace from "@/assets/images/brands/proface.webp";
+
+const brands = [
+  {
+    name: "Zebra",
+    image: zebra,
+  },
+  {
+    name: "Honeywell",
+    image: honeywell,
+  },
+  {
+    name: "Panasonic",
+    image: panasonic,
+  },
+  {
+    name: "Polycom",
+    image: polycom,
+  },
+  {
+    name: "ProFace",
+    image: proFace,
+  },
+  {
+    name: "3dConnexion",
+    image: Connexion,
+  },
+  {
+    name: "Citizen",
+    image: citizen,
+  },
+  {
+    name: "iKey",
+    image: iKey,
+  },
+  {
+    name: "Inkanton",
+    image: inkanton,
+  },
+  {
+    name: "Omron",
+    image: omron,
+  },
+];
+
+import ScrollReveal from "../shared/ScrollReveal";
+---
+
+<section class="section-padding bg-slate-50 dark:bg-slate-900/50">
+  <div class="container-lg">
+    <ScrollReveal client:visible>
+      <h2
+        class="text-3xl md:text-4xl font-bold text-center text-primary dark:text-slate-200 mb-12"
+      >
+        Marcas que <span class="text-primary dark:text-white font-bold"
+          >representamos</span
+        >
+      </h2>
+    </ScrollReveal>
+  </div>
+
+  <div
+    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 items-center px-4 md:px-10 max-w-7xl mx-auto"
+  >
+    {
+      brands.map((brand, index) => (
+        <ScrollReveal client:visible delay={index * 0.1} direction="up">
+          <a
+            href="/productos"
+            class="flex justify-center items-center h-28 md:h-32 p-6 bg-white dark:bg-slate-100 rounded-2xl shadow-sm hover:shadow-lg border border-slate-100 dark:border-slate-200 grayscale hover:grayscale-0 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          >
+            <Image
+              src={brand.image}
+              alt={brand.name}
+              class="max-h-12 md:max-h-16 w-auto object-contain mix-blend-multiply dark:mix-blend-normal"
+            />
+          </a>
+        </ScrollReveal>
+      ))
+    }
+  </div>
+</section>

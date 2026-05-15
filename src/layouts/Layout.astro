@@ -26,15 +26,12 @@ const {
   canonical,
 } = Astro.props;
 
-/** Build absolute URLs for OG / canonical */
 const currentPath = Astro.url.pathname;
 const canonicalURL = canonical ?? new URL(currentPath, SITE_URL).href;
-const absoluteImage = image.startsWith("http") ? image : new URL(image, SITE_URL).href;
+const absoluteImage = image.startsWith("http")
+  ? image
+  : new URL(image, SITE_URL).href;
 
-/**
- * JSON-LD structured data — LocalBusiness + WebSite.
- * Only emitted on the home page to avoid duplicate entities.
- */
 const isHome = currentPath === "/" || currentPath === "";
 
 const localBusinessLD = {
@@ -88,20 +85,26 @@ const webSiteLD = {
     <ClientRouter />
     <meta name="generator" content={Astro.generator} />
 
+    {/* Google Tag Manager — colocado lo más arriba posible en <head> */}
+    <script is:inline>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-WC9PWCK6");
+    </script>
+
     {/* Canonical */}
     <link rel="canonical" href={canonicalURL} />
 
     {/* Google Fonts — async load to avoid render-blocking */}
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-      crossorigin
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
       as="style"
@@ -203,6 +206,15 @@ const webSiteLD = {
   </head>
 
   <body class="bg-canvas text-ink antialiased">
+    {/* Google Tag Manager (noscript) — primera línea dentro de <body> */}
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-WC9PWCK6"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
     <Navbar />
 
     <main>

@@ -33,7 +33,7 @@ export default function CartPanel() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => cartStore.closePanel()}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-60"
             aria-hidden
           />
           <motion.aside
@@ -44,15 +44,22 @@ export default function CartPanel() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", ease: [0.25, 0.1, 0.25, 1], duration: 0.35 }}
+            transition={{
+              type: "tween",
+              ease: [0.25, 0.1, 0.25, 1],
+              duration: 0.35,
+            }}
             data-surface="panel"
-            className="fixed top-0 right-0 bottom-0 z-[70] w-full md:w-[420px] text-ink shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 bottom-0 z-70 w-full md:w-[420px] text-ink shadow-2xl flex flex-col"
           >
             <header className="flex items-center justify-between px-6 py-5 border-b border-line">
               <div>
-                <h2 className="text-lg font-bold text-ink dark:text-white">Tu carrito</h2>
+                <h2 className="text-lg font-bold text-ink dark:text-white">
+                  Tu carrito
+                </h2>
                 <p className="text-xs text-muted">
-                  {items.length} producto{items.length === 1 ? "" : "s"} para cotizar
+                  {items.length} producto{items.length === 1 ? "" : "s"} para
+                  cotizar
                 </p>
               </div>
               <button
@@ -68,7 +75,11 @@ export default function CartPanel() {
                   strokeWidth={2}
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </header>
@@ -109,7 +120,9 @@ export default function CartPanel() {
                         <div className="mt-auto flex items-center justify-between gap-2 pt-1">
                           <QuantityStepper
                             value={item.cantidad}
-                            onChange={(v) => cartStore.setCantidad(item.slug, v)}
+                            onChange={(v) =>
+                              cartStore.setCantidad(item.slug, v)
+                            }
                           />
                           <button
                             type="button"
@@ -176,7 +189,13 @@ function EmptyState() {
         className="w-16 h-16 rounded-full flex items-center justify-center"
         style={{ background: "rgba(250,183,2,0.12)", color: "#fab702" }}
       >
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+        <svg
+          className="w-7 h-7"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.8}
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -184,9 +203,12 @@ function EmptyState() {
           />
         </svg>
       </div>
-      <p className="text-sm font-semibold text-ink dark:text-white">Tu carrito está vacío</p>
+      <p className="text-sm font-semibold text-ink dark:text-white">
+        Tu carrito está vacío
+      </p>
       <p className="text-xs text-muted max-w-[220px] leading-relaxed">
-        Agrega productos desde el catálogo para solicitar tu cotización personalizada.
+        Agrega productos desde el catálogo para solicitar tu cotización
+        personalizada.
       </p>
       <a
         href="/productos"

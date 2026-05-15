@@ -90,7 +90,7 @@ function RelatedCard({ product }: { product: RelatedProduct }) {
       href={`/productos/${product.slug}`}
       className="group bento-card flex flex-col gap-4 p-4 hover:border-primary/30 transition-all"
     >
-      <div className="aspect-[4/3] rounded-xl overflow-hidden bg-line">
+      <div className="aspect-4/3 rounded-xl overflow-hidden bg-line">
         {product.imagen ? (
           <img
             src={product.imagen}

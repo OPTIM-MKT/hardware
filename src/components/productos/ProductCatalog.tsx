@@ -40,11 +40,11 @@ export default function ProductCatalog({ products, children }: Props) {
 
   const categorias = useMemo(
     () => Array.from(new Set(products.map((p) => p.categoria))).sort(),
-    [products]
+    [products],
   );
   const marcas = useMemo(
     () => Array.from(new Set(products.map((p) => p.marca))).sort(),
-    [products]
+    [products],
   );
 
   const filtered = useMemo(() => {
@@ -75,14 +75,16 @@ export default function ProductCatalog({ products, children }: Props) {
         list = [...list].sort((a, b) => Number(b.nuevo) - Number(a.nuevo));
         break;
       case "destacado":
-        list = [...list].sort((a, b) => Number(b.destacado) - Number(a.destacado));
+        list = [...list].sort(
+          (a, b) => Number(b.destacado) - Number(a.destacado),
+        );
         break;
       default:
         list = [...list].sort(
           (a, b) =>
             Number(b.destacado) - Number(a.destacado) ||
             Number(b.nuevo) - Number(a.nuevo) ||
-            a.nombre.localeCompare(b.nombre)
+            a.nombre.localeCompare(b.nombre),
         );
     }
 
@@ -92,7 +94,7 @@ export default function ProductCatalog({ products, children }: Props) {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginatedProducts = filtered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   const hasFilters =
@@ -116,8 +118,18 @@ export default function ProductCatalog({ products, children }: Props) {
           onClick={() => setDrawerOpen(true)}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-sm font-semibold text-ink hover:border-primary hover:text-primary transition-colors cursor-pointer"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h18M5.25 12h13.5M9.75 19.5h4.5" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 4.5h18M5.25 12h13.5M9.75 19.5h4.5"
+            />
           </svg>
           Filtros
           {hasFilters && (
@@ -128,7 +140,10 @@ export default function ProductCatalog({ products, children }: Props) {
       </div>
 
       {/* Desktop filters */}
-      <aside className="hidden md:block sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
+      <aside
+        className="hidden md:block sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2"
+        style={{ scrollbarWidth: "thin" }}
+      >
         <FiltersPanel
           query={query}
           onQuery={setQuery}
@@ -167,15 +182,27 @@ export default function ProductCatalog({ products, children }: Props) {
               className="fixed top-0 left-0 bottom-0 z-50 w-[85%] max-w-sm p-6 overflow-y-auto md:hidden"
             >
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold text-ink dark:text-white">Filtros</h3>
+                <h3 className="text-lg font-bold text-ink dark:text-white">
+                  Filtros
+                </h3>
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Cerrar"
                   className="w-9 h-9 rounded-full hover:bg-line/60 flex items-center justify-center cursor-pointer"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -211,9 +238,12 @@ export default function ProductCatalog({ products, children }: Props) {
             children
           ) : (
             <div className="bento-card flex flex-col items-center text-center py-16 gap-3">
-              <p className="text-base font-semibold text-ink dark:text-white">Sin resultados</p>
+              <p className="text-base font-semibold text-ink dark:text-white">
+                Sin resultados
+              </p>
               <p className="text-sm text-muted max-w-sm">
-                No encontramos productos con esos criterios. Ajusta los filtros o busca otra palabra.
+                No encontramos productos con esos criterios. Ajusta los filtros
+                o busca otra palabra.
               </p>
               <button
                 type="button"
@@ -244,8 +274,18 @@ export default function ProductCatalog({ products, children }: Props) {
                   className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
                   aria-label="Página anterior"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5 8.25 12l7.5-7.5"
+                    />
                   </svg>
                 </button>
 
@@ -263,8 +303,18 @@ export default function ProductCatalog({ products, children }: Props) {
                   className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
                   aria-label="Página siguiente"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                    />
                   </svg>
                 </button>
               </div>
@@ -324,7 +374,11 @@ function FiltersPanel({
             strokeWidth={2}
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.34-4.34M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-4.34-4.34M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"
+            />
           </svg>
         </div>
       </div>
@@ -347,9 +401,11 @@ function FiltersPanel({
           type="checkbox"
           checked={soloDisponibles}
           onChange={(e) => onSoloDisponibles(e.target.checked)}
-          className="w-4 h-4 rounded border-line accent-primary dark:accent-[#fab702]"
+          className="w-4 h-4 rounded border-line accent-primary dark:accent-accent"
         />
-        <span className="text-sm text-ink dark:text-white">Solo disponibles</span>
+        <span className="text-sm text-ink dark:text-white">
+          Solo disponibles
+        </span>
       </label>
 
       {hasFilters && (
@@ -387,7 +443,7 @@ function FilterGroup({
             type="radio"
             checked={value === "all"}
             onChange={() => onChange("all")}
-            className="w-4 h-4 accent-primary dark:accent-[#fab702]"
+            className="w-4 h-4 accent-primary dark:accent-accent"
           />
           <span className="text-sm text-ink dark:text-white">Todas</span>
         </label>
@@ -397,7 +453,7 @@ function FilterGroup({
               type="radio"
               checked={value === opt}
               onChange={() => onChange(opt)}
-              className="w-4 h-4 accent-primary dark:accent-[#fab702]"
+              className="w-4 h-4 accent-primary dark:accent-accent"
             />
             <span className="text-sm text-ink dark:text-white">{opt}</span>
           </label>
@@ -451,7 +507,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         categoria: product.categoria,
         sku: product.sku,
       },
-      1
+      1,
     );
     toast.success(`Agregado: ${product.nombre}`, {
       action: {
@@ -466,7 +522,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
       href={`/productos/${product.slug}`}
       className="group bento-card flex flex-col gap-4 p-5 hover:border-primary/30 transition-all"
     >
-      <div className="aspect-[4/3] rounded-xl overflow-hidden bg-line relative">
+      <div className="aspect-4/3 rounded-xl overflow-hidden bg-line relative">
         {product.imagen ? (
           <img
             src={product.imagen}
@@ -503,8 +559,18 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         <div className="mt-auto pt-3 flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary dark:text-accent">
             Ver detalle
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
             </svg>
           </span>
           <button
@@ -513,8 +579,18 @@ function ProductCard({ product }: { product: CatalogProduct }) {
             aria-label={`Agregar ${product.nombre} al carrito`}
             className="w-9 h-9 rounded-full bg-accent text-primary flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
             </svg>
           </button>
         </div>

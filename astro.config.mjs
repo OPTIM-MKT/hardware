@@ -15,7 +15,7 @@ import icon from 'astro-icon';
 
 
 export default defineConfig({
-  site: 'https://basic.com',
+  site: 'https://www.hard-ware.com.mx/',
   output: "server",
   adapter: netlify({
     imageCDN: false,

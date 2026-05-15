@@ -116,7 +116,7 @@ export default function ProductCatalog({ products, children }: Props) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-sm font-semibold text-ink hover:border-primary hover:text-primary transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-sm font-semibold text-primary dark:text-accent hover:border-primary hover:text-primary dark:hover:text-accent transition-colors cursor-pointer"
         >
           <svg
             className="w-4 h-4"
@@ -182,7 +182,7 @@ export default function ProductCatalog({ products, children }: Props) {
               className="fixed top-0 left-0 bottom-0 z-50 w-[85%] max-w-sm p-6 overflow-y-auto md:hidden"
             >
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold text-ink dark:text-white">
+                <h3 className="text-lg font-bold text-primary dark:text-accent">
                   Filtros
                 </h3>
                 <button

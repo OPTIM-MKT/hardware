@@ -91,6 +91,29 @@ const webSiteLD = {
     {/* Canonical */}
     <link rel="canonical" href={canonicalURL} />
 
+    {/* Google Fonts — async load to avoid render-blocking */}
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+      crossorigin
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Syne:wght@700;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Syne:wght@700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
     <SEO
       title={title}
       description={description}
@@ -188,8 +211,8 @@ const webSiteLD = {
 
     <Footer />
     <ScrollTop />
-    <CartPanel client:load />
-    <AppToaster client:load />
+    <CartPanel client:idle />
+    <AppToaster client:idle />
 
     <!-- Theme toggle logic -->
     <script>

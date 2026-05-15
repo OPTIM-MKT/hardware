@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 
 const all = await getCollection("productos");
 const featured = all
@@ -59,9 +60,10 @@ const featured = all
           >
             <div class="aspect-[4/3] rounded-xl overflow-hidden bg-line relative">
               {p.data.imagen && (
-                <img
+                <Image
                   src={p.data.imagen}
                   alt={p.data.nombre}
+                  inferSize={true}
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />

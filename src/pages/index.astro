@@ -1,17 +1,26 @@
 ---
+import { getImage } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/home/HeroCarousel";
 import ServicesSection from "../components/home/ServicesSection";
 import HomeContactTeaser from "../components/home/HomeContactTeaser";
 import FeaturedProducts from "../components/home/FeaturedProducts.astro";
 import Brands from "@/components/home/Brands.astro";
+
+import oneSrc from "@/assets/one.webp";
+import twoSrc from "@/assets/two.jpg";
+import tresSrc from "@/assets/tres.webp";
+
+const one = await getImage({ src: oneSrc, format: "webp", width: 1920, quality: 75 });
+const two = await getImage({ src: twoSrc, format: "webp", width: 1920, quality: 75 });
+const tres = await getImage({ src: tresSrc, format: "webp", width: 1920, quality: 75 });
 ---
 
 <Layout
   title="Hard-Ware | Distribuidor autorizado en México · Tecnología, impresión, identificación y automatización"
   description="HardWare es distribuidor autorizado en México. Soluciones industriales: impresión, identificación, captura de datos, equipos rugged y automatización."
 >
-  <HeroCarousel client:load />
+  <HeroCarousel images={[one.src, two.src, tres.src]} client:load />
 
   <FeaturedProducts />
 

@@ -17,6 +17,9 @@ import icon from 'astro-icon';
 export default defineConfig({
   site: 'https://www.hard-ware.com.mx/',
   output: "server",
+  image: {
+    remotePatterns: [{ protocol: "https" }],
+  },
   adapter: netlify({
     imageCDN: false,
   }),

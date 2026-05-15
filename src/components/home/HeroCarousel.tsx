@@ -5,16 +5,12 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef } from "react";
 import type { SwiperClass } from "swiper/react";
-import one from "@/assets/one.webp";
-import two from "@/assets/two.jpg";
-import tres from "@/assets/tres.webp";
 
 const slides = [
   {
     id: 1,
     tag: "Soluciones Industriales B2B",
     title: "Tecnología,\nimpresión e\nidentificación",
-    image: one,
     subtitle: "Soluciones industriales para empresas en México",
     description:
       "Soluciones industriales en tecnología, impresión, identificación y automatización para empresas en México. Distribuidor autorizado Zebra, Honeywell y más.",
@@ -29,7 +25,6 @@ const slides = [
     id: 2,
     tag: "Identificación & Automatización",
     title: "Trazabilidad\ntotal para tu\noperación.",
-    image: two,
     subtitle: "Terminales · Impresoras · Escáneres · RFID",
     description:
       "Implementamos sistemas de identificación automática y trazabilidad end-to-end que reducen errores y aumentan la eficiencia de tu cadena de suministro.",
@@ -44,7 +39,6 @@ const slides = [
     id: 3,
     tag: "Distribuidores Autorizados",
     title: "Socios de las\nmarcas líderes\nen México.",
-    image: tres,
     subtitle: "Zebra · Honeywell · SATO · Datalogic",
     description:
       "Distribuidor autorizado oficial en México. Garantía de fábrica, soporte técnico especializado y acceso a programas de servicio directo del fabricante.",
@@ -64,7 +58,7 @@ const stats = [
   { value: "100%", label: "Cobertura ZMM" },
 ];
 
-export default function HeroCarousel() {
+export default function HeroCarousel({ images }: { images?: string[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperClass | null>(null);
 
@@ -86,7 +80,7 @@ export default function HeroCarousel() {
           <SwiperSlide key={slide.id}>
             {/* Full-bleed photo background */}
             <img
-              src={slide.image.src}
+              src={images ? images[i] : ""}
               alt={slide.tag}
               className="absolute inset-0 w-full h-full object-cover"
               loading={i === 0 ? "eager" : "lazy"}

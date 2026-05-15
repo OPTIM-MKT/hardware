@@ -3,7 +3,7 @@ nombre: "CadMouse Compact"
 marca: "3Dconnexion"
 descripcion: "Ratón compacto con cable diseñado específicamente para profesionales del diseño y la ingeniería."
 descripcionLarga: "El CadMouse Compact ofrece un rendimiento de nivel profesional en un formato reducido. Cuenta con un botón central dedicado, rueda de desplazamiento inteligente y un sensor óptico de alta precisión ideal para el trabajo continuo en entornos CAD."
-imagen: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8nm15A4d_seNTXjdnH0mJUNexzCm04tHwUA&s"
 categoria: "Ratones CAD"
 tags:
   - "ratón"

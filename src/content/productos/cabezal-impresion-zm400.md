@@ -3,7 +3,7 @@ nombre: "Cabezal de Impresión ZM400 203dpi"
 marca: "Zebra"
 descripcion: "Repuesto original de cabezal térmico para impresoras industriales Zebra serie ZM400."
 descripcionLarga: "Asegure la calidad de impresión y el rendimiento de su equipo con este cabezal original Zebra de 203 dpi. Diseñado para una fácil sustitución, garantiza que sus códigos de barras y textos mantengan la precisión necesaria para evitar errores de lectura."
-imagen: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?q=80&w=1400"
+imagen: "https://mpi.com.es/wp-content/uploads/2018/01/Cabezales-zebra-ZM400-79800M-79801M-.jpg"
 categoria: "Refacciones"
 tags:
   - "cabezal"

@@ -3,7 +3,7 @@ nombre: "Poly Blackwire 3325-M"
 marca: "Poly"
 descripcion: "Diadema estéreo con cable, optimizada para Microsoft Teams con conexión USB y 3.5mm."
 descripcionLarga: "La serie Blackwire 3300 ofrece la mejor experiencia de audio de su clase en una diadema diseñada para el uso empresarial intensivo. Su diseño moderno y cómodo permite a los usuarios gestionar llamadas con facilidad gracias a su versatilidad de conexión."
-imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1400"
+imagen: "https://hp.widen.net/content/mfdixmcpm0/png/mfdixmcpm0.png?w=800&h=600&dpi=72&color=ffffff00"
 categoria: "Audio"
 tags:
   - "diadema"

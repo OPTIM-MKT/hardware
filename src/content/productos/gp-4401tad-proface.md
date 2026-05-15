@@ -3,7 +3,7 @@ nombre: "HMI Pro-face GP-4401TAD"
 marca: "Pro-face"
 descripcion: "Interfaz Hombre-Máquina compacta de 7.5 pulgadas con pantalla táctil a color VGA."
 descripcionLarga: "El GP-4401TAD ofrece un equilibrio perfecto entre tamaño y rendimiento. Con una pantalla de 7.5 pulgadas de alta resolución, es ideal para tableros de control compactos que requieren una interfaz gráfica rica y múltiples puertos de comunicación."
-imagen: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?q=80&w=1400"
+imagen: "https://pro-face.com.mx/wp-content/uploads/2019/12/pfx-gp-4401-tad.jpg"
 categoria: "HMI"
 tags:
   - "touch"

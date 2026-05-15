@@ -3,7 +3,7 @@ nombre: "CadMouse Compact Wireless"
 marca: "3Dconnexion"
 descripcion: "Ratón compacto e inalámbrico de alto rendimiento para profesionales móviles del CAD."
 descripcionLarga: "Desarrollado para ofrecer un rendimiento inalámbrico superior en un diseño ligero y compacto. Ofrece triple conectividad (Bluetooth, Receptor Universal y cable USB) y una batería recargable de larga duración para profesionales en constante movimiento."
-imagen: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_p4bhAt9mnXryEGxmHZb7JjTFLV33D-MMEg&s"
 categoria: "Ratones CAD"
 tags:
   - "ratón"

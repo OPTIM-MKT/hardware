@@ -3,7 +3,7 @@ nombre: "Toughbook G2 (FZ-G2)"
 marca: "Panasonic"
 descripcion: "Tableta rugerizada de 10.1 pulgadas de última generación, lista para IA."
 descripcionLarga: "El Toughbook G2 es la evolución de la informática móvil táctica. Con un procesador Intel Core Ultra 5 optimizado para IA, ofrece un diseño modular único que permite añadir lectores de tarjetas, puertos adicionales o almacenamiento térmico según las necesidades del campo."
-imagen: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=1400"
+imagen: "https://ruggedbooks.com/cdn/shop/files/toughbook-fz-g2-mk3-intel-core-ultra-5-135u-4g-lte-windows-11-pro-fz-g2pff51bm-596617.jpg?v=1741411112&width=1214"
 categoria: "Cómputo Móvil"
 tags:
   - "tablet"

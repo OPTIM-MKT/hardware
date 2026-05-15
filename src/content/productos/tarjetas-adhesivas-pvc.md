@@ -3,7 +3,7 @@ nombre: "Tarjetas Adhesivas Blancas Zebra de PVC"
 marca: "Zebra"
 descripcion: "Tarjetas de PVC con reverso adhesivo diseñadas para personalizar tarjetas de proximidad estándar."
 descripcionLarga: "Las tarjetas adhesivas Zebra 104523-010 son ideales para añadir información personalizada a tarjetas de acceso gruesas o clamshell. Fabricadas en PVC de alta calidad, garantizan una impresión nítida y una adherencia duradera."
-imagen: "https://images.unsplash.com/photo-1621508651130-176865203300?q=80&w=1400"
+imagen: "https://tech-solution.mx/wp-content/uploads/2022/07/8cef1455efb17b24df0556fdd0508ea7-1.jpg"
 categoria: "Consumibles"
 tags:
   - "pvc"

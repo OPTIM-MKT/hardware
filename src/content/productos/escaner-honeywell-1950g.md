@@ -3,7 +3,7 @@ nombre: "Escáner Honeywell Xenon 1950g"
 marca: "Honeywell"
 descripcion: "Escáner de mano 2D de alto rendimiento para retail, salud y manufactura con tecnología de captura de imágenes avanzada."
 descripcionLarga: "El Honeywell Xenon 1950g ofrece lectura ultra rápida de códigos 1D, 2D y captura de imágenes en condiciones de iluminación adversas. Diseño ergonómico, cable USB y soporte para escaneo continuo."
-imagen: "https://images.unsplash.com/photo-1556742400-b5b7c5121f5d?q=80&w=1400"
+imagen: "https://s7d1.scene7.com/is/image/Honeywell65/sps-ppr-1950g-barcode-scanner-2"
 categoria: "Escáneres"
 tags:
   - "2d"

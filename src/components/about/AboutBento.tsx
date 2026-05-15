@@ -70,11 +70,11 @@ export default function AboutBento() {
             <h1 className="text-5xl md:text-6xl font-extrabold text-black dark:text-white mb-4">
               Somos <span className="text-gradient">Hard-Ware</span>
             </h1>
-            <p className="text-muted max-w-2xl mx-auto text-lg leading-relaxed">
+            {/* <p className="text-muted max-w-2xl mx-auto text-lg leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Somos una
               empresa especializada en soluciones tecnológicas industriales con
               más de 15 años de experiencia en Monterrey, Nuevo León.
-            </p>
+            </p> */}
           </div>
         </ScrollReveal>
 
@@ -238,17 +238,14 @@ export default function AboutBento() {
             className="rounded-2xl p-10 text-center text-white"
             style={{ background: "linear-gradient(135deg, #013383, #233060)" }}
           >
-            <h3
-              className="text-2xl font-bold mb-2"
-              style={{ fontFamily: "'Syne', sans-serif" }}
-            >
+            <h3 className="text-2xl font-bold mb-2">
               ¿Quieres ser parte de nuestros clientes?
             </h3>
-            <p className="text-white/70 text-sm mb-6 max-w-md mx-auto">
+            {/* <p className="text-white/70 text-sm mb-6 max-w-md mx-auto">
               Lorem ipsum dolor sit amet consectetur adipiscing elit.
               Contáctanos y descubre cómo podemos mantener tus equipos operando
               al máximo.
-            </p>
+            </p> */}
             <a
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm tracking-wide hover:-translate-y-0.5 transition-all duration-300"

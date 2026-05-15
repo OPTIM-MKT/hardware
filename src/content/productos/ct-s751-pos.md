@@ -3,7 +3,7 @@ nombre: "Impresora Térmica CT-S751 POS"
 marca: "Citizen"
 descripcion: "Impresora de recibos de carga superior ultra rápida para puntos de venta modernos."
 descripcionLarga: "La CT-S751 es una impresora de tickets ergonómica y compacta que ofrece una velocidad de impresión líder en su clase. Su diseño de carga superior y salida frontal la hace ideal para mostradores de retail y hostelería con espacio limitado."
-imagen: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?q=80&w=1400"
+imagen: "https://resources.sears.com.mx/medios-plazavip/mkt/62cdd6f715ef7_27jpg.jpg"
 categoria: "Punto de Venta"
 tags:
   - "recibos"

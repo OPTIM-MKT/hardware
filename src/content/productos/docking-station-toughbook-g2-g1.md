@@ -3,7 +3,7 @@ nombre: "Docking Station para Panasonic Toughbook G2 / G1"
 marca: "Panasonic"
 descripcion: "Estación de acoplamiento vehicular y de escritorio de alta resistencia para tabletas Toughbook G2 y G1."
 descripcionLarga: "Esta Docking Station de Gamber-Johnson (certificada por Panasonic) está diseñada para entornos de misión crítica. Permite una conexión segura y carga constante para las tabletas Toughbook G2 y G1, ofreciendo una expansión de puertos completa y un sistema de bloqueo robusto para evitar robos y vibraciones en vehículos."
-imagen: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?q=80&w=1400"
+imagen: "https://www.gamberjohnson.com/wp-content/uploads/2024/06/panasonic_fz-g1_g2_docking_station-_no_rf_angled_view_with_lind_power_adapter_no_computer.jpg"
 categoria: "Accesorios"
 tags:
   - "docking"

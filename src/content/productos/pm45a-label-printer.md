@@ -3,7 +3,7 @@ nombre: "Honeywell PM45A Industrial"
 marca: "Honeywell"
 descripcion: "Impresora de etiquetas industrial de alto rendimiento con conectividad avanzada."
 descripcionLarga: "La PM45A está diseñada para una impresión de alta velocidad en aplicaciones de fabricación y gestión de almacenes. Ofrece una excelente precisión de impresión y está preparada para la industria 4.0 con múltiples opciones de conectividad."
-imagen: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?q=80&w=1400"
+imagen: "https://honeywell.scene7.com/is/image/Honeywell65/sps-ppr-pm45a-primary"
 categoria: "Impresoras Industriales"
 tags:
   - "transferencia térmica"

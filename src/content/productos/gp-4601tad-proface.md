@@ -3,7 +3,7 @@ nombre: "HMI Pro-face GP-4601TAD"
 marca: "Pro-face"
 descripcion: "Interfaz Hombre-Máquina de 12.1 pulgadas con pantalla táctil analógica a color."
 descripcionLarga: "El GP-4601TAD es una HMI industrial de alta gama que ofrece una pantalla TFT de gran formato (SVGA). Proporciona una visualización clara y un control preciso para sistemas de automatización complejos, con amplias opciones de comunicación serial y ethernet."
-imagen: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?q=80&w=1400"
+imagen: "https://mm.digikey.com/Volume0/opasdata/d220001/medias/images/5986/MFG_PFXGP4601TAD.jpg"
 categoria: "HMI"
 tags:
   - "touch"

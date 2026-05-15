@@ -3,7 +3,7 @@ nombre: "SpaceMouse Pro Wireless"
 marca: "3Dconnexion"
 descripcion: "La máxima libertad para profesionales 3D: controlador 3D inalámbrico con reposamanos y teclas de atajo."
 descripcionLarga: "Combina el confort ergonómico y la eficiencia del SpaceMouse Pro con la flexibilidad de la conectividad inalámbrica. Olvídate de los cables mientras mantienes un control total sobre tus modelos 3D con sus 15 botones programables y sensor 6DoF."
-imagen: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfZL2KbZRBUfQGLVLjk1ACOkzwZd8aAmxVmQ&s"
 categoria: "Navegación 3D"
 tags:
   - "3d"

@@ -3,7 +3,7 @@ nombre: "Brazaletes Térmicos Directos Adhesivos Rojos para HC100"
 marca: "Zebra"
 descripcion: "Brazaletes de identificación para el sector salud con cierre adhesivo y color rojo de alerta."
 descripcionLarga: "Diseñados para su uso con la impresora de brazaletes Zebra ZD510-HC (antes HC100), estos brazaletes Z-Band Direct permiten una identificación rápida de pacientes. El color rojo es ideal para señalizar alertas médicas, alergias o condiciones especiales."
-imagen: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1400"
+imagen: "https://www.hard-ware.com.mx/wp-content/uploads/2022/07/zband-direct-group-product-photography.jpg"
 categoria: "Salud"
 tags:
   - "brazaletes"

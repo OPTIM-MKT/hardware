@@ -3,7 +3,7 @@ titulo: "Cómo elegir la impresora de etiquetas industrial correcta"
 descripcion: "Guía práctica para seleccionar la impresora térmica adecuada según tu volumen, ambiente y tipo de etiqueta."
 fecha: 2026-04-12
 autor: "Equipo Hard-Ware"
-portada: "https://images.unsplash.com/photo-1612198790700-0a49e2e7e7f9?q=80&w=1600"
+portada: "https://cintasyetiquetas.com/cdn/shop/articles/photography-web-cat-hero-printers-16x9-3600.jpg.imgo.jpg?v=1726076468&width=1100"
 tags:
   - "impresoras"
   - "etiquetas"
@@ -35,11 +35,11 @@ Las impresoras industriales típicas manejan 4" de ancho. Para palets y etiqueta
 
 ## 4. Volumen diario
 
-| Volumen | Tipo recomendado |
-|---|---|
-| < 500 etiq/día | Escritorio (ZD421) |
-| 500–4000 etiq/día | Industrial compacta |
-| > 4000 etiq/día | Industrial de alto rendimiento |
+| Volumen           | Tipo recomendado               |
+| ----------------- | ------------------------------ |
+| < 500 etiq/día    | Escritorio (ZD421)             |
+| 500–4000 etiq/día | Industrial compacta            |
+| > 4000 etiq/día   | Industrial de alto rendimiento |
 
 ## 5. Conectividad
 

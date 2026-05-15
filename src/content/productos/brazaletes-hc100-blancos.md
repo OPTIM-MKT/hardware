@@ -3,7 +3,7 @@ nombre: "Brazaletes Térmicos Directos Adhesivos Blancos para HC100"
 marca: "Zebra"
 descripcion: "Brazaletes estándar de identificación de pacientes en color blanco para impresión térmica directa."
 descripcionLarga: "Los brazaletes Z-Band Direct blancos ofrecen una solución duradera y segura para la identificación en hospitales. Su material suave evita irritaciones en la piel del paciente mientras mantiene la legibilidad del código de barras durante toda su estancia."
-imagen: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1400"
+imagen: "https://supportek-mx.myshopify.com/cdn/shop/products/10006995K_Consumibles.png?v=1756253394"
 categoria: "Salud"
 tags:
   - "brazaletes"

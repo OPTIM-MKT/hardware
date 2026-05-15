@@ -3,7 +3,7 @@ nombre: "CadMouse Pro Wireless Left"
 marca: "3Dconnexion"
 descripcion: "Ratón ergonómico inalámbrico de tamaño completo diseñado exclusivamente para profesionales zurdos."
 descripcionLarga: "Ofrece todas las ventajas ergonómicas y la precisión del CadMouse Pro Wireless, pero con un diseño invertido adaptado perfectamente para usuarios zurdos, asegurando la máxima comodidad y reducción de tensiones."
-imagen: "https://images.unsplash.com/photo-1605773527852-c546a8584ea3?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf9W6bvWcGJjl2X1rrMPEVNs0AtqPt0qkqVw&s"
 categoria: "Ratones CAD"
 tags:
   - "ratón"

@@ -3,7 +3,7 @@ nombre: "SpaceMouse Pro"
 marca: "3Dconnexion"
 descripcion: "Controlador 3D profesional con cable, reposamanos ergonómico y teclas modificadoras dedicadas."
 descripcionLarga: "El SpaceMouse Pro ofrece a los ingenieros y diseñadores la máxima comodidad y control. Con un reposamanos de tamaño completo recubierto suavemente, 15 teclas programables, teclas QuickView y modificadores de teclado (Ctrl, Alt, Shift, Esc)."
-imagen: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj6SmpxeSp-oXKibVMSQZQ8QQk5OKAXmYw0A&s"
 categoria: "Navegación 3D"
 tags:
   - "3d"

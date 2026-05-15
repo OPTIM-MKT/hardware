@@ -3,7 +3,7 @@ nombre: "Relevador de Seguridad G7SA"
 marca: "Omron"
 descripcion: "Relevador de seguridad con contactos de guía forzada de 6 polos."
 descripcionLarga: "La serie G7SA ofrece un diseño compacto y delgado con contactos de guía forzada (Force Guided) que garantizan que los contactos NO y NC nunca se cierren simultáneamente, cumpliendo con los estándares de seguridad para circuitos de control críticos."
-imagen: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?q=80&w=1400"
+imagen: "https://assets.omron.com/m/2c0ede2b3f9b23bb/Square_M-G7SA-jpg.jpg"
 categoria: "Automatización"
 tags:
   - "safety"

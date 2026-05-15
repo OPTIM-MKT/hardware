@@ -3,7 +3,7 @@ nombre: "SpaceMouse Compact"
 marca: "3Dconnexion"
 descripcion: "Navegación 3D esencial e intuitiva en un diseño compacto con cable."
 descripcionLarga: "Desarrollado para proporcionar una navegación 3D de nivel profesional para quienes prefieren un formato más reducido en su escritorio. Su base de acero cepillado le otorga estabilidad para mover con precisión el cabezal del controlador 6DoF."
-imagen: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFgJafP6TQmKDSgSO_YEejCZOVNWGtMP2vLA&s"
 categoria: "Navegación 3D"
 tags:
   - "3d"

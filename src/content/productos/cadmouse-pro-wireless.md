@@ -3,7 +3,7 @@ nombre: "CadMouse Pro Wireless"
 marca: "3Dconnexion"
 descripcion: "El ratón ergonómico inalámbrico de tamaño completo premium para profesionales de CAD."
 descripcionLarga: "Construido para soportar largas horas de trabajo diario, el CadMouse Pro Wireless combina una ergonomía excepcional con total libertad inalámbrica. Cuenta con triple conectividad, botones altamente duraderos y un sensor láser de alta precisión."
-imagen: "https://images.unsplash.com/photo-1605773527852-c546a8584ea3?q=80&w=1400"
+imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq1d8ACp39-BEchhsEFNeHtQW5csuDpV-vjw&s"
 categoria: "Ratones CAD"
 tags:
   - "ratón"

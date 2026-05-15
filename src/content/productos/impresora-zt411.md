@@ -3,7 +3,7 @@ nombre: "Zebra ZT411 Impresora de Etiquetas"
 marca: "Zebra"
 descripcion: "Impresora industrial de alto rendimiento con pantalla táctil a color para entornos exigentes."
 descripcionLarga: "La ZT411 ofrece tecnología avanzada con una pantalla táctil de 4.3 pulgadas que facilita la configuración y el estado de la impresora. Robusta y cargada con funciones de conectividad, es perfecta para aplicaciones industriales de gran volumen."
-imagen: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?q=80&w=1400"
+imagen: "https://www.logiscenter.us/media/catalog/product/cache/8cf70735af30046b057c1b96cae675a8/m/o/mod-zt411-zebra-label-printer-5.jpg"
 categoria: "Impresoras"
 tags:
   - "industrial"

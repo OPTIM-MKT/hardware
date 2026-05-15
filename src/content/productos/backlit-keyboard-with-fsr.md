@@ -3,7 +3,7 @@ nombre: "Backlit Keyboard with FSR"
 marca: "iKey"
 descripcion: "Teclado industrial robusto y retroiluminado con dispositivo apuntador FSR (Force Sensing Resistor) integrado."
 descripcionLarga: "Diseñado para sobrevivir en entornos industriales exigentes y condiciones extremas, este teclado de iKey ofrece teclas de perfil bajo para una fácil limpieza, retroiluminación LED ajustable para áreas con poca luz y un sensor FSR integrado que funciona como ratón. Su construcción garantiza resistencia total al polvo, la suciedad, el agua y los líquidos corrosivos."
-imagen: "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=1400"
+imagen: "https://ikey.com/cdn/shop/files/SLK-102-FSR.jpg?v=1722869506"
 categoria: "Teclados Industriales"
 tags:
   - "teclado"

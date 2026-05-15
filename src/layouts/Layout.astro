@@ -12,13 +12,71 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** Override the canonical URL when needed (e.g. paginated pages) */
+  canonical?: string;
 }
 
+const SITE_NAME = "Hard-Ware";
+const SITE_URL = "https://www.hard-ware.com.mx";
+
 const {
-  title = "Hard-Ware | Reparación y Mantenimiento Industrial",
-  description = "Expertos en reparación de equipos industriales de control, mantenimiento de dispositivos móviles y gestión de garantías en Monterrey, N.L.",
-  image = "/og-image.jpg",
+  title = "Hard-Ware | Distribuidor autorizado · Tecnología, impresión, identificación y automatización",
+  description = "HardWare es distribuidor autorizado en México de equipos industriales: impresión, identificación automática, captura de datos, equipos rugged y automatización. Monterrey, N.L.",
+  image = "/HWLogo.webp",
+  canonical,
 } = Astro.props;
+
+/** Build absolute URLs for OG / canonical */
+const currentPath = Astro.url.pathname;
+const canonicalURL = canonical ?? new URL(currentPath, SITE_URL).href;
+const absoluteImage = image.startsWith("http") ? image : new URL(image, SITE_URL).href;
+
+/**
+ * JSON-LD structured data — LocalBusiness + WebSite.
+ * Only emitted on the home page to avoid duplicate entities.
+ */
+const isHome = currentPath === "/" || currentPath === "";
+
+const localBusinessLD = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Hard-Ware",
+  description:
+    "Distribuidor autorizado en México de soluciones industriales: impresión, identificación automática, captura de datos, equipos rugged y automatización.",
+  url: SITE_URL,
+  logo: `${SITE_URL}/HWLogo.webp`,
+  image: `${SITE_URL}/HWLogo.webp`,
+  telephone: "+528183652769",
+  email: "ventas.online@hard-ware.com.mx",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Rio Papaloapan #308, Col. Mexico",
+    addressLocality: "Monterrey",
+    addressRegion: "Nuevo León",
+    postalCode: "64710",
+    addressCountry: "MX",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 25.6866,
+    longitude: -100.3161,
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "08:00",
+    closes: "18:00",
+  },
+  sameAs: ["https://wa.me/528183652769"],
+};
+
+const webSiteLD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  inLanguage: "es-MX",
+};
 ---
 
 <!doctype html>
@@ -30,6 +88,9 @@ const {
     <ClientRouter />
     <meta name="generator" content={Astro.generator} />
 
+    {/* Canonical */}
+    <link rel="canonical" href={canonicalURL} />
+
     <SEO
       title={title}
       description={description}
@@ -37,20 +98,57 @@ const {
         basic: {
           title,
           type: "website",
-          image,
+          image: absoluteImage,
+          url: canonicalURL,
         },
         optional: {
           description,
-          siteName: "Hard-Ware",
+          siteName: SITE_NAME,
+          locale: "es_MX",
+        },
+        image: {
+          alt: "Hard-Ware — Soluciones Tecnológicas Industriales",
+          width: 1200,
+          height: 630,
+          type: "image/webp",
         },
       }}
       twitter={{
         card: "summary_large_image",
         title,
         description,
-        image,
+        image: absoluteImage,
+      }}
+      extend={{
+        meta: [
+          { name: "theme-color", content: "#013383" },
+          { name: "author", content: "Hard-Ware" },
+          {
+            name: "keywords",
+            content:
+              "distribuidor autorizado méxico, impresión industrial, identificación automática, captura de datos, equipos rugged, automatización, Monterrey, mantenimiento industrial, reparación equipos, Zebra, Honeywell, Datalogic",
+          },
+          { property: "og:locale", content: "es_MX" },
+        ],
+        link: [],
       }}
     />
+
+    {/* JSON-LD structured data — only on the home page */}
+    {
+      isHome && (
+        <>
+          <script
+            type="application/ld+json"
+            set:html={JSON.stringify(localBusinessLD)}
+          />
+          <script
+            type="application/ld+json"
+            set:html={JSON.stringify(webSiteLD)}
+          />
+        </>
+      )
+    }
 
     <!-- Dark mode init: runs before paint to avoid flash + persists across View Transitions -->
     <script is:inline>

@@ -1,5 +1,7 @@
 ---
 // Footer.astro — Premium footer with columns, social links, and copyright
+import LogoC from "@/components/shared/LogoC.astro";
+
 const year = new Date().getFullYear();
 
 const services = [
@@ -36,13 +38,7 @@ const socials = [
       <!-- Brand column -->
       <div class="lg:col-span-1">
         <div class="flex items-center gap-2 mb-4">
-          <span
-            class="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary font-bold text-lg leading-none"
-            >H·W</span
-          >
-          <span class="text-xl font-extrabold tracking-tight">
-            Hard<span class="text-accent">-</span>Ware
-          </span>
+          <LogoC size={36} />
         </div>
         <p class="text-sm text-white/60 leading-relaxed mb-6">
           Expertos en reparación y mantenimiento de equipos industriales de

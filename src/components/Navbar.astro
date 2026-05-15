@@ -25,25 +25,8 @@ const isActive = (href: string) => {
   <div class="container-lg">
     <nav class="flex items-center justify-between h-18 md:h-20">
       <!-- Logo -->
-      <a
-        href="/"
-        class="flex items-center gap-2 group"
-        aria-label="Hard-Ware Home"
-      >
-        <span
-          class="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-primary font-bold text-lg leading-none select-none"
-        >
-          H·W
-        </span>
-        <span
-          id="nav-logo-text"
-          class="nav-link text-xl font-extrabold tracking-tight transition-colors duration-300"
-        >
-          Hard<span class="text-accent">-</span>Ware
-        </span>
-      </a>
+      <LogoC />
 
-      <!-- Desktop links -->
       <ul class="hidden md:flex items-center gap-8 list-none m-0 p-0">
         {
           navLinks.map((link) => {
@@ -256,6 +239,16 @@ const isActive = (href: string) => {
     --nav-theme-hover-border: var(--color-accent);
     --nav-cart-color: #ffffff;
     --nav-cart-hover-bg: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Logo container: switch to white-glass on solid/scrolled navbar */
+  #navbar.scrolled :global(.logo-c),
+  #navbar.always-solid :global(.logo-c) {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  #navbar.scrolled :global(.logo-c:hover),
+  #navbar.always-solid :global(.logo-c:hover) {
+    background: rgba(255, 255, 255, 0.22);
   }
 </style>
 

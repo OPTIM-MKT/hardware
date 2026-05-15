@@ -19,11 +19,12 @@ export interface CatalogProduct {
 
 interface Props {
   products: CatalogProduct[];
+  children?: React.ReactNode;
 }
 
 type SortKey = "relevancia" | "nombre" | "nuevo" | "destacado";
 
-export default function ProductCatalog({ products }: Props) {
+export default function ProductCatalog({ products, children }: Props) {
   const [query, setQuery] = useState("");
   const [categoria, setCategoria] = useState<string>("all");
   const [marca, setMarca] = useState<string>("all");
@@ -193,19 +194,23 @@ export default function ProductCatalog({ products }: Props) {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="bento-card flex flex-col items-center text-center py-16 gap-3">
-            <p className="text-base font-semibold text-ink dark:text-white">Sin resultados</p>
-            <p className="text-sm text-muted max-w-sm">
-              No encontramos productos con esos criterios. Ajusta los filtros o busca otra palabra.
-            </p>
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline cursor-pointer"
-            >
-              Restablecer filtros
-            </button>
-          </div>
+          children ? (
+            children
+          ) : (
+            <div className="bento-card flex flex-col items-center text-center py-16 gap-3">
+              <p className="text-base font-semibold text-ink dark:text-white">Sin resultados</p>
+              <p className="text-sm text-muted max-w-sm">
+                No encontramos productos con esos criterios. Ajusta los filtros o busca otra palabra.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline cursor-pointer"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          )
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((product) => (

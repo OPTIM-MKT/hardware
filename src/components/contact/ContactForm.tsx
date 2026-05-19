@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,25 +22,15 @@ export default function ContactForm({
 }: ContactFormProps) {
   const cartItems = useCartItems();
   const [mode, setMode] = useState<"productos" | "proyecto">(initialMode);
+  const resolvedInitialMode = useRef(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const queryMode = params.get("mode");
-    if (queryMode === "productos" || queryMode === "proyecto") {
-      setMode(queryMode);
-    } else if (cartItems.length > 0) {
-      setMode("productos");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -56,6 +46,44 @@ export default function ContactForm({
       timeline: "",
     } as unknown as ContactFormData,
   });
+
+  const changeMode = useCallback(
+    (nextMode: "productos" | "proyecto") => {
+      setMode(nextMode);
+      setValue("modo", nextMode as ContactFormData["modo"], {
+        shouldValidate: false,
+        shouldDirty: false,
+      });
+
+      if (nextMode === "productos") {
+        clearErrors(["descripcionProyecto", "presupuesto", "timeline"] as any);
+        setValue("items" as any, cartItems as any, {
+          shouldValidate: false,
+          shouldDirty: false,
+        });
+        return;
+      }
+
+      clearErrors("items" as any);
+    },
+    [cartItems, clearErrors, setValue]
+  );
+
+  useEffect(() => {
+    if (resolvedInitialMode.current || typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const queryMode = params.get("mode");
+    const nextMode =
+      queryMode === "productos" || queryMode === "proyecto"
+        ? queryMode
+        : cartItems.length > 0
+          ? "productos"
+          : initialMode;
+
+    changeMode(nextMode);
+    resolvedInitialMode.current = true;
+  }, [cartItems.length, changeMode, initialMode]);
 
   // Keep RHF state in sync with the mode toggle. A hidden input bound to
   // `register("modo")` doesn't fire onChange when its `value` prop mutates,
@@ -144,7 +172,18 @@ export default function ContactForm({
           <button
             type="button"
             onClick={() => {
-              reset();
+              reset({
+                modo: initialMode,
+                nombre: "",
+                empresa: "",
+                email: "",
+                telefono: "",
+                mensaje: "",
+                descripcionProyecto: "",
+                presupuesto: "",
+                timeline: "",
+              } as unknown as ContactFormData);
+              changeMode(initialMode);
               setSubmitted(false);
             }}
             className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline hover:opacity-70 transition-opacity cursor-pointer"
@@ -171,7 +210,7 @@ export default function ContactForm({
         </p>
       </header>
 
-      <ModeSwitch mode={mode} onChange={setMode} />
+      <ModeSwitch mode={mode} onChange={changeMode} />
 
       <form
         onSubmit={handleSubmit(onSubmit, onInvalid)}

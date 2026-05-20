@@ -85,7 +85,22 @@ const webSiteLD = {
     <ClientRouter />
     <meta name="generator" content={Astro.generator} />
 
-    {/* Google Tag Manager — colocado lo más arriba posible en <head> */}
+    {/* Google tag (gtag.js) — Google Ads */}
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=AW-1014165907"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "AW-1014165907");
+    </script>
+
+    {/* Google Tag Manager */}
     <script is:inline>
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];

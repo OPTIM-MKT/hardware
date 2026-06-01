@@ -1,5 +1,4 @@
 ---
-// Footer.astro — Premium footer with columns, social links, and copyright
 import LogoC from "@/components/shared/LogoC.astro";
 
 const year = new Date().getFullYear();
@@ -38,7 +37,7 @@ const socials = [
       <!-- Brand column -->
       <div class="lg:col-span-1">
         <div class="flex items-center gap-2 mb-4">
-          <LogoC size={36} />
+          <LogoC />
         </div>
         <p class="text-sm text-white/60 leading-relaxed mb-6">
           Expertos en reparación y mantenimiento de equipos industriales de
@@ -121,8 +120,10 @@ const socials = [
             [
               { label: "Inicio", href: "/" },
               { label: "Nosotros", href: "/about" },
+              { label: "Proyectos", href: "/proyectos" },
+              { label: "Productos", href: "/productos" },
+              // { label: "Zebra", href: "/zebra.html" },
               { label: "Contacto", href: "/contact" },
-              // { label: "Aviso de Privacidad", href: "#" },
             ].map((l) => (
               <li>
                 <a

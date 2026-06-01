@@ -5,6 +5,7 @@ import LogoC from "@/components/shared/LogoC.astro";
 
 const navLinks = [
   // { label: "Inicio", href: "/" },
+  // { label: "Zebra", href: "/zebra.html" },
   { label: "Productos", href: "/productos" },
   { label: "Proyectos", href: "/proyectos" },
   { label: "Nosotros", href: "/about" },
@@ -37,7 +38,7 @@ const isActive = (href: string) => {
                   href={link.href}
                   data-active={active ? "true" : "false"}
                   aria-current={active ? "page" : undefined}
-                  class="nav-link text-sm font-medium tracking-wide transition-colors duration-200 relative group"
+                  class="nav-link text-xs font-medium tracking-wide transition-colors duration-200 relative group"
                 >
                   {link.label}
                   <span class="nav-underline absolute -bottom-0.5 left-0 h-px bg-accent transition-all duration-300" />

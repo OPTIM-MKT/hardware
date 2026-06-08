@@ -190,7 +190,7 @@ export default function HeroCarousel({ images }: { images?: string[] }) {
                     >
                       <a
                         href={slide.ctaHref}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                        className="inline-flex items-center cursor-pointer gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
                         style={{
                           background: slide.accent,
                           color: "#013383",
@@ -213,7 +213,7 @@ export default function HeroCarousel({ images }: { images?: string[] }) {
                       </a>
                       <a
                         href={slide.cta2Href}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
+                        className="inline-flex cursor-pointer items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full font-semibold text-xs md:text-sm tracking-wide text-white border border-white/30 hover:border-white/60 hover:bg-white/10 transition-all duration-300"
                       >
                         {slide.cta2}
                       </a>

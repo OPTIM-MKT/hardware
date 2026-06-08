@@ -2,6 +2,7 @@
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
+@import "swiper/css/effect-fade";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark,.dark *));

@@ -127,6 +127,9 @@ export default function ContactForm({
       toast.success("Solicitud enviada", {
         description: "Te contactaremos en menos de 24 h hábiles.",
       });
+      if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+        (window as any).fbq("track", "Lead");
+      }
       if (payload.modo === "productos") cartStore.clear();
       setSubmitted(true);
     } catch (err) {

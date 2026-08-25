@@ -7,8 +7,9 @@ import HomeContactTeaser from "../components/home/HomeContactTeaser";
 import FeaturedProducts from "../components/home/FeaturedProducts.astro";
 import Brands from "@/components/home/Brands.astro";
 import SingleBrandBanner from "@/components/home/SingleBrandBanner.astro";
+import VentaMayoreo from "@/components/home/VentaMayoreo.astro";
 
-import { zebraData, DconnData, ikeyData } from "@/constants/singlebrand";
+import { zebraData, DconnData, ikeyData, mayoreoData } from "@/constants/singlebrand";
 import oneSrc from "@/assets/one.webp";
 import twoSrc from "@/assets/two.jpg";
 import tresSrc from "@/assets/tres.webp";
@@ -43,9 +44,19 @@ const tres = await getImage({
 
   <Brands />
 
-  <SingleBrandBanner {...zebraData} />
-  <SingleBrandBanner {...DconnData} />
-  <SingleBrandBanner {...ikeyData} />
+  <section class="py-16 md:py-24">
+    <div class="container-lg max-w-7xl mx-auto px-4 md:px-10 space-y-10 md:space-y-12">
+      <!-- 3 Single Brands in one row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+        <SingleBrandBanner {...zebraData} />
+        <SingleBrandBanner {...DconnData} />
+        <SingleBrandBanner {...ikeyData} />
+      </div>
+
+      <!-- Full-width Venta Mayoreo Banner below -->
+      <VentaMayoreo {...mayoreoData} />
+    </div>
+  </section>
 
   <ServicesSection client:visible />
 

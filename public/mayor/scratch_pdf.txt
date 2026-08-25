@@ -1,0 +1,127 @@
+Estrategia de Copywriting B2B: Landing
+
+Page iKey | Hard-Ware
+
+1. HERO SECTION (Sección Principal)
+
+     Título Principal (H1): Periféricos Industriales iKey: Máxima Resistencia y
+         Continuidad Operativa.
+
+     Subtítulo: Soluciones de cómputo y control ultra-resistentes diseñadas para superar
+         las condiciones más extremas en entornos críticos médicos, militares e industriales.
+
+     Llamado a la Acción (CTA): Solicitar Cotización Industrial
+
+2. TARJETAS DE PRODUCTOS (Soluciones
+Destacadas)
+
+Serie de Escritorio (Robustos)
+
+Modelo: iKey DT-5K
+     Características Técnicas:
+               Material de Fabricación: Carcasa de acero inoxidable de calibre pesado con
+                   teclado de caucho de silicona industrial.
+               Grado de Protección: IP65 / NEMA 4X.
+               Tipo de Sellado: Sellado hermético sin aberturas ni fisuras, resistente a
+                   fluidos, corrosivos, aceites y procesos de limpieza profunda.
+     Mejor Aplicación Industrial: Estaciones de control en plantas de manufactura
+         pesada, procesamiento químico y entornos industriales expuestos a contaminantes
+         severos.
+
+Modelo: iKey DU-1K
+     Características Técnicas:
+               Material de Fabricación: Estructura compacta de policarbonato rugerizado
+                   de alta densidad con membrana de silicona de grado industrial.
+               Grado de Protección: IP65 / NEMA 4X.
+               Tipo de Sellado: Sellado perimetral continuo impermeable contra derrames
+                   accidentales y acumulación de polvo.
+     Mejor Aplicación Industrial: Terminales de datos en espacios reducidos, consolas
+         de procesamiento de alimentos y puestos de trabajo en líneas de producción.
+
+Dispositivos de Señalización
+
+Modelo: iKey DT-OM
+     Características Técnicas:
+               Material de Fabricación: Cuerpo robusto fabricado íntegramente en acero
+                   inoxidable de grado quirúrgico e industrial.
+               Grado de Protección: IP68 / NEMA 4X.
+               Tipo de Sellado: Mecanismo óptico 100% hermético y sumergible, sin
+                   componentes mecánicos móviles expuestos al exterior.
+     Mejor Aplicación Industrial: Quirófanos, laboratorios farmacéuticos y salas limpias
+         que exigen descontaminación total y lavado con desinfectantes concentrados.
+
+Modelo: iKey DT-TB
+     Características Técnicas:
+               Material de Fabricación: Chasis de acero inoxidable con bola de
+                   seguimiento integrada de alta precisión.
+               Grado de Protección: IP65 / NEMA 4X.
+               Tipo de Sellado: Envolvente interna sellada contra intrusión de partículas
+                   sólidas, grasas y líquidos proyectados.
+     Mejor Aplicación Industrial: Consolas de automatización, sistemas de navegación
+         marina/militar y paneles de control en maquinaria pesada.
+
+Línea NI (No Incendivos / Áreas Clasificadas)
+
+Modelo: iKey DT-102-NI
+     Características Técnicas:
+               Material de Fabricación: Caja de policarbonato industrial de alta resistencia
+                   con teclado de hule de silicona hermético.
+               Grado de Protección: IP65 / NEMA 4X con certificación No Incendiva para
+                   áreas clasificadas (Clase I, II y III, División 2).
+               Tipo de Sellado: Aislamiento eléctrico e ignífugo especializado que previene
+                   chispas o arcos eléctricos en atmósferas volátiles.
+     Mejor Aplicación Industrial: Plantas petroquímicas, refinerías, procesadoras de
+         gas y entornos con presencia de polvos o vapores inflamables.
+
+Línea Iluminada (Baja Luminosidad)
+
+Modelo: iKey SLK-101
+     Características Técnicas:
+               Material de Fabricación: Caucho de silicona industrial de perfil delgado con
+                   retroiluminación LED de intensidad regulable.
+               Grado de Protección: IP65 / NEMA 4X.
+               Tipo de Sellado: Cubierta monolítica totalmente lavable e impermeable.
+     Mejor Aplicación Industrial: Cabinas de vehículos militares, salas de monitoreo en
+         penumbra, centros de control nocturno y logística aeroportuaria.
+
+3. SECCIÓN DE VALOR AGREGADO (Por qué
+Hard-Ware)
+
+     Equipos 100% Originales con Garantía de Fábrica: Garantizamos la autenticidad
+         total de cada dispositivo iKey, respaldado por la garantía oficial del fabricante para
+         eliminar riesgos en su infraestructura.
+
+     Respuesta Comercial en Menos de 24 Horas: Evaluamos las necesidades de su
+         proyecto y entregamos propuestas comerciales consolidadas en un plazo menor a
+         24 horas hábiles.
+
+     Precios Competitivos en Compras por Volumen: Optimizamos su presupuesto
+         operativo mediante esquemas de costo escalonado y paquetes tecnológicos a la
+         medida de su empresa.
+     Asesoría Técnica Especializada en Ingeniería: Nuestro equipo de ingenieros
+         capacitados le brinda soporte postventa y consultoría en la selección e integración
+         de equipos para su planta.
+
+4. FORMULARIO DE CONVERSIÓN B2B
+
+Encabezado: Solicita una Propuesta Técnica y Comercial para Equipos
+iKey
+
+     Campos Requeridos:
+              1. Nombre Completo: [Texto]
+              2. Empresa / Corporativo: [Texto]
+              3. Correo Electrónico Corporativo: [Email]
+              4. Teléfono de Contacto Directo: [Teléfono]
+              5. Tipo de Entorno de Uso: [Menú Desplegable]
+                         Planta Química / Petroquímica
+                         Laboratorio / Área Farmacéutica
+                         Nave Industrial / Manufactura
+                         Procesamiento de Alimentos y Bebidas
+                         Entorno Médico / Hospitalario
+                         Aplicación Militar / Defensa
+                         Almacén / Logística
+              6. Producto de Interés: [Selección múltiple de modelos iKey]
+              7. Detalles del Proyecto o Cantidad Requerida: [Área de Texto]
+
+     Botón de Envío: Solicitar Propuesta Personalizada
+

@@ -1,6 +1,6 @@
 import zebra from "@/assets/images/brands/zebra.webp";
 import connexion from "@/assets/images/brands/3dConnexion.webp";
-import ikey from "@/assets/images/brands/ikey.webp";
+import ikey from "@/assets/images/brands/iKey.webp";
 import type { ImageMetadata } from "astro";
 
 export interface BrandBannerData {
@@ -49,8 +49,10 @@ export const DconnData: BrandBannerData = {
 };
 
 export const mayoreoData: MayoreoBannerData = {
-  badgeText: "Marcas Líderes Globales para la Continuidad de tu Cadena de Suministro",
-  title: "Equipamiento Industrial al Mayoreo: Tecnología, Control y Calidad Operativa",
+  badgeText:
+    "Marcas Líderes Globales para la Continuidad de tu Cadena de Suministro",
+  title:
+    "Equipamiento Industrial al Mayoreo: Tecnología, Control y Calidad Operativa",
   p: "Optimiza tu presupuesto con adquisiciones en volumen y bundles comerciales. Proveemos hardware original, soporte técnico capacitado e instalación para equipamiento nuevo.",
   href: "/mayoreo",
   cta: "Cotizar Mayoreo",

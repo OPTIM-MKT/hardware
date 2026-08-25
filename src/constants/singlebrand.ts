@@ -1,5 +1,15 @@
 import zebra from "@/assets/images/brands/zebra.webp";
 import connexion from "@/assets/images/brands/3dConnexion.webp";
+import ikey from "@/assets/images/brands/ikey.webp";
+
+export const ikeyData = {
+  image: ikey,
+  title: "Ikey",
+  badgeText: "Distribuidor autorizado",
+  p: "Ikey es el líder mundial en soluciones de identificación, impresión y captura de datos. Con más de 50 años de experiencia, Ikey ofrece una amplia gama de productos y soluciones para satisfacer las necesidades de su negocio.",
+  href: "/ikey",
+  cta: "Conoce más",
+};
 
 export const zebraData = {
   image: zebra,

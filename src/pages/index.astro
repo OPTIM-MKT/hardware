@@ -8,7 +8,7 @@ import FeaturedProducts from "../components/home/FeaturedProducts.astro";
 import Brands from "@/components/home/Brands.astro";
 import SingleBrandBanner from "@/components/home/SingleBrandBanner.astro";
 
-import { zebraData, DconnData } from "@/constants/singlebrand";
+import { zebraData, DconnData, ikeyData } from "@/constants/singlebrand";
 import oneSrc from "@/assets/one.webp";
 import twoSrc from "@/assets/two.jpg";
 import tresSrc from "@/assets/tres.webp";
@@ -45,6 +45,7 @@ const tres = await getImage({
 
   <SingleBrandBanner {...zebraData} />
   <SingleBrandBanner {...DconnData} />
+  <SingleBrandBanner {...ikeyData} />
 
   <ServicesSection client:visible />
 

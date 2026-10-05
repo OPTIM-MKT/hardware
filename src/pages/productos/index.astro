@@ -7,6 +7,7 @@ import ProductCatalog, {
 import ContactForm from "../../components/contact/ContactForm";
 import NoProducts from "../../components/productos/NoProducts.astro";
 import ProductsDisclaimer from "@/components/productos/ProductsDisclaimer.astro";
+import { resolveSectionId } from "@/constants/product-sections";
 
 const productos = await getCollection("productos");
 
@@ -15,6 +16,7 @@ const items: CatalogProduct[] = productos.map(({ id, data }) => ({
   nombre: data.nombre,
   marca: data.marca,
   categoria: data.categoria,
+  seccion: resolveSectionId(data),
   descripcion: data.descripcion,
   imagen: data.imagen,
   disponible: data.disponible,

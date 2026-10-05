@@ -2,12 +2,17 @@ import { useMemo, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { cartStore } from "../cart/cart-store";
+import {
+  PRODUCT_SECTIONS,
+  SECTION_QUERY_PARAM,
+} from "../../constants/product-sections";
 
 export interface CatalogProduct {
   slug: string;
   nombre: string;
   marca: string;
   categoria: string;
+  seccion?: string;
   descripcion: string;
   imagen?: string;
   disponible: boolean;
@@ -28,15 +33,28 @@ export default function ProductCatalog({ products, children }: Props) {
   const [query, setQuery] = useState("");
   const [categoria, setCategoria] = useState<string>("all");
   const [marca, setMarca] = useState<string>("all");
+  const [seccion, setSeccion] = useState<string>("all");
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [sort, setSort] = useState<SortKey>("relevancia");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 12;
 
+  // Enlaces del home (/productos?seccion=...) llegan con la sección ya filtrada.
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search).get(
+      SECTION_QUERY_PARAM,
+    );
+    if (param && PRODUCT_SECTIONS.some((s) => s.id === param)) {
+      setSeccion(param);
+    }
+  }, []);
+
   useEffect(() => {
     setCurrentPage(1);
-  }, [query, categoria, marca, soloDisponibles, sort]);
+  }, [query, categoria, marca, seccion, soloDisponibles, sort]);
+
+  const seccionTitle = PRODUCT_SECTIONS.find((s) => s.id === seccion)?.title;
 
   const categorias = useMemo(
     () => Array.from(new Set(products.map((p) => p.categoria))).sort(),
@@ -52,6 +70,7 @@ export default function ProductCatalog({ products, children }: Props) {
     let list = products.filter((p) => {
       if (categoria !== "all" && p.categoria !== categoria) return false;
       if (marca !== "all" && p.marca !== marca) return false;
+      if (seccion !== "all" && p.seccion !== seccion) return false;
       if (soloDisponibles && !p.disponible) return false;
       if (!q) return true;
       const haystack = [
@@ -89,7 +108,7 @@ export default function ProductCatalog({ products, children }: Props) {
     }
 
     return list;
-  }, [products, query, categoria, marca, soloDisponibles, sort]);
+  }, [products, query, categoria, marca, seccion, soloDisponibles, sort]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginatedProducts = filtered.slice(
@@ -98,12 +117,17 @@ export default function ProductCatalog({ products, children }: Props) {
   );
 
   const hasFilters =
-    query !== "" || categoria !== "all" || marca !== "all" || soloDisponibles;
+    query !== "" ||
+    categoria !== "all" ||
+    marca !== "all" ||
+    seccion !== "all" ||
+    soloDisponibles;
 
   const resetFilters = () => {
     setQuery("");
     setCategoria("all");
     setMarca("all");
+    setSeccion("all");
     setSoloDisponibles(false);
     setSort("relevancia");
     setCurrentPage(1);
@@ -229,6 +253,7 @@ export default function ProductCatalog({ products, children }: Props) {
         <div className="hidden md:flex items-center justify-between mb-6 gap-4">
           <p className="text-sm text-muted">
             {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
+            {seccionTitle && ` en ${seccionTitle}`}
           </p>
           <SortSelect value={sort} onChange={setSort} />
         </div>

@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import SectionHeading from "@/components/shared/SectionHeading.astro";
+import SnapCarousel from "@/components/shared/SnapCarousel.astro";
+import ProductCard from "@/components/productos/ProductCard.astro";
+import {
+  BEST_SELLER_SECTION_IDS,
+  PRODUCT_SECTIONS,
+  resolveSectionId,
+  sectionHref,
+} from "@/constants/product-sections";
+
+interface Props {
+  /** Productos por sección. */
+  limit?: number;
+}
+
+const { limit = 5 } = Astro.props;
+
+const productos = (await getCollection("productos")).filter(
+  (p) => p.data.disponible,
+);
+
+// Por sección: primero los rankeados (`rankingVentas`), el resto completa la lista.
+const groups = BEST_SELLER_SECTION_IDS.map((id) => {
+  const section = PRODUCT_SECTIONS.find((s) => s.id === id)!;
+  const items = productos
+    .filter((p) => resolveSectionId(p.data) === id)
+    .sort(
+      (a, b) =>
+        (a.data.rankingVentas ?? Infinity) -
+          (b.data.rankingVentas ?? Infinity) ||
+        Number(b.data.destacado) - Number(a.data.destacado),
+    )
+    .slice(0, limit);
+  return { ...section, items };
+}).filter((group) => group.items.length > 0);
+---
+
+{
+  groups.length > 0 && (
+    <section class="section-padding bg-white dark:bg-[#0b1529]">
+      <best-sellers class="container-lg block">
+        <SectionHeading
+          eyebrow="Más vendidos"
+          title="Lo más vendido en"
+          description="Los equipos con mayor demanda, por línea de producto."
+        />
+
+        <div
+          role="tablist"
+          aria-label="Lo más vendido por sección"
+          class="-mt-4 mb-8 inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-slate-100 p-1 dark:bg-white/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {groups.map((group, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`best-tab-${group.id}`}
+              aria-controls={`best-panel-${group.id}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              tabindex={i === 0 ? 0 : -1}
+              class="shrink-0 cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-muted transition-[color,background-color,transform] duration-300 hover:text-ink active:scale-[0.97] active:duration-100 aria-selected:bg-primary aria-selected:text-white dark:hover:text-white dark:aria-selected:bg-accent dark:aria-selected:text-[#013383] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {group.title}
+            </button>
+          ))}
+        </div>
+
+        {groups.map((group, i) => (
+          <div
+            role="tabpanel"
+            id={`best-panel-${group.id}`}
+            aria-labelledby={`best-tab-${group.id}`}
+            hidden={i !== 0}
+            class="transition-opacity duration-300 starting:opacity-0 motion-reduce:transition-none"
+          >
+            <SnapCarousel
+              count={group.items.length}
+              label={`Lo más vendido en ${group.title}`}
+              breakpoint="lg"
+              class="lg:grid-cols-5 lg:gap-5"
+            >
+              {group.items.map((p, rank) => (
+                <li>
+                  <ProductCard
+                    slug={p.id}
+                    nombre={p.data.nombre}
+                    marca={p.data.marca}
+                    categoria={p.data.categoria}
+                    descripcion={p.data.descripcion}
+                    imagen={p.data.imagen}
+                    badge={`#${rank + 1}`}
+                  />
+                </li>
+              ))}
+            </SnapCarousel>
+
+            <div class="mt-8 flex justify-center">
+              <a
+                href={sectionHref(group.id)}
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm tracking-wide border border-line text-primary dark:text-white hover:border-primary hover:text-primary transition-[color,border-color,transform] duration-300 active:scale-[0.97] active:duration-100"
+              >
+                Ver todo en {group.title}
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </best-sellers>
+    </section>
+  )
+}
+
+<script>
+  class BestSellers extends HTMLElement {
+    connectedCallback() {
+      const tabs = [...this.querySelectorAll<HTMLElement>('[role="tab"]')];
+      const panels = [
+        ...this.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
+      ];
+
+      const select = (index: number, focus = false) => {
+        tabs.forEach((tab, i) => {
+          tab.setAttribute("aria-selected", String(i === index));
+          tab.tabIndex = i === index ? 0 : -1;
+        });
+        panels.forEach((panel, i) => (panel.hidden = i !== index));
+        if (focus) tabs[index]?.focus();
+      };
+
+      tabs.forEach((tab, i) => {
+        // pointerdown: la respuesta llega al presionar, no al soltar.
+        tab.addEventListener("pointerdown", () => select(i));
+        tab.addEventListener("click", () => select(i));
+        tab.addEventListener("keydown", (e) => {
+          const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+          if (!step) return;
+          e.preventDefault();
+          select((i + step + tabs.length) % tabs.length, true);
+        });
+      });
+    }
+  }
+
+  if (!customElements.get("best-sellers")) {
+    customElements.define("best-sellers", BestSellers);
+  }
+</script>

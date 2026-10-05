@@ -1,0 +1,122 @@
+---
+/**
+ * Carrusel en pantallas chicas, grid a partir de `breakpoint`.
+ * Usa scroll nativo con snap: sigue el dedo 1:1, conserva la inercia y se
+ * puede interrumpir en cualquier momento. El script solo sincroniza los puntos.
+ * Los hijos directos del slot (p. ej. <li>) son los slides.
+ */
+interface Props {
+  /** Número de slides; define cuántos puntos se pintan. */
+  count: number;
+  label: string;
+  breakpoint?: "md" | "lg";
+  /** Clases del grid a partir del breakpoint (columnas, etc.). */
+  class?: string;
+}
+
+const { count, label, breakpoint = "md", class: gridClass } = Astro.props;
+
+const gridAt = {
+  md: "md:mx-0 md:grid md:overflow-visible md:px-0 md:*:w-auto",
+  lg: "lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:*:w-auto",
+}[breakpoint];
+const dotsHiddenAt = { md: "md:hidden", lg: "lg:hidden" }[breakpoint];
+---
+
+<snap-carousel class="block">
+  <ul
+    data-track
+    role="list"
+    aria-label={label}
+    class:list={[
+      "-mx-6 -my-3 flex list-none snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-px-6 px-6 py-3",
+      "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+      "*:w-[80%] *:shrink-0 *:snap-start sm:*:w-[46%]",
+      gridAt,
+      gridClass,
+    ]}
+  >
+    <slot />
+  </ul>
+
+  <div class:list={["mt-5 flex justify-center", dotsHiddenAt]}>
+    {
+      Array.from({ length: count }, (_, i) => (
+        <button
+          type="button"
+          data-dot
+          aria-label={`Ir al elemento ${i + 1} de ${count}`}
+          aria-current={i === 0 ? "true" : undefined}
+          class="group/dot grid h-6 w-6 cursor-pointer place-items-center"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-muted/40 transition-all duration-300 group-aria-[current=true]/dot:w-5 group-aria-[current=true]/dot:bg-accent" />
+        </button>
+      ))
+    }
+  </div>
+</snap-carousel>
+
+<script>
+  class SnapCarousel extends HTMLElement {
+    connectedCallback() {
+      const track = this.querySelector<HTMLElement>("[data-track]");
+      const dots = [...this.querySelectorAll<HTMLElement>("[data-dot]")];
+      if (!track || dots.length === 0) return;
+      const slides = [...track.children] as HTMLElement[];
+
+      const setActive = (index: number) =>
+        dots.forEach((dot, i) =>
+          i === index
+            ? dot.setAttribute("aria-current", "true")
+            : dot.removeAttribute("aria-current"),
+        );
+
+      // Slide activo = el más cercano al borde de snap (o el último al llegar al final).
+      const activeIndex = () => {
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) {
+          return slides.length - 1;
+        }
+        const origin =
+          track.getBoundingClientRect().left +
+          (parseFloat(getComputedStyle(track).scrollPaddingLeft) || 0);
+        let nearest = 0;
+        let min = Infinity;
+        slides.forEach((slide, i) => {
+          const distance = Math.abs(
+            slide.getBoundingClientRect().left - origin,
+          );
+          if (distance < min) {
+            min = distance;
+            nearest = i;
+          }
+        });
+        return nearest;
+      };
+
+      let frame = 0;
+      track.addEventListener(
+        "scroll",
+        () => {
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(() => setActive(activeIndex()));
+        },
+        { passive: true },
+      );
+
+      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+      dots.forEach((dot, i) =>
+        dot.addEventListener("click", () =>
+          slides[i]?.scrollIntoView({
+            behavior: reduceMotion.matches ? "auto" : "smooth",
+            inline: "start",
+            block: "nearest",
+          }),
+        ),
+      );
+    }
+  }
+
+  if (!customElements.get("snap-carousel")) {
+    customElements.define("snap-carousel", SnapCarousel);
+  }
+</script>

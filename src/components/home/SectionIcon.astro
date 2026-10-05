@@ -1,0 +1,33 @@
+---
+import type { IconType } from "react-icons";
+import {
+  HiOutlineCpuChip,
+  HiOutlineCube,
+  HiOutlineDevicePhoneMobile,
+  HiOutlinePrinter,
+  HiOutlineQrCode,
+  HiOutlineSpeakerWave,
+  HiOutlineTag,
+} from "react-icons/hi2";
+import type { ProductSectionId } from "@/constants/product-sections";
+
+interface Props {
+  section: ProductSectionId;
+  class?: string;
+}
+
+const ICONS: Record<ProductSectionId, IconType> = {
+  impresion: HiOutlinePrinter,
+  "captura-de-datos": HiOutlineQrCode,
+  "computo-movil": HiOutlineDevicePhoneMobile,
+  consumibles: HiOutlineTag,
+  automatizacion: HiOutlineCpuChip,
+  "diseno-cad": HiOutlineCube,
+  audio: HiOutlineSpeakerWave,
+};
+
+const { section, class: className } = Astro.props;
+const Icon = ICONS[section];
+---
+
+<Icon className={className} aria-hidden="true" />

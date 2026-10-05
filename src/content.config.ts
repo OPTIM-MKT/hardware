@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { z } from "zod";
 import { glob } from "astro/loaders";
+import { PRODUCT_SECTION_IDS } from "./constants/product-sections";
 
 const productos = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/productos" }),
@@ -14,6 +15,8 @@ const productos = defineCollection({
     galeria: z.array(z.string()).default([]),
     categoria: z.string(),
     subcategoria: z.string().optional(),
+    // Sección del menú del home. Opcional: si falta, se deriva de `categoria`.
+    seccion: z.enum(PRODUCT_SECTION_IDS).optional(),
     tags: z.array(z.string()).default([]),
     caracteristicas: z.array(z.string()).default([]),
     especificaciones: z
@@ -28,6 +31,9 @@ const productos = defineCollection({
     disponible: z.boolean().default(true),
     destacado: z.boolean().default(false),
     nuevo: z.boolean().default(false),
+    // Posición dentro de "Lo más vendido en…" de su sección (1 = primero).
+    // Los productos sin valor completan la lista después de los rankeados.
+    rankingVentas: z.number().int().positive().optional(),
   }),
 });
 

@@ -26,4 +26,5 @@ sku: "ZD4A042-301M00EZ"
 disponible: true
 destacado: true
 nuevo: true
+rankingVentas: 2
 ---

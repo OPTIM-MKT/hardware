@@ -26,4 +26,5 @@ sku: "FZ-G2-AI-READY"
 disponible: true
 destacado: true
 nuevo: true
+rankingVentas: 2
 ---

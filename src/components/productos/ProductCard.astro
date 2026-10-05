@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  slug: string;
+  nombre: string;
+  marca: string;
+  categoria: string;
+  descripcion: string;
+  imagen?: string;
+  /** Etiqueta sobre la imagen, p. ej. "#1" o "Nuevo". */
+  badge?: string;
+}
+
+const { slug, nombre, marca, categoria, descripcion, imagen, badge } =
+  Astro.props;
+---
+
+<a
+  href={`/productos/${slug}`}
+  class="group bento-card flex h-full flex-col gap-3 p-4! hover:border-primary/30 active:scale-[0.98] motion-reduce:transform-none"
+>
+  <div class="aspect-[4/3] rounded-xl overflow-hidden bg-line relative">
+    {
+      imagen && (
+        <Image
+          src={imagen}
+          alt={nombre}
+          width={480}
+          height={360}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 motion-reduce:transform-none"
+          loading="lazy"
+        />
+      )
+    }
+    {
+      badge && (
+        <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent text-primary">
+          {badge}
+        </span>
+      )
+    }
+  </div>
+  <p class="text-[10px] font-semibold uppercase tracking-widest text-muted">
+    {marca} · {categoria}
+  </p>
+  <h3
+    class="text-base font-bold text-primary dark:text-white line-clamp-2 group-hover:text-primary transition-colors"
+  >
+    {nombre}
+  </h3>
+  <p class="text-sm text-muted line-clamp-2">{descripcion}</p>
+</a>

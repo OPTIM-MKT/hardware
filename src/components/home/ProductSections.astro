@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import SectionHeading from "@/components/shared/SectionHeading.astro";
+import SnapCarousel from "@/components/shared/SnapCarousel.astro";
+import ProductSectionCard from "./ProductSectionCard.astro";
+import {
+  PRODUCT_SECTIONS,
+  resolveSectionId,
+  sectionHref,
+} from "@/constants/product-sections";
+
+const productos = await getCollection("productos");
+
+// Solo se muestran secciones con productos; el fondo sale de uno de ellos.
+const sections = PRODUCT_SECTIONS.map((section) => {
+  const items = productos.filter(
+    (p) => resolveSectionId(p.data) === section.id,
+  );
+  const cover =
+    items.find((p) => p.data.destacado && p.data.imagen) ??
+    items.find((p) => p.data.imagen);
+  return { ...section, count: items.length, image: cover?.data.imagen };
+}).filter((section) => section.count > 0);
+---
+
+<section class="section-padding">
+  <div class="container-lg">
+    <SectionHeading
+      eyebrow="Secciones"
+      title="Nuestras soluciones"
+      description="Todo lo que tu operación necesita, organizado por línea de producto."
+    />
+
+    <SnapCarousel
+      count={sections.length}
+      label="Secciones de productos"
+      class="md:grid-cols-2 md:gap-5 lg:grid-cols-4"
+    >
+      {
+        sections.map((section, i) => (
+          <li class={i === 0 ? "md:col-span-2" : undefined}>
+            <ProductSectionCard
+              id={section.id}
+              title={section.title}
+              description={section.description}
+              href={sectionHref(section.id)}
+              count={section.count}
+              image={section.image}
+            />
+          </li>
+        ))
+      }
+    </SnapCarousel>
+  </div>
+</section>

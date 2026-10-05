@@ -4,12 +4,19 @@ import Layout from "../layouts/Layout.astro";
 import HeroCarousel from "../components/home/HeroCarousel";
 import ServicesSection from "../components/home/ServicesSection";
 import HomeContactTeaser from "../components/home/HomeContactTeaser";
+import ProductSections from "../components/home/ProductSections.astro";
+import BestSellers from "../components/home/BestSellers.astro";
 import FeaturedProducts from "../components/home/FeaturedProducts.astro";
 import Brands from "@/components/home/Brands.astro";
 import SingleBrandBanner from "@/components/home/SingleBrandBanner.astro";
 import VentaMayoreo from "@/components/home/VentaMayoreo.astro";
 
-import { zebraData, DconnData, ikeyData, mayoreoData } from "@/constants/singlebrand";
+import {
+  zebraData,
+  DconnData,
+  ikeyData,
+  mayoreoData,
+} from "@/constants/singlebrand";
 import oneSrc from "@/assets/one.webp";
 import twoSrc from "@/assets/two.jpg";
 import tresSrc from "@/assets/tres.webp";
@@ -40,12 +47,18 @@ const tres = await getImage({
 >
   <HeroCarousel images={[one.src, two.src, tres.src]} client:load />
 
+  <ProductSections />
+
+  <BestSellers />
+
   <FeaturedProducts />
 
   <Brands />
 
   <section class="py-16 md:py-24">
-    <div class="container-lg max-w-7xl mx-auto px-4 md:px-10 space-y-10 md:space-y-12">
+    <div
+      class="container-lg max-w-7xl mx-auto px-4 md:px-10 space-y-10 md:space-y-12"
+    >
       <!-- 3 Single Brands in one row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
         <SingleBrandBanner {...zebraData} />

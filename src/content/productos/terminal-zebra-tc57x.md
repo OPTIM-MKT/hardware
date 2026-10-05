@@ -29,4 +29,5 @@ sku: "TC57X-XXXXX"
 disponible: true
 destacado: true
 nuevo: false
+rankingVentas: 1
 ---

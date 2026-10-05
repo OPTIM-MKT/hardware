@@ -26,4 +26,5 @@ sku: "ZT41142-T010000Z"
 disponible: true
 destacado: true
 nuevo: false
+rankingVentas: 1
 ---

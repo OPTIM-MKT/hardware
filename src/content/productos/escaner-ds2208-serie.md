@@ -26,4 +26,5 @@ sku: "DS2208-SR7U2100SGW"
 disponible: true
 destacado: false
 nuevo: false
+rankingVentas: 1
 ---

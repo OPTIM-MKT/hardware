@@ -16,6 +16,11 @@ export interface ProductSection {
   description: string;
   /** Categorías (campo `categoria` del producto) que pertenecen a la sección. */
   categorias: string[];
+  /**
+   * Subcategorías que fuerzan la sección aunque su categoría apunte a otra
+   * (p. ej. "Tabletas robustas" vive en "Lectura y Captura de Datos").
+   */
+  subcategorias?: string[];
 }
 
 export const PRODUCT_SECTIONS: ProductSection[] = [
@@ -24,13 +29,23 @@ export const PRODUCT_SECTIONS: ProductSection[] = [
     title: "Impresión",
     description:
       "Impresoras de etiquetas industriales, de escritorio y de punto de venta.",
-    categorias: ["Impresoras", "Impresoras Industriales", "Punto de Venta"],
+    categorias: [
+      "Impresoras",
+      "Impresoras Industriales",
+      "Impresoras de Etiquetas",
+      "Impresoras de credenciales",
+      "Punto de Venta",
+    ],
   },
   {
     id: "captura-de-datos",
     title: "Captura de datos",
     description: "Escáneres de códigos de barras para piso, almacén y mostrador.",
-    categorias: ["Escáneres", "Escáneres Industriales"],
+    categorias: [
+      "Escáneres",
+      "Escáneres Industriales",
+      "Lectura y Captura de Datos",
+    ],
   },
   {
     id: "computo-movil",
@@ -41,25 +56,33 @@ export const PRODUCT_SECTIONS: ProductSection[] = [
       "Cómputo Móvil",
       "Teclados Industriales",
       "Accesorios Industriales",
+      "Accesorios",
+      "Cómputo",
     ],
+    subcategorias: ["Computadoras móviles", "Tabletas robustas"],
   },
   {
     id: "consumibles",
     title: "Consumibles",
     description: "Ribbons, etiquetas, brazaletes y refacciones originales.",
-    categorias: ["Consumibles", "Refacciones", "Salud"],
+    categorias: [
+      "Consumibles",
+      "Consumibles Especializados",
+      "Refacciones",
+      "Salud",
+    ],
   },
   {
     id: "automatizacion",
     title: "Automatización",
     description: "HMI, relevadores y control para tu línea de producción.",
-    categorias: ["Automatización", "HMI"],
+    categorias: ["Automatización", "Automatización Industrial", "HMI"],
   },
   {
     id: "diseno-cad",
     title: "Diseño y CAD",
     description: "Ratones CAD y navegación 3D para ingeniería y diseño.",
-    categorias: ["Ratones CAD", "Navegación 3D", "Kits", "Accesorios"],
+    categorias: ["Ratones CAD", "Navegación 3D", "Kits"],
   },
   {
     id: "audio",
@@ -84,14 +107,25 @@ export const sectionHref = (id: ProductSectionId) =>
 
 /**
  * Sección de un producto: el campo `seccion` del frontmatter manda;
- * si no existe, se deriva de su `categoria`.
+ * después la `subcategoria` y, al final, la `categoria`.
  */
 export function resolveSectionId(product: {
   categoria: string;
+  subcategoria?: string;
   seccion?: ProductSectionId;
 }): ProductSectionId | undefined {
-  return (
-    product.seccion ??
-    PRODUCT_SECTIONS.find((s) => s.categorias.includes(product.categoria))?.id
-  );
+  const { seccion, categoria, subcategoria } = product;
+  if (seccion) return seccion;
+  if (subcategoria) {
+    const bySub = PRODUCT_SECTIONS.find((s) =>
+      s.subcategorias?.includes(subcategoria),
+    );
+    if (bySub) return bySub.id;
+  }
+  return PRODUCT_SECTIONS.find((s) => s.categorias.includes(categoria))?.id;
 }
+
+/** Productos importados del catálogo de Vexin (src/content/productos/vexin). */
+export const EXTENDED_CATALOG_PREFIX = "vexin-";
+export const isExtendedCatalog = (id: string) =>
+  id.startsWith(EXTENDED_CATALOG_PREFIX);

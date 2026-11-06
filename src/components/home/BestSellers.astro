@@ -5,6 +5,7 @@ import SnapCarousel from "@/components/shared/SnapCarousel.astro";
 import ProductCard from "@/components/productos/ProductCard.astro";
 import {
   BEST_SELLER_SECTION_IDS,
+  isExtendedCatalog,
   PRODUCT_SECTIONS,
   resolveSectionId,
   sectionHref,
@@ -30,7 +31,10 @@ const groups = BEST_SELLER_SECTION_IDS.map((id) => {
       (a, b) =>
         (a.data.rankingVentas ?? Infinity) -
           (b.data.rankingVentas ?? Infinity) ||
-        Number(b.data.destacado) - Number(a.data.destacado),
+        Number(b.data.destacado) - Number(a.data.destacado) ||
+        // La selección curada y lo que tiene foto va antes que el catálogo extendido.
+        Number(isExtendedCatalog(a.id)) - Number(isExtendedCatalog(b.id)) ||
+        Number(Boolean(b.data.imagen)) - Number(Boolean(a.data.imagen)),
     )
     .slice(0, limit);
   return { ...section, items };

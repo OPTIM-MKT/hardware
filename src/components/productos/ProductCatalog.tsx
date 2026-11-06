@@ -1,17 +1,27 @@
-import { useMemo, useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  memo,
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { toast } from "sonner";
 import { cartStore } from "../cart/cart-store";
 import {
   PRODUCT_SECTIONS,
   SECTION_QUERY_PARAM,
 } from "../../constants/product-sections";
+import { CATALOG_JSON_URL, CATALOG_PAGE_SIZE } from "./catalog-data";
 
 export interface CatalogProduct {
   slug: string;
   nombre: string;
   marca: string;
   categoria: string;
+  subcategoria?: string;
   seccion?: string;
   descripcion: string;
   imagen?: string;
@@ -20,127 +30,382 @@ export interface CatalogProduct {
   nuevo: boolean;
   sku?: string;
   tags: string[];
+  /** true = viene del catálogo extendido (src/content/productos/vexin). */
+  extendido: boolean;
 }
 
 interface Props {
-  products: CatalogProduct[];
+  /** Primera página (orden por relevancia) para el primer pintado. */
+  initialProducts: CatalogProduct[];
+  /** Total de productos del catálogo completo. */
+  total: number;
+  /** Opciones de marca y categoría, disponibles antes de descargar el JSON. */
+  facets: { marcas: string[]; categorias: string[] };
   children?: React.ReactNode;
 }
 
 type SortKey = "relevancia" | "nombre" | "nuevo" | "destacado";
+type CatalogoKey = "all" | "seleccion" | "extendido";
+type LoadStatus = "loading" | "ready" | "error";
 
-export default function ProductCatalog({ products, children }: Props) {
-  const [query, setQuery] = useState("");
-  const [categoria, setCategoria] = useState<string>("all");
-  const [marca, setMarca] = useState<string>("all");
-  const [seccion, setSeccion] = useState<string>("all");
-  const [soloDisponibles, setSoloDisponibles] = useState(false);
-  const [sort, setSort] = useState<SortKey>("relevancia");
-  const [drawerOpen, setDrawerOpen] = useState(false);
+interface Filters {
+  query: string;
+  marca: string;
+  categoria: string;
+  subcategoria: string;
+  seccion: string;
+  catalogo: CatalogoKey;
+  soloDisponibles: boolean;
+  sort: SortKey;
+}
+
+const DEFAULT_FILTERS: Filters = {
+  query: "",
+  marca: "all",
+  categoria: "all",
+  subcategoria: "all",
+  seccion: "all",
+  catalogo: "all",
+  soloDisponibles: false,
+  sort: "relevancia",
+};
+
+const SORT_KEYS: SortKey[] = ["relevancia", "nombre", "nuevo", "destacado"];
+const CATALOGO_OPTIONS: { value: CatalogoKey; label: string }[] = [
+  { value: "all", label: "Todo el catálogo" },
+  { value: "seleccion", label: "Selección Hard-Ware" },
+  { value: "extendido", label: "Catálogo extendido" },
+];
+
+// Parámetros de URL: permiten compartir una búsqueda y que "atrás" desde la
+// ficha de un producto regrese a la misma página y filtros.
+const PARAM = {
+  query: "q",
+  marca: "marca",
+  categoria: "categoria",
+  subcategoria: "sub",
+  seccion: SECTION_QUERY_PARAM,
+  catalogo: "catalogo",
+  soloDisponibles: "disponibles",
+  sort: "orden",
+  page: "pagina",
+} as const;
+
+// Panel de filtros: sin barra de scroll visible; un desvanecido en el borde
+// inferior sigue indicando que hay más opciones abajo.
+const HIDDEN_SCROLLBAR =
+  "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden";
+const SCROLL_EDGE_FADE =
+  "[mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent)]";
+
+const numberFormat = new Intl.NumberFormat("es-MX");
+const collator = new Intl.Collator("es", { sensitivity: "base", numeric: true });
+
+/** Minúsculas y sin acentos: "cámara" encuentra "camara" y viceversa. */
+const fold = (s: string) =>
+  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+function readUrlState(): { filters: Filters; page: number } {
+  const params = new URLSearchParams(window.location.search);
+  const get = (key: string) => params.get(key)?.trim() || undefined;
+
+  const seccion = get(PARAM.seccion);
+  const sort = get(PARAM.sort) as SortKey | undefined;
+  const catalogo = get(PARAM.catalogo) as CatalogoKey | undefined;
+  const page = Number(get(PARAM.page));
+
+  return {
+    filters: {
+      query: get(PARAM.query) ?? "",
+      marca: get(PARAM.marca) ?? "all",
+      categoria: get(PARAM.categoria) ?? "all",
+      subcategoria: get(PARAM.subcategoria) ?? "all",
+      seccion:
+        seccion && PRODUCT_SECTIONS.some((s) => s.id === seccion)
+          ? seccion
+          : "all",
+      catalogo:
+        catalogo && CATALOGO_OPTIONS.some((o) => o.value === catalogo)
+          ? catalogo
+          : "all",
+      soloDisponibles: get(PARAM.soloDisponibles) === "1",
+      sort: sort && SORT_KEYS.includes(sort) ? sort : "relevancia",
+    },
+    page: Number.isInteger(page) && page > 1 ? page : 1,
+  };
+}
+
+function writeUrlState(filters: Filters, page: number) {
+  const params = new URLSearchParams();
+  if (filters.query.trim()) params.set(PARAM.query, filters.query.trim());
+  if (filters.marca !== "all") params.set(PARAM.marca, filters.marca);
+  if (filters.categoria !== "all") params.set(PARAM.categoria, filters.categoria);
+  if (filters.subcategoria !== "all")
+    params.set(PARAM.subcategoria, filters.subcategoria);
+  if (filters.seccion !== "all") params.set(PARAM.seccion, filters.seccion);
+  if (filters.catalogo !== "all") params.set(PARAM.catalogo, filters.catalogo);
+  if (filters.soloDisponibles) params.set(PARAM.soloDisponibles, "1");
+  if (filters.sort !== "relevancia") params.set(PARAM.sort, filters.sort);
+  if (page > 1) params.set(PARAM.page, String(page));
+
+  const search = params.toString();
+  const url = `${window.location.pathname}${search ? `?${search}` : ""}${window.location.hash}`;
+  if (url !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+    window.history.replaceState(window.history.state, "", url);
+  }
+}
+
+type Counts = Map<string, number>;
+const bump = (counts: Counts, key: string | undefined) => {
+  if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
+};
+
+export default function ProductCatalog({
+  initialProducts,
+  total,
+  facets,
+  children,
+}: Props) {
+  const [products, setProducts] = useState<CatalogProduct[]>(initialProducts);
+  const [status, setStatus] = useState<LoadStatus>("loading");
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 12;
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [urlReady, setUrlReady] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
-  // Enlaces del home (/productos?seccion=...) llegan con la sección ya filtrada.
+  // 1) Estado inicial desde la URL (después de hidratar para no desfasar el SSR).
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get(
-      SECTION_QUERY_PARAM,
-    );
-    if (param && PRODUCT_SECTIONS.some((s) => s.id === param)) {
-      setSeccion(param);
-    }
+    const { filters: fromUrl, page } = readUrlState();
+    setFilters(fromUrl);
+    setCurrentPage(page);
+    setUrlReady(true);
   }, []);
 
+  // 2) Catálogo completo desde el JSON estático.
+  const loadCatalog = useCallback(() => {
+    setStatus("loading");
+    const controller = new AbortController();
+    fetch(CATALOG_JSON_URL, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json() as Promise<CatalogProduct[]>;
+      })
+      .then((data) => {
+        setProducts(data);
+        setStatus("ready");
+      })
+      .catch((err) => {
+        if (err?.name !== "AbortError") setStatus("error");
+      });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => loadCatalog(), [loadCatalog]);
+
+  // 3) Sincroniza filtros y página con la URL.
   useEffect(() => {
+    if (urlReady) writeUrlState(filters, currentPage);
+  }, [filters, currentPage, urlReady]);
+
+  const updateFilters = useCallback((patch: Partial<Filters>) => {
+    setFilters((prev) => {
+      const next = { ...prev, ...patch };
+      // La subcategoría depende de la categoría elegida.
+      if (patch.categoria !== undefined && patch.categoria !== prev.categoria) {
+        next.subcategoria = "all";
+      }
+      return next;
+    });
     setCurrentPage(1);
-  }, [query, categoria, marca, seccion, soloDisponibles, sort]);
+  }, []);
 
-  const seccionTitle = PRODUCT_SECTIONS.find((s) => s.id === seccion)?.title;
+  const resetFilters = useCallback(() => {
+    setFilters(DEFAULT_FILTERS);
+    setCurrentPage(1);
+  }, []);
 
-  const categorias = useMemo(
-    () => Array.from(new Set(products.map((p) => p.categoria))).sort(),
+  // Índice de búsqueda: se calcula una vez por catálogo, no en cada tecla.
+  const searchIndex = useMemo(
+    () =>
+      products.map((p) =>
+        fold(
+          [
+            p.nombre,
+            p.marca,
+            p.categoria,
+            p.subcategoria ?? "",
+            p.descripcion,
+            p.sku ?? "",
+            ...p.tags,
+          ].join(" "),
+        ),
+      ),
     [products],
   );
-  const marcas = useMemo(
-    () => Array.from(new Set(products.map((p) => p.marca))).sort(),
-    [products],
-  );
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = products.filter((p) => {
-      if (categoria !== "all" && p.categoria !== categoria) return false;
-      if (marca !== "all" && p.marca !== marca) return false;
-      if (seccion !== "all" && p.seccion !== seccion) return false;
-      if (soloDisponibles && !p.disponible) return false;
-      if (!q) return true;
-      const haystack = [
-        p.nombre,
-        p.marca,
-        p.categoria,
-        p.descripcion,
-        p.sku ?? "",
-        ...p.tags,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(q);
+  const deferredQuery = useDeferredValue(filters.query);
+
+  // Un solo recorrido: resultados + conteos por faceta (cada conteo respeta
+  // todos los filtros excepto el suyo, para que las cifras sean honestas).
+  const { filtered, counts } = useMemo(() => {
+    const tokens = fold(deferredQuery).split(/\s+/).filter(Boolean);
+    const { marca, categoria, subcategoria, seccion, catalogo, soloDisponibles } =
+      filters;
+    const result: CatalogProduct[] = [];
+    const counts = {
+      marca: new Map() as Counts,
+      categoria: new Map() as Counts,
+      subcategoria: new Map() as Counts,
+      catalogo: new Map() as Counts,
+    };
+
+    products.forEach((p, i) => {
+      const base =
+        (seccion === "all" || p.seccion === seccion) &&
+        (!soloDisponibles || p.disponible) &&
+        (tokens.length === 0 ||
+          tokens.every((t) => searchIndex[i].includes(t)));
+      if (!base) return;
+
+      const okMarca = marca === "all" || p.marca === marca;
+      const okCategoria = categoria === "all" || p.categoria === categoria;
+      const okSub = subcategoria === "all" || p.subcategoria === subcategoria;
+      const okCatalogo =
+        catalogo === "all" ||
+        (catalogo === "extendido" ? p.extendido : !p.extendido);
+
+      if (okCategoria && okSub && okCatalogo) bump(counts.marca, p.marca);
+      if (okMarca && okCatalogo) bump(counts.categoria, p.categoria);
+      if (okMarca && okCategoria && okCatalogo)
+        bump(counts.subcategoria, p.subcategoria);
+      if (okMarca && okCategoria && okSub)
+        bump(counts.catalogo, p.extendido ? "extendido" : "seleccion");
+
+      if (okMarca && okCategoria && okSub && okCatalogo) result.push(p);
     });
 
-    switch (sort) {
+    // El JSON ya llega ordenado por relevancia; los demás órdenes son estables.
+    switch (filters.sort) {
       case "nombre":
-        list = [...list].sort((a, b) => a.nombre.localeCompare(b.nombre));
+        result.sort((a, b) => collator.compare(a.nombre, b.nombre));
         break;
       case "nuevo":
-        list = [...list].sort((a, b) => Number(b.nuevo) - Number(a.nuevo));
+        result.sort((a, b) => Number(b.nuevo) - Number(a.nuevo));
         break;
       case "destacado":
-        list = [...list].sort(
-          (a, b) => Number(b.destacado) - Number(a.destacado),
-        );
+        result.sort((a, b) => Number(b.destacado) - Number(a.destacado));
         break;
-      default:
-        list = [...list].sort(
-          (a, b) =>
-            Number(b.destacado) - Number(a.destacado) ||
-            Number(b.nuevo) - Number(a.nuevo) ||
-            a.nombre.localeCompare(b.nombre),
-        );
     }
 
-    return list;
-  }, [products, query, categoria, marca, seccion, soloDisponibles, sort]);
+    return { filtered: result, counts };
+  }, [products, searchIndex, deferredQuery, filters]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
+  const page = Math.min(currentPage, totalPages);
+  const pageStart = (page - 1) * CATALOG_PAGE_SIZE;
   const paginatedProducts = filtered.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
+    pageStart,
+    pageStart + CATALOG_PAGE_SIZE,
   );
 
-  const hasFilters =
-    query !== "" ||
-    categoria !== "all" ||
-    marca !== "all" ||
-    seccion !== "all" ||
-    soloDisponibles;
-
-  const resetFilters = () => {
-    setQuery("");
-    setCategoria("all");
-    setMarca("all");
-    setSeccion("all");
-    setSoloDisponibles(false);
-    setSort("relevancia");
-    setCurrentPage(1);
+  const goToPage = (next: number) => {
+    setCurrentPage(Math.min(Math.max(1, next), totalPages));
+    const el = rootRef.current;
+    if (el) {
+      // Debajo del navbar fijo, al inicio del catálogo (no al tope de la página).
+      const top = el.getBoundingClientRect().top + window.scrollY - 112;
+      window.scrollTo({ top, behavior: reduceMotion ? "auto" : "smooth" });
+    }
   };
 
+  const loaded = status === "ready";
+  const hasFilters =
+    filters.query.trim() !== "" ||
+    filters.marca !== "all" ||
+    filters.categoria !== "all" ||
+    filters.subcategoria !== "all" ||
+    filters.seccion !== "all" ||
+    filters.catalogo !== "all" ||
+    filters.soloDisponibles;
+
+  // Mientras llega el JSON, solo la vista por defecto es fiel (es el SSR);
+  // con filtros o en otra página mostramos esqueletos en vez de "sin resultados".
+  const waiting = !loaded && (hasFilters || page > 1);
+
+  const seccionTitle = PRODUCT_SECTIONS.find(
+    (s) => s.id === filters.seccion,
+  )?.title;
+
+  const subcategorias = useMemo(() => {
+    if (filters.categoria === "all") return [];
+    return [...counts.subcategoria.keys()].sort(collator.compare);
+  }, [counts.subcategoria, filters.categoria]);
+
+  const activeChips: { label: string; clear: () => void }[] = [];
+  if (filters.query.trim())
+    activeChips.push({
+      label: `“${filters.query.trim()}”`,
+      clear: () => updateFilters({ query: "" }),
+    });
+  if (seccionTitle)
+    activeChips.push({
+      label: seccionTitle,
+      clear: () => updateFilters({ seccion: "all" }),
+    });
+  if (filters.catalogo !== "all")
+    activeChips.push({
+      label: CATALOGO_OPTIONS.find((o) => o.value === filters.catalogo)!.label,
+      clear: () => updateFilters({ catalogo: "all" }),
+    });
+  if (filters.marca !== "all")
+    activeChips.push({
+      label: filters.marca,
+      clear: () => updateFilters({ marca: "all" }),
+    });
+  if (filters.categoria !== "all")
+    activeChips.push({
+      label: filters.categoria,
+      clear: () => updateFilters({ categoria: "all" }),
+    });
+  if (filters.subcategoria !== "all")
+    activeChips.push({
+      label: filters.subcategoria,
+      clear: () => updateFilters({ subcategoria: "all" }),
+    });
+  if (filters.soloDisponibles)
+    activeChips.push({
+      label: "Solo disponibles",
+      clear: () => updateFilters({ soloDisponibles: false }),
+    });
+
+  const panel = (
+    <FiltersPanel
+      filters={filters}
+      onChange={updateFilters}
+      onReset={resetFilters}
+      hasFilters={hasFilters}
+      marcas={facets.marcas}
+      categorias={facets.categorias}
+      subcategorias={subcategorias}
+      counts={loaded ? counts : null}
+    />
+  );
+
+  const resultCount = loaded ? filtered.length : total;
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 items-start">
+    <div
+      ref={rootRef}
+      className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 items-start"
+    >
       {/* Mobile filters trigger */}
       <div className="md:hidden flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-sm font-semibold text-primary dark:text-accent hover:border-primary hover:text-primary dark:hover:text-accent transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-sm font-semibold text-primary dark:text-accent hover:border-primary hover:text-primary dark:hover:text-accent active:scale-[0.97] transition-[color,border-color,transform] duration-100 cursor-pointer motion-reduce:transform-none"
         >
           <svg
             className="w-4 h-4"
@@ -148,6 +413,7 @@ export default function ProductCatalog({ products, children }: Props) {
             stroke="currentColor"
             strokeWidth={2}
             viewBox="0 0 24 24"
+            aria-hidden
           >
             <path
               strokeLinecap="round"
@@ -156,35 +422,28 @@ export default function ProductCatalog({ products, children }: Props) {
             />
           </svg>
           Filtros
-          {hasFilters && (
-            <span className="w-2 h-2 rounded-full bg-accent" aria-hidden />
+          {activeChips.length > 0 && (
+            <span className="min-w-5 h-5 px-1.5 rounded-full bg-accent text-primary text-[11px] font-bold leading-5 text-center tabular-nums">
+              {activeChips.length}
+            </span>
           )}
         </button>
-        <SortSelect value={sort} onChange={setSort} compact />
+        <SortSelect
+          value={filters.sort}
+          onChange={(sort) => updateFilters({ sort })}
+          compact
+        />
       </div>
 
       {/* Desktop filters */}
       <aside
-        className="hidden md:block sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-2"
-        style={{ scrollbarWidth: "thin" }}
+        className={`hidden md:block sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto overscroll-contain pb-8 ${HIDDEN_SCROLLBAR} ${SCROLL_EDGE_FADE}`}
+        aria-label="Filtros del catálogo"
       >
-        <FiltersPanel
-          query={query}
-          onQuery={setQuery}
-          categoria={categoria}
-          onCategoria={setCategoria}
-          categorias={categorias}
-          marca={marca}
-          onMarca={setMarca}
-          marcas={marcas}
-          soloDisponibles={soloDisponibles}
-          onSoloDisponibles={setSoloDisponibles}
-          onReset={resetFilters}
-          hasFilters={hasFilters}
-        />
+        {panel}
       </aside>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer: entra y sale por la izquierda, por donde vino. */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -198,14 +457,21 @@ export default function ProductCatalog({ products, children }: Props) {
             />
             <motion.div
               key="dr"
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filtros"
+              initial={reduceMotion ? { opacity: 0 } : { x: "-100%" }}
+              animate={reduceMotion ? { opacity: 1 } : { x: 0 }}
+              exit={reduceMotion ? { opacity: 0 } : { x: "-100%" }}
+              transition={
+                reduceMotion
+                  ? { duration: 0.2 }
+                  : { type: "spring", bounce: 0, duration: 0.35 }
+              }
               data-surface="panel"
-              className="fixed top-0 left-0 bottom-0 z-50 w-[85%] max-w-sm p-6 overflow-y-auto md:hidden"
+              className="fixed top-0 left-0 bottom-0 z-50 w-[85%] max-w-sm flex flex-col md:hidden"
             >
-              <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center justify-between px-6 pt-6 pb-4">
                 <h3 className="text-lg font-bold text-primary dark:text-accent">
                   Filtros
                 </h3>
@@ -221,6 +487,7 @@ export default function ProductCatalog({ products, children }: Props) {
                     stroke="currentColor"
                     strokeWidth={2}
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -230,35 +497,119 @@ export default function ProductCatalog({ products, children }: Props) {
                   </svg>
                 </button>
               </div>
-              <FiltersPanel
-                query={query}
-                onQuery={setQuery}
-                categoria={categoria}
-                onCategoria={setCategoria}
-                categorias={categorias}
-                marca={marca}
-                onMarca={setMarca}
-                marcas={marcas}
-                soloDisponibles={soloDisponibles}
-                onSoloDisponibles={setSoloDisponibles}
-                onReset={resetFilters}
-                hasFilters={hasFilters}
-              />
+              <div
+                className={`flex-1 overflow-y-auto overscroll-contain px-6 pb-8 ${HIDDEN_SCROLLBAR} ${SCROLL_EDGE_FADE}`}
+              >
+                {panel}
+              </div>
+              <div className="px-6 py-4 border-t border-line">
+                <button
+                  type="button"
+                  onClick={() => setDrawerOpen(false)}
+                  className="w-full py-3 rounded-full bg-primary text-white text-sm font-semibold active:scale-[0.98] transition-transform duration-100 cursor-pointer motion-reduce:transform-none"
+                >
+                  Ver {numberFormat.format(resultCount)}{" "}
+                  {resultCount === 1 ? "producto" : "productos"}
+                </button>
+              </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      <section>
-        <div className="hidden md:flex items-center justify-between mb-6 gap-4">
-          <p className="text-sm text-muted">
-            {filtered.length} {filtered.length === 1 ? "producto" : "productos"}
+      <section aria-label="Resultados" className="min-w-0">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-4">
+          <p className="text-sm text-muted tabular-nums" aria-live="polite">
+            <span className="font-semibold text-ink dark:text-white">
+              {numberFormat.format(resultCount)}
+            </span>{" "}
+            {resultCount === 1 ? "producto" : "productos"}
             {seccionTitle && ` en ${seccionTitle}`}
+            {loaded && filtered.length > CATALOG_PAGE_SIZE && (
+              <span className="hidden sm:inline">
+                {" "}
+                · mostrando {numberFormat.format(pageStart + 1)}–
+                {numberFormat.format(pageStart + paginatedProducts.length)}
+              </span>
+            )}
           </p>
-          <SortSelect value={sort} onChange={setSort} />
+          <div className="hidden md:block">
+            <SortSelect
+              value={filters.sort}
+              onChange={(sort) => updateFilters({ sort })}
+            />
+          </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {activeChips.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            {activeChips.map((chip) => (
+              <button
+                key={chip.label}
+                type="button"
+                onClick={chip.clear}
+                aria-label={`Quitar filtro ${chip.label}`}
+                className="group/chip inline-flex items-center gap-1.5 max-w-full pl-3 pr-2 py-1 rounded-full bg-primary/8 dark:bg-accent/10 text-xs font-semibold text-primary dark:text-accent hover:bg-primary/12 dark:hover:bg-accent/15 active:scale-[0.97] transition-[background-color,transform] duration-100 cursor-pointer motion-reduce:transform-none"
+              >
+                <span className="truncate">{chip.label}</span>
+                <svg
+                  className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover/chip:opacity-100"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            ))}
+            {activeChips.length > 1 && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="text-xs font-semibold text-muted hover:text-primary dark:hover:text-accent underline underline-offset-4 cursor-pointer px-1"
+              >
+                Limpiar todo
+              </button>
+            )}
+          </div>
+        )}
+
+        {status === "error" && (
+          <div
+            role="alert"
+            className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line px-4 py-3 text-sm text-ink dark:text-white"
+          >
+            <span>
+              No pudimos cargar el catálogo completo. Mostramos solo los
+              primeros productos.
+            </span>
+            <button
+              type="button"
+              onClick={loadCatalog}
+              className="text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline underline-offset-4 cursor-pointer"
+            >
+              Reintentar
+            </button>
+          </div>
+        )}
+
+        {waiting ? (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            aria-busy="true"
+            aria-label="Cargando productos"
+          >
+            {Array.from({ length: CATALOG_PAGE_SIZE }, (_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           children ? (
             children
           ) : (
@@ -267,8 +618,8 @@ export default function ProductCatalog({ products, children }: Props) {
                 Sin resultados
               </p>
               <p className="text-sm text-muted max-w-sm">
-                No encontramos productos con esos criterios. Ajusta los filtros
-                o busca otra palabra.
+                No encontramos productos con esos criterios. Prueba con el
+                número de parte, otra palabra o quita algún filtro.
               </p>
               <button
                 type="button"
@@ -281,68 +632,25 @@ export default function ProductCatalog({ products, children }: Props) {
           )
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* Cross-fade corto al cambiar de página o filtros. */}
+            <motion.div
+              key={`${page}|${filtered.length}|${filters.sort}`}
+              initial={{ opacity: 0.35 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            >
               {paginatedProducts.map((product) => (
                 <ProductCard key={product.slug} product={product} />
               ))}
-            </div>
+            </motion.div>
 
-            {totalPages > 1 && (
-              <div className="mt-12 flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  disabled={currentPage === 1}
-                  onClick={() => {
-                    setCurrentPage((p) => Math.max(1, p - 1));
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
-                  aria-label="Página anterior"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.75 19.5 8.25 12l7.5-7.5"
-                    />
-                  </svg>
-                </button>
-
-                <span className="text-sm font-semibold text-ink dark:text-white px-4">
-                  Página {currentPage} de {totalPages}
-                </span>
-
-                <button
-                  type="button"
-                  disabled={currentPage === totalPages}
-                  onClick={() => {
-                    setCurrentPage((p) => Math.min(totalPages, p + 1));
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="w-10 h-10 rounded-full border border-line flex items-center justify-center text-ink dark:text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-line/50 transition-colors"
-                  aria-label="Página siguiente"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                    />
-                  </svg>
-                </button>
-              </div>
+            {loaded && totalPages > 1 && (
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onChange={goToPage}
+              />
             )}
           </>
         )}
@@ -351,53 +659,67 @@ export default function ProductCatalog({ products, children }: Props) {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/* Filtros                                                                     */
+/* -------------------------------------------------------------------------- */
+
 function FiltersPanel({
-  query,
-  onQuery,
-  categoria,
-  onCategoria,
-  categorias,
-  marca,
-  onMarca,
-  marcas,
-  soloDisponibles,
-  onSoloDisponibles,
+  filters,
+  onChange,
   onReset,
   hasFilters,
+  marcas,
+  categorias,
+  subcategorias,
+  counts,
 }: {
-  query: string;
-  onQuery: (v: string) => void;
-  categoria: string;
-  onCategoria: (v: string) => void;
-  categorias: string[];
-  marca: string;
-  onMarca: (v: string) => void;
-  marcas: string[];
-  soloDisponibles: boolean;
-  onSoloDisponibles: (v: boolean) => void;
+  filters: Filters;
+  onChange: (patch: Partial<Filters>) => void;
   onReset: () => void;
   hasFilters: boolean;
+  marcas: string[];
+  categorias: string[];
+  subcategorias: string[];
+  /** null mientras el catálogo completo no ha llegado. */
+  counts: {
+    marca: Counts;
+    categoria: Counts;
+    subcategoria: Counts;
+    catalogo: Counts;
+  } | null;
 }) {
+  const catalogoTotal = counts
+    ? (counts.catalogo.get("seleccion") ?? 0) +
+      (counts.catalogo.get("extendido") ?? 0)
+    : undefined;
+
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <div>
-        <label className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2 block">
+        <label
+          htmlFor="catalog-search"
+          className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2 block"
+        >
           Buscar
         </label>
         <div className="relative">
           <input
+            id="catalog-search"
             type="search"
-            value={query}
-            onChange={(e) => onQuery(e.target.value)}
-            placeholder="Buscar productos…"
-            className="w-full pl-10 pr-4 py-3 rounded-full text-sm text-ink bg-canvas border border-line focus:outline-none focus:border-primary dark:focus:border-accent transition-colors"
+            value={filters.query}
+            onChange={(e) => onChange({ query: e.target.value })}
+            placeholder="Modelo o número de parte"
+            autoComplete="off"
+            spellCheck={false}
+            className="w-full pl-10 pr-4 py-3 rounded-full text-sm text-ink bg-canvas border border-line placeholder:text-muted focus:outline-none focus:border-primary dark:focus:border-accent transition-colors"
           />
           <svg
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
             viewBox="0 0 24 24"
+            aria-hidden
           >
             <path
               strokeLinecap="round"
@@ -409,23 +731,68 @@ function FiltersPanel({
       </div>
 
       <FilterGroup
-        label="Marca"
-        value={marca}
-        onChange={onMarca}
-        options={marcas}
+        label="Catálogo"
+        name="catalogo"
+        value={filters.catalogo}
+        onChange={(v) => onChange({ catalogo: v as CatalogoKey })}
+        allLabel={CATALOGO_OPTIONS[0].label}
+        allCount={catalogoTotal}
+        options={CATALOGO_OPTIONS.slice(1).map((o) => ({
+          value: o.value,
+          label: o.label,
+          count: counts?.catalogo.get(o.value),
+        }))}
+        counted={Boolean(counts)}
       />
+
+      <FilterGroup
+        label="Marca"
+        name="marca"
+        value={filters.marca}
+        onChange={(v) => onChange({ marca: v })}
+        options={marcas.map((m) => ({
+          value: m,
+          label: m,
+          count: counts?.marca.get(m),
+        }))}
+        counted={Boolean(counts)}
+        collapseAfter={6}
+      />
+
       <FilterGroup
         label="Categoría"
-        value={categoria}
-        onChange={onCategoria}
-        options={categorias}
+        name="categoria"
+        value={filters.categoria}
+        onChange={(v) => onChange({ categoria: v })}
+        options={categorias.map((c) => ({
+          value: c,
+          label: c,
+          count: counts?.categoria.get(c),
+        }))}
+        counted={Boolean(counts)}
+        collapseAfter={8}
       />
+
+      {subcategorias.length > 0 && (
+        <FilterGroup
+          label={`Tipo · ${filters.categoria}`}
+          name="subcategoria"
+          value={filters.subcategoria}
+          onChange={(v) => onChange({ subcategoria: v })}
+          options={subcategorias.map((s) => ({
+            value: s,
+            label: s,
+            count: counts?.subcategoria.get(s),
+          }))}
+          counted={Boolean(counts)}
+        />
+      )}
 
       <label className="flex items-center gap-3 cursor-pointer">
         <input
           type="checkbox"
-          checked={soloDisponibles}
-          onChange={(e) => onSoloDisponibles(e.target.checked)}
+          checked={filters.soloDisponibles}
+          onChange={(e) => onChange({ soloDisponibles: e.target.checked })}
           className="w-4 h-4 rounded border-line accent-primary dark:accent-accent"
         />
         <span className="text-sm text-ink dark:text-white">
@@ -437,7 +804,7 @@ function FiltersPanel({
         <button
           type="button"
           onClick={onReset}
-          className="text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline self-start cursor-pointer"
+          className="text-xs font-semibold uppercase tracking-widest text-primary dark:text-accent underline underline-offset-4 self-start cursor-pointer"
         >
           Limpiar filtros
         </button>
@@ -446,45 +813,125 @@ function FiltersPanel({
   );
 }
 
+interface FilterOption {
+  value: string;
+  label: string;
+  count?: number;
+}
+
 function FilterGroup({
   label,
+  name,
   value,
   onChange,
   options,
+  counted,
+  allLabel = "Todas",
+  allCount,
+  collapseAfter,
 }: {
   label: string;
+  name: string;
   value: string;
   onChange: (v: string) => void;
-  options: string[];
+  options: FilterOption[];
+  /** true cuando ya hay conteos: oculta opciones sin resultados. */
+  counted: boolean;
+  allLabel?: string;
+  allCount?: number;
+  collapseAfter?: number;
 }) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Con conteos, las opciones vacías estorban; la seleccionada siempre queda.
+  const visible = counted
+    ? options.filter((o) => (o.count ?? 0) > 0 || o.value === value)
+    : options;
+
+  const canCollapse = collapseAfter !== undefined && visible.length > collapseAfter + 2;
+  let shown = visible;
+  if (canCollapse && !expanded) {
+    shown = visible.slice(0, collapseAfter);
+    // Si la opción elegida quedaría oculta, la mostramos igualmente.
+    const selected = visible.find((o) => o.value === value);
+    if (selected && !shown.includes(selected)) shown = [...shown, selected];
+  }
+
   return (
     <fieldset>
       <legend className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">
         {label}
       </legend>
-      <div className="flex flex-col gap-1.5">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            checked={value === "all"}
-            onChange={() => onChange("all")}
-            className="w-4 h-4 accent-primary dark:accent-accent"
+      <div className="flex flex-col gap-0.5">
+        <FilterOptionRow
+          name={name}
+          checked={value === "all"}
+          onSelect={() => onChange("all")}
+          label={allLabel}
+          count={allCount}
+        />
+        {shown.map((opt) => (
+          <FilterOptionRow
+            key={opt.value}
+            name={name}
+            checked={value === opt.value}
+            onSelect={() => onChange(opt.value)}
+            label={opt.label}
+            count={counted ? (opt.count ?? 0) : undefined}
           />
-          <span className="text-sm text-ink dark:text-white">Todas</span>
-        </label>
-        {options.map((opt) => (
-          <label key={opt} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={value === opt}
-              onChange={() => onChange(opt)}
-              className="w-4 h-4 accent-primary dark:accent-accent"
-            />
-            <span className="text-sm text-ink dark:text-white">{opt}</span>
-          </label>
         ))}
       </div>
+      {canCollapse && (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+          className="mt-1.5 ml-6 text-xs font-semibold text-primary dark:text-accent hover:underline underline-offset-4 cursor-pointer"
+        >
+          {expanded ? "Ver menos" : `Ver todas (${visible.length})`}
+        </button>
+      )}
     </fieldset>
+  );
+}
+
+function FilterOptionRow({
+  name,
+  checked,
+  onSelect,
+  label,
+  count,
+}: {
+  name: string;
+  checked: boolean;
+  onSelect: () => void;
+  label: string;
+  count?: number;
+}) {
+  return (
+    <label className="flex items-center gap-2 py-1 cursor-pointer group/opt">
+      <input
+        type="radio"
+        name={`catalog-${name}`}
+        checked={checked}
+        onChange={onSelect}
+        className="w-4 h-4 shrink-0 accent-primary dark:accent-accent"
+      />
+      <span
+        className={`flex-1 min-w-0 text-sm leading-snug group-hover/opt:text-primary dark:group-hover/opt:text-accent transition-colors ${
+          checked
+            ? "font-semibold text-ink dark:text-white"
+            : "text-ink dark:text-white"
+        }`}
+      >
+        {label}
+      </span>
+      {count !== undefined && (
+        <span className="text-xs text-muted tabular-nums">
+          {numberFormat.format(count)}
+        </span>
+      )}
+    </label>
   );
 }
 
@@ -519,7 +966,172 @@ function SortSelect({
   );
 }
 
-function ProductCard({ product }: { product: CatalogProduct }) {
+/* -------------------------------------------------------------------------- */
+/* Paginación                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/** 1 … 4 5 6 … 620 — siempre primera, última y vecinas de la actual. */
+function pageItems(page: number, totalPages: number): (number | "gap")[] {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  const start = Math.max(2, Math.min(page - 1, totalPages - 4));
+  const end = Math.min(totalPages - 1, Math.max(page + 1, 5));
+  const items: (number | "gap")[] = [1];
+  if (start > 2) items.push("gap");
+  for (let i = start; i <= end; i++) items.push(i);
+  if (end < totalPages - 1) items.push("gap");
+  items.push(totalPages);
+  return items;
+}
+
+const pageButton =
+  "min-w-10 h-10 px-2 rounded-full flex items-center justify-center text-sm font-semibold tabular-nums transition-[background-color,color,transform] duration-100 active:scale-[0.94] motion-reduce:transform-none cursor-pointer";
+
+function Pagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (page: number) => void;
+}) {
+  return (
+    <nav
+      aria-label="Paginación"
+      className="mt-12 flex items-center justify-center gap-1.5 sm:gap-2"
+    >
+      <button
+        type="button"
+        disabled={page === 1}
+        onClick={() => onChange(page - 1)}
+        className={`${pageButton} border border-line text-ink dark:text-white hover:bg-line/50 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100`}
+        aria-label="Página anterior"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 19.5 8.25 12l7.5-7.5"
+          />
+        </svg>
+      </button>
+
+      {/* Números en tablet/escritorio; en móvil, "3 / 620". */}
+      <ol className="hidden sm:flex items-center gap-1 list-none p-0 m-0">
+        {pageItems(page, totalPages).map((item, i) =>
+          item === "gap" ? (
+            <li
+              key={`gap-${i}`}
+              aria-hidden
+              className="w-8 text-center text-sm text-muted select-none"
+            >
+              …
+            </li>
+          ) : (
+            <li key={item}>
+              <button
+                type="button"
+                onClick={() => onChange(item)}
+                aria-current={item === page ? "page" : undefined}
+                aria-label={`Página ${item}`}
+                className={`${pageButton} ${
+                  item === page
+                    ? "bg-primary text-white dark:bg-accent dark:text-primary"
+                    : "text-ink dark:text-white hover:bg-line/60"
+                }`}
+              >
+                {numberFormat.format(item)}
+              </button>
+            </li>
+          ),
+        )}
+      </ol>
+      <span className="sm:hidden text-sm font-semibold text-ink dark:text-white px-3 tabular-nums">
+        {numberFormat.format(page)} / {numberFormat.format(totalPages)}
+      </span>
+
+      <button
+        type="button"
+        disabled={page === totalPages}
+        onClick={() => onChange(page + 1)}
+        className={`${pageButton} border border-line text-ink dark:text-white hover:bg-line/50 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100`}
+        aria-label="Página siguiente"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m8.25 4.5 7.5 7.5-7.5 7.5"
+          />
+        </svg>
+      </button>
+    </nav>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tarjetas                                                                    */
+/* -------------------------------------------------------------------------- */
+
+function ProductImage({ src, alt }: { src?: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-muted/60">
+        <svg
+          className="w-12 h-12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.25}
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+          />
+        </svg>
+        <span className="sr-only">Imagen no disponible</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      // Fotos de producto sobre blanco: contain + aire, sin recortar el equipo.
+      className="w-full h-full object-contain p-5 group-hover:scale-[1.03] transition-transform duration-500 ease-out motion-reduce:transform-none"
+      loading="lazy"
+      decoding="async"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+const ProductCard = memo(function ProductCard({
+  product,
+}: {
+  product: CatalogProduct;
+}) {
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -542,23 +1154,20 @@ function ProductCard({ product }: { product: CatalogProduct }) {
     });
   };
 
+  const meta = product.subcategoria ?? product.categoria;
+
   return (
     <a
       href={`/productos/${product.slug}`}
-      className="group bento-card flex flex-col gap-4 p-5 hover:border-primary/30 transition-all"
+      className="group bento-card flex flex-col gap-4 p-5 hover:border-primary/30 transition-all active:scale-[0.99] motion-reduce:transform-none"
     >
-      <div className="aspect-4/3 rounded-xl overflow-hidden bg-line relative">
-        {product.imagen ? (
-          <img
-            src={product.imagen}
-            alt={product.nombre}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full" />
-        )}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+      <div
+        className={`aspect-4/3 rounded-xl overflow-hidden relative ${
+          product.imagen ? "bg-white" : "bg-line/60"
+        }`}
+      >
+        <ProductImage src={product.imagen} alt={product.nombre} />
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
           {product.nuevo && (
             <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent text-primary">
               Nuevo
@@ -573,8 +1182,8 @@ function ProductCard({ product }: { product: CatalogProduct }) {
       </div>
 
       <div className="flex flex-col flex-1 gap-2">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted">
-          {product.marca} · {product.categoria}
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted truncate">
+          {product.marca} · {meta}
         </p>
         <h3 className="text-base font-bold text-ink dark:text-white line-clamp-2 group-hover:text-primary transition-colors">
           {product.nombre}
@@ -582,27 +1191,35 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         <p className="text-sm text-muted line-clamp-2">{product.descripcion}</p>
 
         <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary dark:text-accent">
-            Ver detalle
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-              />
-            </svg>
+          <span className="min-w-0 flex flex-col gap-0.5">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary dark:text-accent">
+              Ver detalle
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </span>
+            {product.sku && (
+              <span className="text-[11px] text-muted tabular-nums truncate">
+                SKU {product.sku}
+              </span>
+            )}
           </span>
           <button
             type="button"
             onClick={handleAdd}
             aria-label={`Agregar ${product.nombre} al carrito`}
-            className="w-9 h-9 rounded-full bg-accent text-primary flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
+            className="w-9 h-9 shrink-0 rounded-full bg-accent text-primary flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-100 cursor-pointer motion-reduce:transform-none"
           >
             <svg
               className="w-4 h-4"
@@ -610,6 +1227,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
               stroke="currentColor"
               strokeWidth={2.5}
               viewBox="0 0 24 24"
+              aria-hidden
             >
               <path
                 strokeLinecap="round"
@@ -621,5 +1239,19 @@ function ProductCard({ product }: { product: CatalogProduct }) {
         </div>
       </div>
     </a>
+  );
+});
+
+function ProductCardSkeleton() {
+  return (
+    <div className="bento-card flex flex-col gap-4 p-5" aria-hidden>
+      <div className="aspect-4/3 rounded-xl bg-line/60 animate-pulse motion-reduce:animate-none" />
+      <div className="flex flex-col gap-2.5">
+        <div className="h-2.5 w-1/3 rounded-full bg-line animate-pulse motion-reduce:animate-none" />
+        <div className="h-4 w-4/5 rounded-full bg-line animate-pulse motion-reduce:animate-none" />
+        <div className="h-3 w-full rounded-full bg-line/70 animate-pulse motion-reduce:animate-none" />
+        <div className="h-3 w-2/3 rounded-full bg-line/70 animate-pulse motion-reduce:animate-none" />
+      </div>
+    </div>
   );
 }

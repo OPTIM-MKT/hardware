@@ -51,6 +51,9 @@ const slides = [
   },
 ];
 
+/** Tiempo por slide; la barra de progreso del indicador usa el mismo valor. */
+const AUTOPLAY_MS = 3000;
+
 const stats = [
   { value: "+500", label: "Equipos Reparados" },
   { value: "+15", label: "Años de Experiencia" },
@@ -70,7 +73,7 @@ export default function HeroCarousel({ images }: { images?: string[] }) {
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        autoplay={{ delay: AUTOPLAY_MS, disableOnInteraction: false }}
         loop
         onSwiper={(s) => (swiperRef.current = s)}
         onSlideChange={(s) => setActiveIndex(s.realIndex)}
@@ -229,74 +232,110 @@ export default function HeroCarousel({ images }: { images?: string[] }) {
       {/* ─── Vertical side navigator (right edge, centered) ─── */}
       <nav
         aria-label="Slides"
-        className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col gap-5"
+        className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-end gap-2"
       >
         {slides.map((slide, i) => {
           const isActive = activeIndex === i;
           return (
             <button
               key={i}
+              type="button"
               onClick={() => swiperRef.current?.slideToLoop(i)}
               aria-label={`Ir al slide ${i + 1}: ${slide.tag}`}
               aria-current={isActive ? "true" : undefined}
-              className="group flex items-center gap-3 focus:outline-none"
-              style={{ direction: "rtl" }}
+              className="group relative flex items-center cursor-pointer rounded-full p-2 outline-none focus-visible:ring-2 focus-visible:ring-accent/80"
             >
-              {/* Slide tag — visible only on active */}
+              {/* Etiqueta del slide activo: posicionada fuera del flujo para
+                  que nunca se recorte; entra desde la barra hacia la izquierda. */}
               <span
-                className="text-right transition-all duration-500 overflow-hidden whitespace-nowrap"
+                aria-hidden
+                className="absolute right-full mr-1 whitespace-nowrap rounded-full px-3 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-white bg-primary/60 backdrop-blur-md border border-white/15 shadow-[0_4px_16px_rgba(1,20,60,0.35)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-opacity"
                 style={{
-                  maxWidth: isActive ? "140px" : "0px",
                   opacity: isActive ? 1 : 0,
-                  fontSize: "0.65rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.85)",
+                  transform: isActive ? "translateX(0)" : "translateX(8px)",
+                  pointerEvents: "none",
                 }}
               >
                 {slide.tag}
               </span>
 
-              {/* Track + progress bar */}
-              <div className="flex flex-col items-center gap-1">
-                {/* Number badge */}
+              {/* Número + barra de progreso */}
+              <span className="flex flex-col items-center gap-1.5 [text-shadow:0_1px_6px_rgba(1,20,60,0.6)]">
                 <span
-                  className="transition-all duration-300 font-bold tabular-nums"
-                  style={{
-                    fontSize: isActive ? "0.75rem" : "0.6rem",
-                    color: isActive ? "#fab702" : "rgba(255,255,255,0.35)",
-                    lineHeight: 1,
-                  }}
+                  className={`font-bold tabular-nums leading-none transition-[color,font-size] duration-300 ${
+                    isActive
+                      ? "text-xs text-accent"
+                      : "text-[0.65rem] text-white/75 group-hover:text-white"
+                  }`}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                {/* Vertical bar */}
-                <div
-                  className="relative rounded-full overflow-hidden"
-                  style={{
-                    width: "2px",
-                    height: isActive ? "48px" : "24px",
-                    background: "rgba(255,255,255,0.18)",
-                    transition: "height 0.4s ease",
-                  }}
+                <span
+                  className={`relative block w-[3px] rounded-full overflow-hidden transition-[height,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_0_0_1px_rgba(1,20,60,0.25)] ${
+                    isActive
+                      ? "h-12 bg-white/35"
+                      : "h-6 bg-white/50 group-hover:bg-white/80"
+                  }`}
                 >
                   {isActive && (
-                    <motion.div
+                    <motion.span
                       key={`progress-${i}`}
-                      className="absolute top-0 left-0 right-0 rounded-full"
-                      style={{ background: "#fab702" }}
+                      className="absolute top-0 left-0 right-0 block rounded-full bg-accent"
                       initial={{ height: "0%" }}
                       animate={{ height: "100%" }}
-                      transition={{ duration: 6, ease: "linear" }}
+                      transition={{
+                        duration: AUTOPLAY_MS / 1000,
+                        ease: "linear",
+                      }}
                     />
                   )}
-                </div>
-              </div>
+                </span>
+              </span>
             </button>
           );
         })}
+      </nav>
+
+      {/* ─── Indicador en móvil: barras horizontales sobre la barra de stats ─── */}
+      <nav
+        aria-label="Slides"
+        className="absolute left-0 right-0 bottom-[4.25rem] z-30 md:hidden"
+      >
+        <div className="container-lg flex gap-0.5 -ml-2.5">
+          {slides.map((slide, i) => {
+            const isActive = activeIndex === i;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => swiperRef.current?.slideToLoop(i)}
+                aria-label={`Ir al slide ${i + 1}: ${slide.tag}`}
+                aria-current={isActive ? "true" : undefined}
+                className="cursor-pointer p-2.5 outline-none rounded-full focus-visible:ring-2 focus-visible:ring-accent/80 active:scale-95 transition-transform duration-100 motion-reduce:transform-none"
+              >
+                <span
+                  className={`relative block h-[3px] rounded-full overflow-hidden transition-[width,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isActive ? "w-10 bg-white/35" : "w-5 bg-white/55"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      key={`progress-m-${i}`}
+                      className="absolute inset-y-0 left-0 block rounded-full bg-accent"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{
+                        duration: AUTOPLAY_MS / 1000,
+                        ease: "linear",
+                      }}
+                    />
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </nav>
 
       {/* Stats bar */}

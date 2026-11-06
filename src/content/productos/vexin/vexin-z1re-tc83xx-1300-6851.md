@@ -1,0 +1,23 @@
+---
+nombre: ZebraOneCareEssential (Z1RE-TC83XX-1300)
+marca: Zebra
+descripcion: 'ZebraOneCareEssential. Número de parte: Z1RE-TC83XX-1300.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: Z1RE-TC83XX-1300
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareEssential, 1 YEAR(S) ZEBRA ONECARE ESSENTIAL, 3 DAY TAT, XXXXXX, RENEWAL, WITH COMPREHENSIVE COVERAGE AND PREMIER MAINTENANCE
+  FOR STANDARD BATTERY.
+imagen: /images/productos/vexin/5445cec7a2ac0d4e47eab00e.webp
+marcaLogo: https://www.vexinone.com/web/image/430369-e28be1f9/Recurso%20167.svg
+sku: Z1RE-TC83XX-1300
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-z1re-tc83xx-1300-marca-zebra-6851 -->

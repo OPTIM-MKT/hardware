@@ -1,0 +1,21 @@
+---
+nombre: ZebraOneCareTSS (Z1R5-ENTBRX2-1000)
+marca: Zebra
+descripcion: 'ZebraOneCareTSS. Número de parte: Z1R5-ENTBRX2-1000.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: Z1R5-ENTBRX2-1000
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareTSS, 1-YEAR RENEWAL EB2 SW DEVICE LICENSE MAINTENANCE
+marcaLogo: https://www.vexinone.com/web/image/430369-e28be1f9/Recurso%20167.svg
+sku: Z1R5-ENTBRX2-1000
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-z1r5-entbrx2-1000-marca-zebra-6329 -->

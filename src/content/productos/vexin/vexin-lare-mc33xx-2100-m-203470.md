@@ -1,0 +1,20 @@
+---
+nombre: ZebraOneCareEssential (LARE-MC33XX-2100.M)
+marca: Zebra
+descripcion: 'ZebraOneCareEssential. Número de parte: LARE-MC33XX-2100.M.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: LARE-MC33XX-2100.M
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareEssential, 2 yr Z1C Essential MC33XX, 3 day TAT, Renewal, comprehensive, std maintenance for std battery, monthly billing
+sku: LARE-MC33XX-2100.M
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-lare-mc33xx-2100-m-marca-zebra-203470 -->

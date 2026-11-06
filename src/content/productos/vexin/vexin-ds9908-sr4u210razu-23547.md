@@ -1,0 +1,22 @@
+---
+nombre: Zebra DS9908 (DS9908-SR4U210RAZU)
+marca: Zebra
+descripcion: 'Zebra DS9908. Número de parte: DS9908-SR4U210RAZU.'
+categoria: Accesorios
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: DS9908-SR4U210RAZU
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: 'DS9908, Escáner manos libres DS9908-SR Negro RFID USB KIT - 902-928 MHZ: DS9908-SRR0004ZZUS SCANNER, CBA-U21-S07ZBR SHIELDED USB CABLE'
+imagen: /images/productos/vexin/895c130a7710e2bc7c55eb09.webp
+marcaLogo: https://www.vexinone.com/web/image/430369-e28be1f9/Recurso%20167.svg
+sku: DS9908-SR4U210RAZU
+subcategoria: Cables y adaptadores
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-ds9908-sr4u210razu-marca-zebra-23547 -->

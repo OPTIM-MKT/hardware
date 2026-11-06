@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import AddToCartButton from "../../components/cart/AddToCartButton";
 import RelatedProducts, {
@@ -10,27 +10,67 @@ import ProductsDisclaimer from "../../components/productos/ProductsDisclaimer.as
 
 export const prerender = true;
 
+type Producto = CollectionEntry<"productos">;
+
 export async function getStaticPaths() {
-  const productos = await getCollection("productos");
-  return productos.map((p) => ({ params: { slug: p.id }, props: { product: p } }));
+  // getStaticPaths corre aislado del resto del frontmatter: la constante va aquí.
+  const RELATED_LIMIT = 4;
+  // Con ~9,300 productos, agrupar una sola vez evita recorrer todo el catálogo
+  // por cada página generada.
+  const productos = (await getCollection("productos")).sort(
+    (a, b) =>
+      Number(Boolean(b.data.imagen)) - Number(Boolean(a.data.imagen)) ||
+      Number(b.data.destacado) - Number(a.data.destacado),
+  );
+
+  const groupBy = (key: (p: Producto) => string | undefined) => {
+    const map = new Map<string, Producto[]>();
+    for (const p of productos) {
+      const k = key(p);
+      if (!k) continue;
+      const list = map.get(k) ?? [];
+      // Con unos cuantos más del límite alcanza para excluir el propio producto.
+      if (list.length < RELATED_LIMIT * 3) list.push(p);
+      map.set(k, list);
+    }
+    return map;
+  };
+
+  const bySub = groupBy((p) =>
+    p.data.subcategoria ? `${p.data.categoria}|${p.data.subcategoria}` : undefined,
+  );
+  const byCategory = groupBy((p) => p.data.categoria);
+  const byBrand = groupBy((p) => p.data.marca);
+
+  return productos.map((product) => {
+    const { data } = product;
+    // Recomendados: mismo tipo, luego misma categoría y, al final, misma marca.
+    const seen = new Set([product.id]);
+    const related: Producto[] = [];
+    for (const candidates of [
+      bySub.get(`${data.categoria}|${data.subcategoria}`),
+      byCategory.get(data.categoria),
+      byBrand.get(data.marca),
+    ]) {
+      for (const p of candidates ?? []) {
+        if (related.length >= RELATED_LIMIT) break;
+        if (seen.has(p.id)) continue;
+        seen.add(p.id);
+        related.push(p);
+      }
+    }
+    return { params: { slug: product.id }, props: { product, related } };
+  });
 }
 
-const { product } = Astro.props;
+const { product, related } = Astro.props as {
+  product: Producto;
+  related: Producto[];
+};
 const { Content } = await render(product);
 const { data } = product;
 
-// Recomendados: misma categoría primero, completar con misma marca
-const all = await getCollection("productos");
-const others = all.filter((p) => p.id !== product.id);
-
-const sameCategory = others.filter((p) => p.data.categoria === data.categoria);
-const sameBrand = others.filter(
-  (p) => p.data.marca === data.marca && p.data.categoria !== data.categoria
-);
-
-const recommendedSource = [...sameCategory, ...sameBrand].slice(0, 4);
-
-const recommended: RelatedProduct[] = recommendedSource.map((p) => ({
+const recommended: RelatedProduct[] = related.map((p) => ({
   slug: p.id,
   nombre: p.data.nombre,
   marca: p.data.marca,
@@ -67,14 +107,32 @@ const cartProduct = {
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-start">
         <div class="bento-card p-0 overflow-hidden">
-          <div class="aspect-square bg-line relative">
+          <div class:list={["aspect-square relative", data.imagen ? "bg-white" : "bg-line/60"]}>
             {
-              data.imagen && (
+              data.imagen ? (
                 <img
                   src={data.imagen}
                   alt={data.nombre}
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-contain p-8"
                 />
+              ) : (
+                <div class="w-full h-full flex flex-col items-center justify-center gap-3 text-muted">
+                  <svg
+                    class="w-16 h-16 opacity-60"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width={1.25}
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                    />
+                  </svg>
+                  <span class="text-xs">Imagen no disponible</span>
+                </div>
               )
             }
             <div class="absolute top-4 left-4 flex flex-col gap-2">

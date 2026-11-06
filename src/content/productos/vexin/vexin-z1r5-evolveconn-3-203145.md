@@ -1,0 +1,20 @@
+---
+nombre: ZebraOneCareTSS (Z1R5-EVOLVECONN-3)
+marca: Zebra
+descripcion: 'ZebraOneCareTSS. Número de parte: Z1R5-EVOLVECONN-3.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: Z1R5-EVOLVECONN-3
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareTSS, Evolve Connector Utility - 3-Year Maintenance and Support Renewal.
+sku: Z1R5-EVOLVECONN-3
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-z1r5-evolveconn-3-marca-zebra-203145 -->

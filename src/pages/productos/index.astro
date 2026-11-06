@@ -7,24 +7,27 @@ import ProductCatalog, {
 import ContactForm from "../../components/contact/ContactForm";
 import NoProducts from "../../components/productos/NoProducts.astro";
 import ProductsDisclaimer from "@/components/productos/ProductsDisclaimer.astro";
-import { resolveSectionId } from "@/constants/product-sections";
+import {
+  CATALOG_PAGE_SIZE,
+  compareRelevance,
+  toCatalogProduct,
+} from "@/components/productos/catalog-data";
 
-const productos = await getCollection("productos");
+// El catálogo completo (~9,300 productos) se descarga en el cliente desde
+// /productos/catalogo.json; aquí solo va la primera página para el primer pintado.
+export const prerender = true;
 
-const items: CatalogProduct[] = productos.map(({ id, data }) => ({
-  slug: id,
-  nombre: data.nombre,
-  marca: data.marca,
-  categoria: data.categoria,
-  seccion: resolveSectionId(data),
-  descripcion: data.descripcion,
-  imagen: data.imagen,
-  disponible: data.disponible,
-  destacado: data.destacado,
-  nuevo: data.nuevo,
-  sku: data.sku,
-  tags: data.tags,
-}));
+const items: CatalogProduct[] = (await getCollection("productos"))
+  .map(toCatalogProduct)
+  .sort(compareRelevance);
+
+const initialProducts = items.slice(0, CATALOG_PAGE_SIZE);
+const uniqueSorted = (values: string[]) =>
+  [...new Set(values)].sort((a, b) => a.localeCompare(b, "es"));
+const facets = {
+  marcas: uniqueSorted(items.map((p) => p.marca)),
+  categorias: uniqueSorted(items.map((p) => p.categoria)),
+};
 ---
 
 <Layout
@@ -52,7 +55,12 @@ const items: CatalogProduct[] = productos.map(({ id, data }) => ({
   <section class="section-padding">
     <div class="container-lg">
       <ProductsDisclaimer />
-      <ProductCatalog products={items} client:load>
+      <ProductCatalog
+        initialProducts={initialProducts}
+        total={items.length}
+        facets={facets}
+        client:load
+      >
         <NoProducts />
       </ProductCatalog>
     </div>

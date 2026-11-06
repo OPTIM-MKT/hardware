@@ -1,0 +1,20 @@
+---
+nombre: ZebraOneCareEssential (Z1BE-ET6XXX-3C00)
+marca: Zebra
+descripcion: 'ZebraOneCareEssential. Número de parte: Z1BE-ET6XXX-3C00.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: Z1BE-ET6XXX-3C00
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareEssential, 3 YR Z1C ESSENTIAL ET6XXX Android, 3 DAY TAT, PURCHASED AFTER 30 DAYS, COMPREHENSIVE
+sku: Z1BE-ET6XXX-3C00
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-z1be-et6xxx-3c00-marca-zebra-202696 -->

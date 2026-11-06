@@ -1,0 +1,24 @@
+---
+nombre: Zebra Base de carga Cradle Locking Solution - Mechanical locking mechanism for TC7 4 slot charging cradles with battery toaster. Can be
+marca: Zebra
+descripcion: 'Zebra Base de carga Cradle Locking Solution - Mechanical locking mechanism for TC7 4 slot charging cradles with battery toaster. Can be. Número
+  de parte: CS-CRD-LOC-TC7-T.'
+categoria: Accesorios
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: CS-CRD-LOC-TC7-T
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: Base de carga Cradle Locking Solution - Mechanical locking mechanism for TC7 4 slot charging cradles with battery toaster. Can be retro-fitted
+  to existing 4 slot charging cradles for TC7 . Incls Client Software.
+imagen: /images/productos/vexin/9d05dddb5f9744b8f390fc26.webp
+marcaLogo: https://www.vexinone.com/web/image/430369-e28be1f9/Recurso%20167.svg
+sku: CS-CRD-LOC-TC7-T
+subcategoria: Bases y cargadores
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-cs-crd-loc-tc7-t-marca-zebra-6065 -->

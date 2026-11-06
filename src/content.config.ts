@@ -4,7 +4,14 @@ import { glob } from "astro/loaders";
 import { PRODUCT_SECTION_IDS } from "./constants/product-sections";
 
 const productos = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/productos" }),
+  loader: glob({
+    pattern: "**/*.md",
+    base: "./src/content/productos",
+    // El id es el nombre del archivo (sin subcarpeta) para que las URLs sigan
+    // siendo /productos/<slug>, también para los de src/content/productos/vexin.
+    generateId: ({ entry }) =>
+      entry.replace(/^.*\//, "").replace(/\.md$/, ""),
+  }),
   schema: z.object({
     nombre: z.string(),
     marca: z.string(),

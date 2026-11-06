@@ -1,0 +1,21 @@
+---
+nombre: 'Zebra Cable USB Cable - Shielded USB: Series A Connector (CBA-U66-C09ZAR)'
+marca: Zebra
+descripcion: 'Zebra Cable USB Cable - Shielded USB: Series A Connector. Número de parte: CBA-U66-C09ZAR.'
+categoria: Accesorios
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: CBA-U66-C09ZAR
+disponible: true
+destacado: false
+nuevo: false
+descripcionLarga: 'Cable USB Cable - Shielded USB: Series A Connector, 9ft. Coiled'
+imagen: /images/productos/vexin/9d05dddb5f9744b8f390fc26.webp
+sku: CBA-U66-C09ZAR
+subcategoria: Cables y adaptadores
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-cba-u66-c09zar-marca-zebra-201386 -->

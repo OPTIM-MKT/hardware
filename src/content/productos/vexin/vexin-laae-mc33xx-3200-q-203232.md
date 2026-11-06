@@ -1,0 +1,21 @@
+---
+nombre: ZebraOneCareEssential (LAAE-MC33XX-3200.Q)
+marca: Zebra
+descripcion: 'ZebraOneCareEssential. Número de parte: LAAE-MC33XX-3200.Q.'
+categoria: Planes de mantenimiento
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: LAAE-MC33XX-3200.Q
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: ZebraOneCareEssential, 3 yr Z1C Essential MC33XX, 3 day TAT, purchased in 30 days, comprehensive, std maintenance for extended or BLE
+  battery, quarterly billing
+sku: LAAE-MC33XX-3200.Q
+subcategoria: Zebra OneCare
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-laae-mc33xx-3200-q-marca-zebra-203232 -->

@@ -5,6 +5,7 @@ descripcion: "Receptor USB que permite conectar hasta cinco dispositivos inalám
 descripcionLarga: "El 3Dconnexion Universal Receiver permite una conexión fiable a 2.4 GHz para emparejar fácilmente tus ratones SpaceMouse y CadMouse inalámbricos en un solo puerto USB, reduciendo el desorden de cables en tu estación de trabajo."
 imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVf-dW1lPT5zhZT-aAcT7KZUdM37WEwId8CQ&s"
 categoria: "Accesorios"
+seccion: "diseno-cad"
 tags:
   - "receptor"
   - "usb"

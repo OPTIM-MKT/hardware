@@ -1,0 +1,23 @@
+---
+nombre: Zebra TC22 (WLMT0-T22B8ABD8-A6)
+marca: Zebra
+descripcion: 'Zebra TC22. Número de parte: WLMT0-T22B8ABD8-A6.'
+categoria: Lectura y Captura de Datos
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: WLMT0-T22B8ABD8-A6
+- label: Conectividad inalámbrica
+  value: Wifi 6, NFC
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: TC22, Computadora táctil TC22; WLAN, Wifi 6, SE4710, Pantalla 6", 8GB/128GB, 16MP RFC, 5MP FFC, 8-Pin Back I/O, Standard Battery w/BLE,
+  NFC, BT, USB-C, GMS, ROW
+imagen: /images/productos/vexin/9d05dddb5f9744b8f390fc26.webp
+sku: WLMT0-T22B8ABD8-A6
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-wlmt0-t22b8abd8-a6-marca-zebra-201738 -->

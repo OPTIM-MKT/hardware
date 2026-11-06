@@ -90,13 +90,18 @@ function RelatedCard({ product }: { product: RelatedProduct }) {
       href={`/productos/${product.slug}`}
       className="group bento-card flex flex-col gap-4 p-4 hover:border-primary/30 transition-all"
     >
-      <div className="aspect-4/3 rounded-xl overflow-hidden bg-line">
+      <div
+        className={`aspect-4/3 rounded-xl overflow-hidden ${
+          product.imagen ? "bg-white" : "bg-line/60"
+        }`}
+      >
         {product.imagen ? (
           <img
             src={product.imagen}
             alt={product.nombre}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            decoding="async"
+            className="w-full h-full object-contain p-4 group-hover:scale-[1.03] transition-transform duration-500 ease-out motion-reduce:transform-none"
           />
         ) : null}
       </div>

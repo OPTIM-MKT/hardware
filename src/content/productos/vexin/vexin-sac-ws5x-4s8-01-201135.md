@@ -1,0 +1,24 @@
+---
+nombre: Zebra Cargador de batería WS50 4Slot Spare Battery Charger for 800mAh Wrist Battery. Requires PWR-BGA12V50W0WW
+marca: Zebra
+descripcion: 'Zebra Cargador de batería WS50 4Slot Spare Battery Charger for 800mAh Wrist Battery. Requires PWR-BGA12V50W0WW. Número de parte: SAC-WS5X-4S8-01.'
+categoria: Accesorios
+galeria: []
+tags: []
+caracteristicas: []
+especificaciones:
+- label: Número de parte
+  value: SAC-WS5X-4S8-01
+- label: Capacidad de batería
+  value: 800mAh
+disponible: false
+destacado: false
+nuevo: false
+descripcionLarga: Cargador de batería WS50 4Slot Spare Battery Charger for 800mAh Wrist Battery. Requires PWR-BGA12V50W0WW, DC Cable CBL-DC-388A1-01 and
+  3-wire Grounded Country Specific AC Line Cord, Sold Separately
+imagen: /images/productos/vexin/9d05dddb5f9744b8f390fc26.webp
+sku: SAC-WS5X-4S8-01
+subcategoria: Bases y cargadores
+---
+
+<!-- Fuente: https://www.vexinstore.com/shop/id-sac-ws5x-4s8-01-marca-zebra-201135 -->
